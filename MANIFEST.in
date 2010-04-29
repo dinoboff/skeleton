@@ -1,0 +1,7 @@
+MANIFEST.in
+Makefile
+README.rst
+distribute_setup.py
+setup.py
+skeleton/__init__.py
+skeleton/test.py
