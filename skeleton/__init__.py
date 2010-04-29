@@ -1,11 +1,15 @@
+import codecs
 import os
-import sys
 import shutil
+import string
+import sys
 
 
-
-class Skeleton(object):
+class Skeleton(dict):
     src = None
+    Template = string.Template
+    template_suffix = '_tmpl'
+    file_encoding = 'UTF-8'
     
     @property
     def skel_dir(self):
@@ -27,16 +31,40 @@ class Skeleton(object):
             #copy files
             for file_name in file_names:
                 src = os.path.join(dir_path, file_name)
-                dst = os.path.join(dst_dir, rel_dir_path, file_name)
-                shutil.copyfile(src, dst)
-                shutil.copymode(src, dst)
+                dst = os.path.join(
+                    dst_dir,
+                    rel_dir_path,
+                    self.Template(file_name).substitute(self))
+                self.copy_file(src, dst)
             
             #copy directories
             for dir_name in dir_names:
                 src = os.path.join(dir_path, dir_name)
-                dst = os.path.join(dst_dir, rel_dir_path, dir_name)
+                dst = os.path.join(
+                    dst_dir,
+                    rel_dir_path,
+                    self.Template(dir_name).substitute(self))
                 os.mkdir(dst)
                 shutil.copymode(src, dst)
+    
+    def copy_file(self, src, dst):
+        if src.endswith(self.template_suffix):
+            dst = dst[:-len(self.template_suffix)]
+            
+            fd_src = None
+            fd_dst = None
+            try:
+                fd_src = codecs.open(src, encoding=self.file_encoding)
+                fd_dst = codecs.open(dst, 'w', encoding=self.file_encoding)
+                fd_dst.write(self.Template(fd_src.read()).substitute(self))
+            finally:
+                if fd_src is not None:
+                    fd_src.close()
+                if fd_dst is not None:
+                    fd_dst.close()
+        else:
+            shutil.copyfile(src, dst)
+        shutil.copymode(src, dst)
 
 
 class Var(object):
@@ -47,24 +75,25 @@ class Var(object):
         self.default = default
 
     def __repr__(self):
-        return '<%s %s default=%r>' % (
+        return u'<%s %s default=%r>' % (
             self.__class__.__name__, self.name, self.default,)
 
     def full_description(self):
         if self.description:
-            return '%s (%s)' % (self.name, self.description,)
+            return u'%s (%s)' % (self.name, self.description,)
         else:
             return self.name
         
     def prompt(self):
-        prompt = 'Enter %s' % self.full_description()
+        prompt = u'Enter %s' % self.full_description()
         if self.default is not None:
-            prompt += ' [%r]' % self.default
-        prompt += ': '
+            prompt += u' [%r]' % self.default
+        prompt += u': '
         
         while True:
-            resp = raw_input(prompt).strip()
-            if resp != '':
+            encoding = sys.stdout.encoding
+            resp = raw_input(prompt.encode(encoding)).decode(encoding).strip()
+            if resp:
                 return resp
             elif self.default is not None:
                 return self.default

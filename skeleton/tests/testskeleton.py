@@ -33,6 +33,10 @@ class Static(Skeleton):
     src = 'skeletons/static'
 
 
+class DynamicContent(Skeleton):
+    src = 'skeletons/dynamic-content'
+
+
 class TestSkeleton(unittest.TestCase):
     
     def setUp(self):
@@ -54,8 +58,31 @@ class TestSkeleton(unittest.TestCase):
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'bar/baz.txt')).read().strip(),
             'baz'
-            )            
+            )
 
+    def test_write_dynamic_content(self):
+        s= DynamicContent(baz="<replaced>")
+        s.write(self.tmp_dir.path)
+        self.assertEqual(
+            open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
+            'foo'
+            )
+        self.assertEqual(
+            open(os.path.join(self.tmp_dir.path, 'bar/baz.txt')).read().strip(),
+            'foo <replaced> bar'
+            )
+
+    def test_write_dynamic_file_names(self):
+        s= Static()
+        s.write(self.tmp_dir.path)
+        self.assertEqual(
+            open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
+            'foo'
+            )
+        self.assertEqual(
+            open(os.path.join(self.tmp_dir.path, 'bar/baz.txt')).read().strip(),
+            'baz'
+            )
 
 if __name__ == "__main__":
     unittest.main()
