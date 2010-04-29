@@ -49,6 +49,19 @@ class TestSkeleton(unittest.TestCase):
     def tearDown(self):
         super(TestSkeleton, self).tearDown()
         self.tmp_dir.remove()
+        
+    def test_write_with_dst_dir_to_create(self):
+        s= Static()
+        dst = os.path.join(self.tmp_dir.path, 'missing-dir')
+        s.write(dst)
+        self.assertEqual(
+            open(os.path.join(dst, 'foo.txt')).read().strip(),
+            'foo'
+            )
+        self.assertEqual(
+            open(os.path.join(dst, 'bar/baz.txt')).read().strip(),
+            'baz'
+            )
 
     def test_write_static_file(self):
         s= Static()

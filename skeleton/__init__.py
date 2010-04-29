@@ -23,6 +23,8 @@ class Skeleton(dict):
         return os.path.join(mod_dir, self.src)
     
     def write(self, dst_dir):
+        if not os.path.exists(dst_dir):
+            os.mkdir(dst_dir)
         self.check_vars()
         skel_dir = self.skel_dir
         skel_dir_len = len(skel_dir)
