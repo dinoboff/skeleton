@@ -7,6 +7,7 @@ import sys
 
 class Skeleton(dict):
     src = None
+    vars = []
     Template = string.Template
     template_suffix = '_tmpl'
     file_encoding = 'UTF-8'
@@ -22,6 +23,7 @@ class Skeleton(dict):
         return os.path.join(mod_dir, self.src)
     
     def write(self, dst_dir):
+        self.check_vars()
         skel_dir = self.skel_dir
         skel_dir_len = len(skel_dir)
         
@@ -65,6 +67,12 @@ class Skeleton(dict):
         else:
             shutil.copyfile(src, dst)
         shutil.copymode(src, dst)
+        
+    def check_vars(self):
+        for var in self.vars:
+            if self.has_key(var.name):
+                continue
+            self[var.name] = var.prompt()
 
 
 class Var(object):

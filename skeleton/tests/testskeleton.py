@@ -1,17 +1,12 @@
-'''
-Created on Apr 29, 2010
-
-@author: dinoboff
-'''
-from __future__ import with_statement
-
+import os
 import shutil
 import tempfile
 import unittest
 
+from mock import patch
 
-from skeleton import Skeleton
-import os
+from skeleton import Skeleton, Var
+
 
 
 class TempDir(object):
@@ -35,6 +30,13 @@ class Static(Skeleton):
 
 class DynamicContent(Skeleton):
     src = 'skeletons/dynamic-content'
+    vars = [
+        Var('baz', 'Dummy variable')
+        ]
+
+
+class DynamicFileName(Skeleton):
+    src = 'skeletons/dynamic-file-name'
 
 
 class TestSkeleton(unittest.TestCase):
@@ -73,7 +75,23 @@ class TestSkeleton(unittest.TestCase):
             )
 
     def test_write_dynamic_file_names(self):
-        s= Static()
+        s= DynamicFileName(baz="replaced-name")
+        s.write(self.tmp_dir.path)
+        self.assertEqual(
+            open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
+            'foo'
+            )
+        self.assertEqual(
+            open(os.path.join(self.tmp_dir.path, 'bar/replaced-name.txt')).read().strip(),
+            'baz'
+            )
+
+    @patch('__builtin__.raw_input')
+    def test_write_dynamic_content_with_var(self, input_mock):
+        resps = ['<input replacement>']
+        input_mock.side_effect = lambda x: resps.pop(0)
+        
+        s= DynamicContent()
         s.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
@@ -81,7 +99,7 @@ class TestSkeleton(unittest.TestCase):
             )
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'bar/baz.txt')).read().strip(),
-            'baz'
+            'foo <input replacement> bar'
             )
 
 if __name__ == "__main__":
