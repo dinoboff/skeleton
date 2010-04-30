@@ -39,3 +39,10 @@ class BasicPackage(Skeleton):
         os.mkdir(path)
         with open(os.path.join(path, '__init__.py'), 'w') as f:
             f.write(init_body)
+
+
+def main():
+    BasicPackage().run()
+
+if __name__ == '__main__':
+    main()

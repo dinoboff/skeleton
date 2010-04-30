@@ -9,13 +9,25 @@ and tests require Mock.
 """
 
 import codecs
+import optparse
 import os
+import re
 import shutil
 import sys
 
 
-def skeleton_to_optparser(Skel):
-    pass
+VALID_OPTION_NAME = re.compile("[a-z]([\w\d]*[a-z0-9])?",re.IGNORECASE)
+
+def vars_to_optparser(vars):
+    opt = optparse.OptionParser()
+    for var in vars:
+        if not VALID_OPTION_NAME.match(var.name):
+            continue
+        opt.add_option(
+            "--%s" % var.name.replace('_', '-'),
+            dest=var.name,
+            help=var.full_description())
+    return opt
 
 
 class Template(object):
@@ -146,6 +158,23 @@ class Skeleton(dict):
             if self.has_key(var.name):
                 continue
             self[var.name] = var.prompt()
+            
+    def run(self, args=None):
+        parser = vars_to_optparser(self.vars)
+        parser.usage = "%prog [options] dst_dir"
+        options, args = parser.parse_args(args)
+        
+        if len(args) != 1:
+            parser.error("incorrect number of arguments")
+        
+        for var in self.vars:
+            value = getattr(options, var.name)
+            if value is not None:
+                self[var.name] = value
+        for k,v in self.items():
+            print k,v
+        self.write(args[0])
+        
 
 
 class Var(object):
