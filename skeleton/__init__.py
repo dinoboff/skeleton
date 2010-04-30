@@ -9,6 +9,7 @@ and tests require Mock.
 """
 
 import codecs
+import logging
 import os
 import re
 import shutil
@@ -185,6 +186,8 @@ class Skeleton(dict):
             self[var.name] = var.prompt()
             
     def run(self, args=None):
+        logging.basicConfig(level=logging.INFO)
+        
         parser = vars_to_optparser(self.vars)
         parser.usage = "%prog [options] dst_dir"
         self.pre_run(parser)
