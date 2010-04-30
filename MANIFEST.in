@@ -9,7 +9,11 @@ skeleton/examples/basic-package/MANIFEST.in
 skeleton/examples/basic-package/README.rst
 skeleton/examples/basic-package/distribute_setup.py
 skeleton/examples/basic-package/setup.py_tmpl
+skeleton/examples/basicmodule.py
 skeleton/examples/basicpackage.py
+skeleton/examples/simple-module/README.rst
+skeleton/examples/simple-module/setup.py_tmpl
+skeleton/examples/simple-module/{ModuleName}.py
 skeleton/tests/__init__.py
 skeleton/tests/run.py
 skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl
