@@ -9,37 +9,15 @@ and tests require Mock.
 """
 
 import codecs
-import logging
-import optparse
 import os
 import re
 import shutil
 import sys
-import stat
+
+from skeleton.utils import get_loggger, get_file_mode, vars_to_optparser
 
 
-VALID_OPTION_NAME = re.compile("[a-z]([\w\d]*[a-z0-9])?",re.IGNORECASE)
-
-class NullHandler(logging.Handler):
-    def emit(self, record):
-        pass
-
-log = logging.getLogger(__name__)
-log.addHandler(NullHandler())
-
-def vars_to_optparser(vars):
-    parser = optparse.OptionParser()
-    for var in vars:
-        if not VALID_OPTION_NAME.match(var.name):
-            continue
-        parser.add_option(
-            "--%s" % var.name.replace('_', '-'),
-            dest=var.name,
-            help=var.full_description())
-    return parser
-
-def _get_mode(path):
-    stat.S_IMODE(os.stat(path)[stat.ST_MODE])
+log = get_loggger(__name__)
 
 
 class Skeleton(dict):    
@@ -83,7 +61,11 @@ class Skeleton(dict):
         """
 
     def template_formatter(self, template):
-        """"""
+        """
+        Default template formatter.
+        
+        Require Python 2.6+
+        """
         if not hasattr(template, 'format'):
             msg = (
                 "%s's template_formatter expect a python 2.6+ string "
@@ -191,13 +173,13 @@ class Skeleton(dict):
             self._set_mode(path, like)
 
     def _set_mode(self, path, like):
-        log.info("Set mode of %r to %r", path, _get_mode(like))
+        log.info("Set mode of %r to %r", path, get_file_mode(like))
         if not self.run_dry:
             shutil.copymode(like, path)
         
     def _check_vars(self):
         for var in self.vars:
-            if self.has_key(var.name):
+            if var.name in self:
                 log.debug("Varaiable %r already set" % var.name)
                 continue
             self[var.name] = var.prompt()
