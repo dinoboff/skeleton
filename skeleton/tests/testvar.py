@@ -60,6 +60,9 @@ class TestVar(unittest.TestCase):
             self.assertEqual(args, (("""Enter foo ['']: """,),{},))
     
 
+def suite():
+    return unittest.TestLoader().loadTestsFromTestCase(TestVar)
+
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

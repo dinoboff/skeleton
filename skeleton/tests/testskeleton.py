@@ -119,5 +119,9 @@ class TestSkeleton(unittest.TestCase):
             'foo <input replacement> bar'
             )
 
+
+def suite():
+    return unittest.TestLoader().loadTestsFromTestCase(TestSkeleton)
+
 if __name__ == "__main__":
     unittest.main()
