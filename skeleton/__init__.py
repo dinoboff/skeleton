@@ -19,15 +19,15 @@ import sys
 VALID_OPTION_NAME = re.compile("[a-z]([\w\d]*[a-z0-9])?",re.IGNORECASE)
 
 def vars_to_optparser(vars):
-    opt = optparse.OptionParser()
+    parser = optparse.OptionParser()
     for var in vars:
         if not VALID_OPTION_NAME.match(var.name):
             continue
-        opt.add_option(
+        parser.add_option(
             "--%s" % var.name.replace('_', '-'),
             dest=var.name,
             help=var.full_description())
-    return opt
+    return parser
 
 
 class Skeleton(dict):    
