@@ -1,0 +1,4 @@
+MANIFEST.in
+README.rst
+distribute_setup.py
+setup.py
