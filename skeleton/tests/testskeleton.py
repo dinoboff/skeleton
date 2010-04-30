@@ -1,5 +1,6 @@
 import os
 import shutil
+import string
 import tempfile
 import unittest
 
@@ -26,10 +27,12 @@ class TempDir(object):
 
 class Static(Skeleton):
     src = 'skeletons/static'
+    Template = string.Template
 
 
 class DynamicContent(Skeleton):
     src = 'skeletons/dynamic-content'
+    Template = string.Template
     vars = [
         Var('baz', 'Dummy variable')
         ]
@@ -37,6 +40,7 @@ class DynamicContent(Skeleton):
 
 class DynamicFileName(Skeleton):
     src = 'skeletons/dynamic-file-name'
+    Template = string.Template
 
 
 class TestSkeleton(unittest.TestCase):

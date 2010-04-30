@@ -1,14 +1,37 @@
+"""
+Basic Template system for project skeleton.
+
+
+"""
+
 import codecs
 import os
 import shutil
-import string
 import sys
 
 
-class Skeleton(dict):
+def skeleton_to_optparser(Skel):
+    pass
+
+
+class Template(object):
+    
+    def __init__(self, template):
+        if not hasattr(template, 'format'):
+            raise NotImplementedError('This template require Python 2.6+')
+        self.template = template
+        
+    def substitute(self, mapping_=None, **kw):
+        if mapping_ is not None:
+            kw.update(mapping_)
+        return self.template.format(**kw)
+
+
+class Skeleton(dict):    
+    
     src = None
     vars = []
-    Template = string.Template
+    Template = Template
     template_suffix = '_tmpl'
     file_encoding = 'UTF-8'
     
