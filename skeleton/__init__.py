@@ -1,7 +1,11 @@
 """
 Basic Template system for project skeleton.
 
+skeleton is similar to the template part of PasteScript but 
+without any dependencies; it should also be compatible with Python 3.
 
+However in this early phase of development, it only target python 2.5+,
+and tests require Mock.
 """
 
 import codecs
@@ -15,6 +19,7 @@ def skeleton_to_optparser(Skel):
 
 
 class Template(object):
+    """Basic Template class to format a skeleton template file."""
     
     def __init__(self, template):
         if not hasattr(template, 'format'):
@@ -28,8 +33,23 @@ class Template(object):
 
 
 class Skeleton(dict):    
+    """
+    Skeleton Class.
     
-    src = None
+    It should have a src attribute set to the path to the skeleton folder
+    (relative to the class module) and a list of variables the skeleton template
+    files require. The variable should be an object with a name attribute and
+    prompt method than prompt the user for the variable value and return that
+    value. You can use skeleton.Var.
+    
+    By default a template file ends with "_tmpl" (see the template_suffix 
+    attribute), is UTF-8 encoded (file_encoding attribute) and will be formatted
+    by python 2.6+ string Formatter.
+    
+    You can set an alternative Template class with Template attribute. It should
+    have a constructor and a substitute method like the string.Template one.
+    """
+    src = None 
     vars = []
     Template = Template
     template_suffix = '_tmpl'
@@ -48,6 +68,10 @@ class Skeleton(dict):
     
     @property
     def skel_dir(self):
+        """
+        return the path (absolute path or relative to the current working
+        directory).
+        """
         if self.src is None:
             raise AttributeError("The src attribute of the %s Skeleton is not set" %
                 self.__class__.__name__
@@ -57,10 +81,20 @@ class Skeleton(dict):
         return os.path.join(mod_dir, self.src)
     
     def write(self, dst_dir):
+        """
+        Copy files and folders from the skeleton folder to the dst_dir.
+        
+        The file name will be formatted by the template formatter so that file
+        names can dynamically generated. Make sure that any special charters for
+        the formatters are escaped.
+        
+        If the file name ends by "_tmpl" its content will be formatted by the
+        template formatter.
+        """
         if not os.path.exists(dst_dir):
             os.mkdir(dst_dir)
         
-        self.check_vars()
+        self._check_vars()
         skel_dir = self.skel_dir
         skel_dir_len = len(skel_dir)
         
@@ -75,7 +109,7 @@ class Skeleton(dict):
                     dst_dir,
                     rel_dir_path,
                     self.Template(file_name).substitute(self))
-                self.copy_file(src, dst)
+                self._copy_file(src, dst)
             
             #copy directories
             for dir_name in dir_names:
@@ -88,7 +122,7 @@ class Skeleton(dict):
                 shutil.copymode(src, dst)
         self.post_write(dst_dir)
     
-    def copy_file(self, src, dst):
+    def _copy_file(self, src, dst):
         if src.endswith(self.template_suffix):
             dst = dst[:-len(self.template_suffix)]
             
@@ -107,7 +141,7 @@ class Skeleton(dict):
             shutil.copyfile(src, dst)
         shutil.copymode(src, dst)
         
-    def check_vars(self):
+    def _check_vars(self):
         for var in self.vars:
             if self.has_key(var.name):
                 continue
@@ -115,6 +149,7 @@ class Skeleton(dict):
 
 
 class Var(object):
+    """Define a template variable."""
 
     def __init__(self, name, description=None, default=None):
         self.name = name
@@ -132,6 +167,11 @@ class Var(object):
             return self.name
         
     def prompt(self):
+        """Prompt the user for a value.
+        
+        If no default is defined, the user will be prompted until he gives a 
+        value.
+        """
         prompt = u'Enter %s' % self.full_description()
         if self.default is not None:
             prompt += u' [%r]' % self.default
