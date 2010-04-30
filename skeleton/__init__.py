@@ -34,6 +34,17 @@ class Skeleton(dict):
     Template = Template
     template_suffix = '_tmpl'
     file_encoding = 'UTF-8'
+        
+    def pre_write(self, dst_dir): 
+        """
+        Called after the vars have been checked
+        and before the creation of the files and directories.
+        """
+    
+    def post_write(self, dst_dir):
+        """
+        Called after the files and directory have benn created.
+        """
     
     @property
     def skel_dir(self):
@@ -48,10 +59,12 @@ class Skeleton(dict):
     def write(self, dst_dir):
         if not os.path.exists(dst_dir):
             os.mkdir(dst_dir)
+        
         self.check_vars()
         skel_dir = self.skel_dir
         skel_dir_len = len(skel_dir)
         
+        self.pre_write(dst_dir)
         for dir_path, dir_names, file_names in os.walk(skel_dir):
             rel_dir_path = dir_path[skel_dir_len:].lstrip(r'\/')
             
@@ -73,6 +86,7 @@ class Skeleton(dict):
                     self.Template(dir_name).substitute(self))
                 os.mkdir(dst)
                 shutil.copymode(src, dst)
+        self.post_write(dst_dir)
     
     def copy_file(self, src, dst):
         if src.endswith(self.template_suffix):
