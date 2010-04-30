@@ -9,14 +9,23 @@ and tests require Mock.
 """
 
 import codecs
+import logging
 import optparse
 import os
 import re
 import shutil
 import sys
+import stat
 
 
 VALID_OPTION_NAME = re.compile("[a-z]([\w\d]*[a-z0-9])?",re.IGNORECASE)
+
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+
+log = logging.getLogger(__name__)
+log.addHandler(NullHandler())
 
 def vars_to_optparser(vars):
     parser = optparse.OptionParser()
@@ -28,6 +37,9 @@ def vars_to_optparser(vars):
             dest=var.name,
             help=var.full_description())
     return parser
+
+def _get_mode(path):
+    stat.S_IMODE(os.stat(path)[stat.ST_MODE])
 
 
 class Skeleton(dict):    
@@ -52,6 +64,7 @@ class Skeleton(dict):
     vars = []
     template_suffix = '_tmpl'
     file_encoding = 'UTF-8'
+    run_dry = False
         
     def pre_write(self, dst_dir): 
         """
@@ -63,13 +76,20 @@ class Skeleton(dict):
         """
         Called after the files and directory have been created.
         """
+    
+    def pre_run(self, parser):
+        """
+        Called before parsing arguments and running Skeleton
+        """
 
     def template_formatter(self, template):
         """"""
         if not hasattr(template, 'format'):
-            raise NotImplementedError("This template_formatter "
-                "expect a python 2.6+ string like object "
-                "(with a format method).")
+            msg = (
+                "%s's template_formatter expect a python 2.6+ string "
+                "like object (with a format method).")
+            log.critical(msg, self.__class__.__name__)
+            raise NotImplementedError(msg % self.__class__.__name__)
         return template.format(**self)
     
     @property
@@ -97,12 +117,19 @@ class Skeleton(dict):
         If the file name ends by "_tmpl" its content will be formatted by the
         template formatter.
         """
+        log.info(
+            "Rendering %s skeleton at %r...",
+            self.__class__.__name__,
+            dst_dir)
+        
         if not os.path.exists(dst_dir):
-            os.mkdir(dst_dir)
+            self._mkdir(dst_dir)
         
         self._check_vars()
+        
         skel_dir = self.skel_dir
         skel_dir_len = len(skel_dir)
+        log.debug("Getting skeleton from %r" % skel_dir)
         
         self.pre_write(dst_dir)
         for dir_path, dir_names, file_names in os.walk(skel_dir):
@@ -115,7 +142,7 @@ class Skeleton(dict):
                     dst_dir,
                     rel_dir_path,
                     self.template_formatter(file_name))
-                self._copy_file(src, dst)
+                self.copy_file(src, dst)
             
             #copy directories
             for dir_name in dir_names:
@@ -124,14 +151,24 @@ class Skeleton(dict):
                     dst_dir,
                     rel_dir_path,
                     self.template_formatter(dir_name))
-                os.mkdir(dst)
-                shutil.copymode(src, dst)
+                self._mkdir(dst, like=src)
         self.post_write(dst_dir)
     
-    def _copy_file(self, src, dst):
+    def copy_file(self, src, dst):
         if src.endswith(self.template_suffix):
-            dst = dst[:-len(self.template_suffix)]
-            
+            self._format_file(src, dst[:-len(self.template_suffix)])
+        else:
+            self._copy_file(src, dst)
+        
+    def _copy_file(self, src, dst):
+        log.info("Copy %r to %r", src, dst)
+        if not self.run_dry:
+            shutil.copyfile(src , dst)
+        self._set_mode(dst, like=src)
+        
+    def _format_file(self, src, dst):
+        log.info("Creating %r from %r template...", dst, src)
+        if not self.run_dry:
             fd_src = None
             fd_dst = None
             try:
@@ -143,21 +180,34 @@ class Skeleton(dict):
                     fd_src.close()
                 if fd_dst is not None:
                     fd_dst.close()
-        else:
-            shutil.copyfile(src, dst)
-        shutil.copymode(src, dst)
+        self._set_mode(dst, like=src)
+            
+        
+    def _mkdir(self, path, like=None):
+        log.info("Create directory %r", path)
+        if not self.run_dry:
+            os.mkdir(path)
+        if like is not None:
+            self._set_mode(path, like)
+
+    def _set_mode(self, path, like):
+        log.info("Set mode of %r to %r", path, _get_mode(like))
+        if not self.run_dry:
+            shutil.copymode(like, path)
         
     def _check_vars(self):
         for var in self.vars:
             if self.has_key(var.name):
+                log.debug("Varaiable %r already set" % var.name)
                 continue
             self[var.name] = var.prompt()
             
     def run(self, args=None):
         parser = vars_to_optparser(self.vars)
         parser.usage = "%prog [options] dst_dir"
-        options, args = parser.parse_args(args)
+        self.pre_run(parser)
         
+        options, args = parser.parse_args(args)
         if len(args) != 1:
             parser.error("incorrect number of arguments")
         
