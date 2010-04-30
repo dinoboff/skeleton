@@ -3,7 +3,7 @@ import unittest
 
 from mock import patch
 
-from skeleton.basicpackage import BasicPackage
+from skeleton.examples.basicpackage import BasicPackage
 from skeleton.tests.testskeleton import TempDir
 
 
