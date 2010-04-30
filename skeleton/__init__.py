@@ -30,20 +30,6 @@ def vars_to_optparser(vars):
     return opt
 
 
-class Template(object):
-    """Basic Template class to format a skeleton template file."""
-    
-    def __init__(self, template):
-        if not hasattr(template, 'format'):
-            raise NotImplementedError('This template require Python 2.6+')
-        self.template = template
-        
-    def substitute(self, mapping_=None, **kw):
-        if mapping_ is not None:
-            kw.update(mapping_)
-        return self.template.format(**kw)
-
-
 class Skeleton(dict):    
     """
     Skeleton Class.
@@ -58,12 +44,12 @@ class Skeleton(dict):
     attribute), is UTF-8 encoded (file_encoding attribute) and will be formatted
     by python 2.6+ string Formatter.
     
-    You can set an alternative Template class with Template attribute. It should
-    have a constructor and a substitute method like the string.Template one.
-    """
+    You can set an alternative formatter by overwriting the template_formatter
+    method. It takes for argument the template to parse and self for
+    variable mapping.
+    """    
     src = None 
     vars = []
-    Template = Template
     template_suffix = '_tmpl'
     file_encoding = 'UTF-8'
         
@@ -75,8 +61,16 @@ class Skeleton(dict):
     
     def post_write(self, dst_dir):
         """
-        Called after the files and directory have benn created.
+        Called after the files and directory have been created.
         """
+
+    def template_formatter(self, template):
+        """"""
+        if not hasattr(template, 'format'):
+            raise NotImplementedError("This template_formatter "
+                "expect a python 2.6+ string like object "
+                "(with a format method).")
+        return template.format(**self)
     
     @property
     def skel_dir(self):
@@ -120,7 +114,7 @@ class Skeleton(dict):
                 dst = os.path.join(
                     dst_dir,
                     rel_dir_path,
-                    self.Template(file_name).substitute(self))
+                    self.template_formatter(file_name))
                 self._copy_file(src, dst)
             
             #copy directories
@@ -129,7 +123,7 @@ class Skeleton(dict):
                 dst = os.path.join(
                     dst_dir,
                     rel_dir_path,
-                    self.Template(dir_name).substitute(self))
+                    self.template_formatter(dir_name))
                 os.mkdir(dst)
                 shutil.copymode(src, dst)
         self.post_write(dst_dir)
@@ -143,7 +137,7 @@ class Skeleton(dict):
             try:
                 fd_src = codecs.open(src, encoding=self.file_encoding)
                 fd_dst = codecs.open(dst, 'w', encoding=self.file_encoding)
-                fd_dst.write(self.Template(fd_src.read()).substitute(self))
+                fd_dst.write(self.template_formatter(fd_src.read()))
             finally:
                 if fd_src is not None:
                     fd_src.close()

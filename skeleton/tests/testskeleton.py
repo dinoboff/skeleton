@@ -27,20 +27,20 @@ class TempDir(object):
 
 class Static(Skeleton):
     src = 'skeletons/static'
-    Template = string.Template
+    
+    def template_formatter(self, template):
+        return string.Template(template).substitute(self)
 
 
-class DynamicContent(Skeleton):
+class DynamicContent(Static):
     src = 'skeletons/dynamic-content'
-    Template = string.Template
     vars = [
         Var('baz', 'Dummy variable')
         ]
 
 
-class DynamicFileName(Skeleton):
+class DynamicFileName(Static):
     src = 'skeletons/dynamic-file-name'
-    Template = string.Template
 
 
 class TestSkeleton(unittest.TestCase):
