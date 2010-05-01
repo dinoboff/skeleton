@@ -1,7 +1,7 @@
 from skeleton import Skeleton, Var
 
 
-class SimpleModule(Skeleton):
+class BasicModule(Skeleton):
     src = 'basic-module'
     vars = [
         Var('ModuleName'),
@@ -11,7 +11,7 @@ class SimpleModule(Skeleton):
 
 
 def main():
-    SimpleModule().run()
+    BasicModule().run()
     
 if __name__ == '__main__':
     main()
