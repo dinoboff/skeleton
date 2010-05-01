@@ -19,7 +19,6 @@ setup(
     license='BSD',
     packages=['skeleton',],
     test_suite = 'skeleton.tests',
-    tests_require="Mock",
     include_package_data=True,
     zip_safe=False,
     install_requires=[],

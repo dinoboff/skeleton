@@ -3,7 +3,32 @@ import __builtin__
 import tempfile
 import shutil
 
-from mock import Mock
+
+class RawInputMock(object):
+    
+    def __init__(self):
+        self.return_value = None
+        self.side_effect = None
+        self.call_args_list = []
+        
+    def __call__(self, *args, **kw):
+        self.call_args_list.append((args,kw,))
+        
+        if self.side_effect is not None:
+            return self.side_effect(*args, **kw)
+        elif self.return_value is not None:
+            return self.return_value
+        else:
+            raise Exception("No return value or side effect set.")
+
+    @property
+    def call_count(self):
+        return len(self.call_args_list)
+    
+    @property
+    def called(self):
+        return self.call_count > 0
+
 
 class TempDir(object):
     
@@ -27,7 +52,7 @@ class TestCase(unittest.TestCase):
         self.tmp_dir = TempDir()
         self.tmp_dir.create()
         self._input = __builtin__.raw_input
-        __builtin__.raw_input = self.input_mock = Mock()
+        __builtin__.raw_input = self.input_mock = RawInputMock()
         
     def tearDown(self):
         super(TestCase, self).tearDown()
