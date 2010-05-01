@@ -32,6 +32,10 @@ class Static(Skeleton):
         return string.Template(template).substitute(self)
 
 
+class MissingSkeleton(Static):
+    src = 'skeletons/missing'
+
+
 class DynamicContent(Static):
     src = 'skeletons/dynamic-content'
     vars = [
@@ -53,6 +57,10 @@ class TestSkeleton(unittest.TestCase):
     def tearDown(self):
         super(TestSkeleton, self).tearDown()
         self.tmp_dir.remove()
+        
+    def test_write_with_missing_skeleton(self):
+        s = MissingSkeleton()
+        self.assertRaises(AttributeError, s.write, self.tmp_dir.path)
         
     def test_write_with_dst_dir_to_create(self):
         s= Static()

@@ -86,9 +86,14 @@ class Skeleton(dict):
             raise AttributeError("The src attribute of the %s Skeleton is not set" %
                 self.__class__.__name__
                 )
+            
         mod = sys.modules[self.__class__.__module__]
         mod_dir = os.path.dirname(mod.__file__)
-        return os.path.join(mod_dir, self.src)
+        skel_path = os.path.join(mod_dir, self.src)
+        
+        if not os.path.exists(skel_path):
+            raise AttributeError("No skeleton at %r" % skel_path)
+        return skel_path
     
     def write(self, dst_dir):
         """
