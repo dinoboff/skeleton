@@ -1,15 +1,13 @@
 `skeleton` is similar to the template part of PasteScript_ but 
-without any dependencies; it should also be compatible with Python 3.
+without any dependencies; it is also compatible with Python 3.
 
-However in this early phase of development, it only targets python 2.5+,
-and its tests require Mock_.
 
 Requirements
 ============
 
 - Python 2.5+ (python 2.6+ to use the default template formatter)
 
-It currently only has been tested with Python 2.6.2 on Mac OSX.
+It currently only has been tested with Python 2.5, 2.6 and 3.1 on Mac OSX.
 
 
 Installation
@@ -139,12 +137,24 @@ at run time.
 	use `{{` to render `{` and `}}` for `}`).
 
 
+CHANGES:
+========
+
+0.2 (Mai 1, 2010)):
+--------------------
+
+- Add python 3 support.
+
+
+0.1 (April 31, 2010)):
+-----------------------
+
+- first release.
+
 TODO:
 =====
 
-- remove the Mock dependency.
 - Write documentation.
-- Learn to use the 2to3 script.
 - Allow skeletons to chain each other (a skeleton could require).
 
 

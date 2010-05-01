@@ -7,7 +7,7 @@ distribute_setup.use_setuptools()
 from setuptools import setup
 
 PROJECT = 'skeleton'
-VERSION = '0.1'
+VERSION = '0.2'
 URL = 'http://github.com/dinoboff/skeleton'
 AUTHOR = 'Damien Lebrun'
 AUTHOR_EMAIL = 'dinoboff@gmail.com'
@@ -38,5 +38,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.5',
         'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.1',
         ],
 )

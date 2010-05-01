@@ -15,8 +15,11 @@ registeroptions =
 
 SHELL = /bin/sh
 PYTHON_BIN = python
+PYTHON_BIN3 = python3
 PYTHON = PYTHONPATH="$(srcdir)/" $(PYTHON_BIN)
+PYTHON3 = PYTHONPATH="$(srcdir)/" $(PYTHON_BIN3)
 SETUP = $(PYTHON) $(srcdir)/setup.py $(setupoptions)
+SETUP3 = $(PYTHON) $(srcdir)/setup.py $(setupoptions)
 GIT_BIN = git
 RELEASE_BRANCH = master
 GIT_DIR = $(srcdir)/.git
@@ -68,6 +71,11 @@ test:
 upload: MANIFEST
 	@echo "Uploading source distribution to pypi..."
 	$(SETUP) register $(registeroptions) sdist $(sdistoptions) upload $(uploadoptions)
+	@echo
+	
+upload3: MANIFEST
+	@echo "Uploading source distribution to pypi..."
+	$(SETUP3) register $(registeroptions) bdist $(sdistoptions) upload $(uploadoptions)
 	@echo
 
 MANIFEST:
