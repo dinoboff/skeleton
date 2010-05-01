@@ -218,6 +218,7 @@ class Var(object):
         return u'<%s %s default=%r>' % (
             self.__class__.__name__, self.name, self.default,)
 
+    @property
     def full_description(self):
         if self.description:
             return u'%s (%s)' % (self.name, self.description,)
@@ -230,7 +231,7 @@ class Var(object):
         If no default is defined, the user will be prompted until he gives a 
         value.
         """
-        prompt = u'Enter %s' % self.full_description()
+        prompt = u'Enter %s' % self.full_description
         if self.default is not None:
             prompt += u' [%r]' % self.default
         prompt += u': '

@@ -20,7 +20,7 @@ def vars_to_optparser(vars):
         parser.add_option(
             "--%s" % var.name.replace('_', '-'),
             dest=var.name,
-            help=var.full_description())
+            help=var.full_description)
     return parser
 
 def get_file_mode(path):

@@ -17,11 +17,11 @@ class TestVar(unittest.TestCase):
         
     def test_full_description(self):
         v = Var('foo', description='dummy var')
-        self.assertEqual(v.full_description(), 'foo (dummy var)')
+        self.assertEqual(v.full_description, 'foo (dummy var)')
         
     def test_full_description_without_description(self):
         v = Var('foo')
-        self.assertEqual(v.full_description(), 'foo')
+        self.assertEqual(v.full_description, 'foo')
     
     @patch('__builtin__.raw_input')
     def test_prompt(self, input_mock):
@@ -64,5 +64,4 @@ def suite():
     return unittest.TestLoader().loadTestsFromTestCase(TestVar)
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
