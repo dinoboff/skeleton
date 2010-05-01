@@ -25,17 +25,18 @@ class Skeleton(dict):
     """
     Skeleton Class.
     
-    It should have a src attribute set to the path to the skeleton folder
-    (relative to the class module) and a list of variables the skeleton template
-    files require. The variable should be an object with a name attribute and
-    prompt method than prompt the user for the variable value and return that
-    value. You can use skeleton.Var.
+    It should have a `src` attribute set to the path to the skeleton folder
+    (relative to the class module) and a list of variables, the `vars` 
+    attribute, the skeleton template files require. The variable should be an 
+    object with name and full_description attribute, and a prompt method than 
+    prompt the user for the variable value and return it. You can use 
+    `skeleton.Var`.
     
-    By default a template file ends with "_tmpl" (see the template_suffix 
-    attribute), is UTF-8 encoded (file_encoding attribute) and will be formatted
-    by python 2.6+ string Formatter.
+    By default a template file ends with "_tmpl" (see the `template_suffix` 
+    attribute), is UTF-8 encoded (`file_encoding` attribute) and will be 
+    formatted by Python 2.6+ string Formatter.
     
-    You can set an alternative formatter by overwriting the template_formatter
+    You can set an alternative formatter by overwriting the `template_formatter`
     method. It takes for argument the template to parse and self for
     variable mapping.
     """    
@@ -58,7 +59,7 @@ class Skeleton(dict):
     
     def pre_run(self, parser):
         """
-        Called before parsing arguments and running Skeleton
+        Called before parsing arguments and running Skeleton.
         """
 
     def template_formatter(self, template):
