@@ -31,7 +31,7 @@ MANIFEST:
 	@echo "Update MANIFEST.in..."
 	$(GIT) ls-files --exclude=".git*" | sed -e 's/^/include /g' > MANIFEST.in
 
-release: clean test dist tag upload
+release: clean test tag upload
 	@echo "Version $(VERSION) released."
 	
 tag:
@@ -40,4 +40,4 @@ tag:
 	$(GIT) push origin v$(VERSION)
 
 upload:
-	$(PYTHON) setup.py register upload
+	$(PYTHON) setup.py register sdist upload
