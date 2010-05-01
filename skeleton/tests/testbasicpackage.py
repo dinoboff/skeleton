@@ -1,8 +1,6 @@
 import os
 import unittest
 
-from mock import patch
-
 from skeleton.examples.basicpackage import BasicPackage
 from skeleton.tests.testskeleton import TempDir
 
@@ -19,6 +17,9 @@ class TestBasicPackage(unittest.TestCase):
         self.tmp_dir.remove()
 
     def test_write(self):
+        # skip test on python 2.5
+        if not hasattr('', 'format'):
+            return
         vars = {
             'ProjectName': 'foo',
             'PackageName': 'foo',

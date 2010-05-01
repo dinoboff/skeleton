@@ -18,6 +18,7 @@ setup(
     url=URL,
     license='BSD',
     packages=['skeleton',],
+    test_suite = 'skeleton.tests',
     include_package_data=True,
     zip_safe=False,
     install_requires=[],
