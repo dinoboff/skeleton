@@ -15,7 +15,7 @@ import re
 import shutil
 import sys
 
-from skeleton.utils import get_loggger, get_file_mode, vars_to_optparser
+from skeleton.utils import get_loggger, get_file_mode, vars_to_optparser, prompt
 
 
 log = get_loggger(__name__)
@@ -214,6 +214,7 @@ class Skeleton(dict):
 
 class Var(object):
     """Define a template variable."""
+    _prompt = prompt
 
     def __init__(self, name, description=None, default=None):
         self.name = name
@@ -237,14 +238,13 @@ class Var(object):
         If no default is defined, the user will be prompted until he gives a 
         value.
         """
-        prompt = u'Enter %s' % self.full_description
+        prompt_ = u'Enter %s' % self.full_description
         if self.default is not None:
-            prompt += u' [%r]' % self.default
-        prompt += u': '
+            prompt_ += u' [%r]' % self.default
+        prompt_ += u': '
         
         while True:
-            encoding = sys.stdout.encoding
-            resp = raw_input(prompt.encode(encoding)).decode(encoding).strip()
+            resp = self._prompt(prompt_)
             if resp:
                 return resp
             elif self.default is not None:

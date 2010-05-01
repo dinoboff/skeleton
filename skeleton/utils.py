@@ -3,6 +3,7 @@ import optparse
 import os
 import re
 import stat
+import sys
 
 
 VALID_OPTION_NAME = re.compile("[a-z]([\w\d]*[a-z0-9])?",re.IGNORECASE)
@@ -30,3 +31,10 @@ def get_file_mode(path):
 class NullHandler(logging.Handler):
     def emit(self, record):
         pass
+
+def prompt(prompt_):
+    result = raw_input(prompt_)
+    try:
+        return result.decode(sys.stdin.encoding)
+    except AttributeError:
+        return result

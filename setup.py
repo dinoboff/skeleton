@@ -6,7 +6,13 @@ distribute_setup.use_setuptools()
 
 from setuptools import setup
 
-from skeleton.meta import *
+PROJECT = 'skeleton'
+VERSION = '0.1'
+URL = 'http://github.com/dinoboff/skeleton'
+AUTHOR = 'Damien Lebrun'
+AUTHOR_EMAIL = 'dinoboff@gmail.com'
+DESC = "Basic Template system for project skeleton."
+
 
 setup(
     name=PROJECT,
@@ -17,8 +23,9 @@ setup(
     author_email=AUTHOR_EMAIL,
     url=URL,
     license='BSD',
-    packages=['skeleton',],
+    packages=['skeleton', 'skeleton.tests', 'skeleton.examples'],
     test_suite = 'skeleton.tests',
+    use_2to3 = True,
     include_package_data=True,
     zip_safe=False,
     install_requires=[],

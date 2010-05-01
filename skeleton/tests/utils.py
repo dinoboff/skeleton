@@ -1,7 +1,8 @@
 import unittest
-import __builtin__
 import tempfile
 import shutil
+
+from skeleton import Var
 
 
 class RawInputMock(object):
@@ -44,17 +45,18 @@ class TempDir(object):
     def __exit__(self, type, value, traceback):
         self.remove()
 
-
+    
 class TestCase(unittest.TestCase):
     
     def setUp(self):
         super(TestCase, self).setUp()
         self.tmp_dir = TempDir()
         self.tmp_dir.create()
-        self._input = __builtin__.raw_input
-        __builtin__.raw_input = self.input_mock = RawInputMock()
+        self.input_mock = RawInputMock()
+        self._input = Var._prompt 
+        Var._prompt = self.input_mock
         
     def tearDown(self):
         super(TestCase, self).tearDown()
         self.tmp_dir.remove()
-        __builtin__.raw_input = self._input
+        Var._prompt = self._input
