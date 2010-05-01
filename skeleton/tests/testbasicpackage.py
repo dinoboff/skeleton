@@ -2,19 +2,10 @@ import os
 import unittest
 
 from skeleton.examples.basicpackage import BasicPackage
-from skeleton.tests.testskeleton import TempDir
+from skeleton.tests.utils import TestCase
 
 
-class TestBasicPackage(unittest.TestCase):
-    
-    def setUp(self):
-        super(TestBasicPackage, self).setUp()
-        self.tmp_dir = TempDir()
-        self.tmp_dir.create()
-        
-    def tearDown(self):
-        super(TestBasicPackage, self).tearDown()
-        self.tmp_dir.remove()
+class TestBasicPackage(TestCase):
 
     def test_write(self):
         # skip test on python 2.5

@@ -5,11 +5,10 @@ Created on Apr 29, 2010
 '''
 import unittest
 
-from mock import patch
-
 from skeleton import Var
+from skeleton.tests.utils import TestCase
 
-class TestVar(unittest.TestCase):
+class TestVar(TestCase):
 
     def test_repr(self):
         v = Var('foo', description='dummy var')
@@ -23,40 +22,37 @@ class TestVar(unittest.TestCase):
         v = Var('foo')
         self.assertEqual(v.full_description, 'foo')
     
-    @patch('__builtin__.raw_input')
-    def test_prompt(self, input_mock):
+    def test_prompt(self):
         resps = ['', 'bar']
-        input_mock.side_effect = lambda x: resps.pop(0)
+        self.input_mock.side_effect = lambda x: resps.pop(0)
         
         v = Var('foo')
         self.assertEqual(v.prompt(), 'bar')
         
-        self.assertEqual(input_mock.call_count, 2)
-        for args in input_mock.call_args_list:
+        self.assertEqual(self.input_mock.call_count, 2)
+        for args in self.input_mock.call_args_list:
             self.assertEqual(args, (('Enter foo: ',),{},))
     
-    @patch('__builtin__.raw_input')
-    def test_prompt_with_default(self, input_mock):
+    def test_prompt_with_default(self):
         resps = ['']
-        input_mock.side_effect = lambda x: resps.pop(0)
+        self.input_mock.side_effect = lambda x: resps.pop(0)
         
         v = Var('foo', default='baz')
         self.assertEqual(v.prompt(), 'baz')
         
-        self.assertEqual(input_mock.call_count, 1)
-        for args in input_mock.call_args_list:
+        self.assertEqual(self.input_mock.call_count, 1)
+        for args in self.input_mock.call_args_list:
             self.assertEqual(args, (("""Enter foo ['baz']: """,),{},))
     
-    @patch('__builtin__.raw_input')
-    def test_prompt_with_empy_default(self, input_mock):
+    def test_prompt_with_empy_default(self):
         resps = ['']
-        input_mock.side_effect = lambda x: resps.pop(0)
+        self.input_mock.side_effect = lambda x: resps.pop(0)
         
         v = Var('foo', default='')
         self.assertEqual(v.prompt(), '')
         
-        self.assertEqual(input_mock.call_count, 1)
-        for args in input_mock.call_args_list:
+        self.assertEqual(self.input_mock.call_count, 1)
+        for args in self.input_mock.call_args_list:
             self.assertEqual(args, (("""Enter foo ['']: """,),{},))
     
 

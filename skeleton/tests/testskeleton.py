@@ -1,28 +1,10 @@
 import os
-import shutil
 import string
-import tempfile
 import unittest
 
-from mock import patch
-
 from skeleton import Skeleton, Var
+from skeleton.tests.utils import TestCase
 
-
-
-class TempDir(object):
-    
-    def create(self):
-        self.path = tempfile.mkdtemp()
-        return self.path
-    
-    def remove(self):
-        shutil.rmtree(self.path)
-        
-    __enter__ = create
-        
-    def __exit__(self, type, value, traceback):
-        self.remove()
 
 
 class Static(Skeleton):
@@ -47,16 +29,7 @@ class DynamicFileName(Static):
     src = 'skeletons/dynamic-file-name'
 
 
-class TestSkeleton(unittest.TestCase):
-    
-    def setUp(self):
-        super(TestSkeleton, self).setUp()
-        self.tmp_dir = TempDir()
-        self.tmp_dir.create()
-        
-    def tearDown(self):
-        super(TestSkeleton, self).tearDown()
-        self.tmp_dir.remove()
+class TestSkeleton(TestCase):
         
     def test_write_with_missing_skeleton(self):
         s = MissingSkeleton()
@@ -111,10 +84,9 @@ class TestSkeleton(unittest.TestCase):
             'baz'
             )
 
-    @patch('__builtin__.raw_input')
-    def test_write_dynamic_content_with_var(self, input_mock):
+    def test_write_dynamic_content_with_var(self):
         resps = ['<input replacement>']
-        input_mock.side_effect = lambda x: resps.pop(0)
+        self.input_mock.side_effect = lambda x: resps.pop(0)
         
         s= DynamicContent()
         s.write(self.tmp_dir.path)
