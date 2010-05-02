@@ -19,7 +19,7 @@ PYTHON_BIN3 = python3
 PYTHON = PYTHONPATH="$(srcdir)/" $(PYTHON_BIN)
 PYTHON3 = PYTHONPATH="$(srcdir)/" $(PYTHON_BIN3)
 SETUP = $(PYTHON) $(srcdir)/setup.py $(setupoptions)
-SETUP3 = $(PYTHON) $(srcdir)/setup.py $(setupoptions)
+SETUP3 = $(PYTHON3) $(srcdir)/setup.py $(setupoptions)
 GIT_BIN = git
 RELEASE_BRANCH = master
 GIT_DIR = $(srcdir)/.git
@@ -73,9 +73,10 @@ upload: MANIFEST
 	$(SETUP) register $(registeroptions) sdist $(sdistoptions) upload $(uploadoptions)
 	@echo
 	
-upload3: MANIFEST
+upload3: MANIFEST clean
 	@echo "Uploading source distribution to pypi..."
-	$(SETUP3) register $(registeroptions) bdist $(sdistoptions) upload $(uploadoptions)
+	$(SETUP3) test $(testoptions)
+	$(SETUP3) register $(registeroptions) bdist_egg $(sdistoptions) upload $(uploadoptions)
 	@echo
 
 MANIFEST:
