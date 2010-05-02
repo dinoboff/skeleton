@@ -81,6 +81,15 @@ class BasicPackage(Skeleton):
             os.path.join(dst_dir, 'distribute_setup.py'))
 
 
+def virtualenv_warpper_hook(args):
+    """
+    Create a new package package (with namespace support)
+    with the setup.py, README.rst and MANIFEST.in files already setup.
+    """
+    logging.basicConfig(level=logging.INFO)
+    BasicPackage().write('src/')
+
+
 def main():
     BasicPackage().run()
 
