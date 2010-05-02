@@ -9,6 +9,7 @@ and tests require Mock.
 """
 
 import codecs
+import datetime
 import logging
 import os
 import re
@@ -45,8 +46,12 @@ class Skeleton(dict):
     template_suffix = '_tmpl'
     file_encoding = 'UTF-8'
     run_dry = False
-        
-    def pre_write(self, dst_dir): 
+
+    def __init__(self, *arg, **kw):
+        super(Skeleton, self).__init__(*arg, **kw)
+        self['Year'] = datetime.datetime.utcnow().year
+
+    def pre_write(self, dst_dir):
         """
         Called after the vars have been checked
         and before the creation of the files and directories.

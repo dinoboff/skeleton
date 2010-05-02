@@ -30,7 +30,12 @@ class DynamicFileName(Static):
 
 
 class TestSkeleton(TestCase):
-        
+
+    def test_default_variables(self):
+        """Test Skeleton set the default Year variable."""
+        skel = Skeleton()
+        self.assertTrue('Year' in skel)
+
     def test_write_with_missing_skeleton(self):
         s = MissingSkeleton()
         self.assertRaises(AttributeError, s.write, self.tmp_dir.path)

@@ -11,9 +11,10 @@ include skeleton/examples/basic-module/setup.py_tmpl
 include skeleton/examples/basic-module/{ModuleName}.py
 include skeleton/examples/basic-package/MANIFEST.in
 include skeleton/examples/basic-package/README.rst
-include skeleton/examples/basic-package/distribute_setup.py
 include skeleton/examples/basic-package/setup.py_tmpl
 include skeleton/examples/basicpackage.py
+include skeleton/examples/license.py
+include skeleton/examples/licenses/bsd/LICENSE_tmpl
 include skeleton/examples/mkmodule.py
 include skeleton/tests/__init__.py
 include skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl
@@ -25,6 +26,7 @@ include skeleton/tests/skeletons/static/foo.txt
 include skeleton/tests/testbasicmodule.py
 include skeleton/tests/testbasicpackage.py
 include skeleton/tests/testdefaulttemplate.py
+include skeleton/tests/testlicenses.py
 include skeleton/tests/testskeleton.py
 include skeleton/tests/testvar.py
 include skeleton/tests/utils.py
