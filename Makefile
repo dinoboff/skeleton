@@ -68,6 +68,11 @@ test: clean
 	$(SETUP) test $(testoptions)
 	@echo
 
+test3: clean
+	@echo "Running skeleton unit tests with Python 3..."
+	$(SETUP3) test $(testoptions)
+	@echo
+
 upload: MANIFEST
 	@echo "Uploading source distribution to pypi..."
 	$(SETUP) register $(registeroptions) sdist $(sdistoptions) upload $(uploadoptions)
