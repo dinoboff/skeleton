@@ -99,7 +99,7 @@ basic-module/README`
 	TODO: write the description of this module.
 	
 `basic-module/setup.py_tmpl`
----------------------------
+----------------------------
 
 `setup.py_tmpl` is a template (it ends with the _tmpl suffix) that will be used
 to create a `setup.py` file::
@@ -128,7 +128,7 @@ to create a `setup.py` file::
 By default, `Skeleton` uses python 2.6+ `string formatting`_.
 
 `basic-module/{ModuleName}.py`
------------------------------
+------------------------------
 
 `{ModuleName}.py` is the module file for which the name will be set dynamically
 at run time.
