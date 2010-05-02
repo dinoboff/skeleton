@@ -214,7 +214,7 @@ class Skeleton(dict):
 
 class Var(object):
     """Define a template variable."""
-    _prompt = prompt
+    _prompt = staticmethod(prompt)
 
     def __init__(self, name, description=None, default=None):
         self.name = name
