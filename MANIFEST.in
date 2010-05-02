@@ -14,6 +14,7 @@ include skeleton/examples/basic-package/README.rst
 include skeleton/examples/basic-package/distribute_setup.py
 include skeleton/examples/basic-package/setup.py_tmpl
 include skeleton/examples/basicpackage.py
+include skeleton/examples/mkmodule.py
 include skeleton/tests/__init__.py
 include skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl
 include skeleton/tests/skeletons/dynamic-content/foo.txt
