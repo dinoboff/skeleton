@@ -63,7 +63,7 @@ tag:
 	$(GIT) push origin v$(DIST_VERSION)
 	@echo
 
-test:
+test: clean
 	@echo "Running skeleton unit tests..."
 	$(SETUP) test $(testoptions)
 	@echo
