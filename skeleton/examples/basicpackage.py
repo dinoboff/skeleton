@@ -52,22 +52,23 @@ class BasicPackage(Skeleton):
         
         # Create namespace packages
         current_ns = []
-        package_path = self['PackageName'].split('.')
-        for p in package_path[:-1]:
+        package_part = self['PackageName'].split('.')
+        for p in package_part[:-1]:
             current_ns.append(p)
-            ns = '.'.join(current_ns)
-            self['NSPackages'].append(ns)
-            self['Packages'].append(ns)
+            self['NSPackages'].append('.'.join(current_ns))
             self._create_package(dst_dir, current_ns, NS_HEADER)
         
         # Create package 
-        self._create_package(dst_dir, package_path)
+        self._create_package(dst_dir, package_part)
     
     def _create_package(self, dst_dir, package_part, init_body=''):
-        log.info("Creating package %s" % '.'.join(package_part))
+        path = os.path.join(dst_dir, *package_part)
+        package = '.'.join(package_part)
+        self['Packages'].append(package)
+        
+        log.info("Creating package %s" % package)
         if self.run_dry:
             return
-        path = os.path.join(dst_dir, *package_part)
         os.mkdir(path)
         with open(os.path.join(path, '__init__.py'), 'w') as f:
             f.write(init_body)
