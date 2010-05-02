@@ -39,7 +39,7 @@ clean:
 	@echo "Removing build and dist directories, and pyc files..."
 	rm -rf ./build/
 	rm -rf ./dist/
-	rm -f distribute-*.tag.gz
+	rm -f distribute-*.tar.gz
 	rm -f distribute-*.egg
 	find $(srcdir) -name "*.pyc" -print0 | xargs -0 rm
 	@echo

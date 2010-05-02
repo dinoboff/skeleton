@@ -29,7 +29,17 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[],
-    entry_points = {},
+    extras_require = {
+        'virtualenv-templates':  [
+            'virtualenvwrapper>=2.1.1',
+            'virtualenvwrapper.project>=1.0'
+            ],
+    },
+    entry_points = {
+        'virtualenvwrapper.project.template': [
+            'package = skeleton.examples.basicpackage:virtualenv_warpper_hook',
+            ],
+        },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
