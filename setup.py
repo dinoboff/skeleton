@@ -7,7 +7,7 @@ distribute_setup.use_setuptools()
 from setuptools import setup
 
 PROJECT = 'skeleton'
-VERSION = '0.2'
+VERSION = '0.2.1'
 URL = 'http://github.com/dinoboff/skeleton'
 AUTHOR = 'Damien Lebrun'
 AUTHOR_EMAIL = 'dinoboff@gmail.com'

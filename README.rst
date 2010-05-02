@@ -143,6 +143,13 @@ at run time.
 CHANGES:
 ========
 
+0.2.1 (Mai 2, 2010):
+--------------------
+
+- Fix bug with Var._prompt static method which was preventing the prompt for 
+  variable assignement.
+
+
 0.2 (Mai 1, 2010):
 -------------------
 
