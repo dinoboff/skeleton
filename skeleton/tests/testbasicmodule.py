@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from skeleton.examples.basicmodule import BasicModule
+from skeleton.examples.mkmodule import BasicModule
 from skeleton.tests.utils import TestCase
 
 

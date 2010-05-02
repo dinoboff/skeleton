@@ -34,34 +34,36 @@ module files.
 First, create the skeleton script layout::
 
 	mkmodule.py
-	module-skel/README
-	module-skel/setup.py_tmpl
-	module-skel/{ModuleName}.py
+	basic-module/README
+	basic-module/setup.py_tmpl
+	basic-module/{ModuleName}.py
 
 `mkmodule.py`
 -------------
 
 `mkmodule.py` is the script that create new module::
 
+
 	#!/usr/bin/env python
 	
 	from skeleton import Skeleton, Var
-	
-	
-	class SimpleModule(Skeleton):
-	    src = 'module-skel'
+
+
+	class BasicModule(Skeleton):
+	    src = 'basic-module'
 	    vars = [
 	        Var('ModuleName'),
-	        Var('Author', default=''),
-	        Var('AuthorEmail', default=''),
+	        Var('Author'),
+	        Var('AuthorEmail'),
 	        ]
-	
-	
+
+
 	def main():
-	    SimpleModule().run()
-	    
+	    BasicModule().run()
+
 	if __name__ == '__main__':
 	    main()
+
 
 The `src` attribute sets the relative path to the skeleton directory where the 
 script will find the files and directories to create.
@@ -89,14 +91,14 @@ constructor, the `update` or `__setitem__` methods to set the variables
 the skeleton.
 
 
-`module-skel/README`
+basic-module/README`
 --------------------
 
 `README` a is static file that will simply be copied::
 
 	TODO: write the description of this module.
 	
-`module-skel/setup.py_tmpl`
+`basic-module/setup.py_tmpl`
 ---------------------------
 
 `setup.py_tmpl` is a template (it ends with the _tmpl suffix) that will be used
@@ -125,7 +127,7 @@ to create a `setup.py` file::
 
 By default, `Skeleton` uses python 2.6+ `string formatting`_.
 
-`module-skel/{ModuleName}.py`
+`basic-module/{ModuleName}.py`
 -----------------------------
 
 `{ModuleName}.py` is the module file for which the name will be set dynamically
@@ -133,21 +135,22 @@ at run time.
 
 .. NOTE::
 	All file names are formatted using `Skeleton.template_formatter` method.
-	Make sure to escape any special characters (with the default formatter,
-	use `{{` to render `{` and `}}` for `}`).
+	Watch out for special characters (with the default formatter,
+	use `{{` to render `{` and `}}` for `}` - unless you want to render
+	a variable).
 
 
 CHANGES:
 ========
 
-0.2 (Mai 1, 2010)):
---------------------
+0.2 (Mai 1, 2010):
+-------------------
 
 - Add python 3 support.
 
 
-0.1 (April 31, 2010)):
------------------------
+0.1 (April 31, 2010):
+----------------------
 
 - first release.
 
@@ -155,7 +158,8 @@ TODO:
 =====
 
 - Write documentation.
-- Allow skeletons to chain each other (a skeleton could require).
+- Allow skeletons to chain each other (a skeleton could require other skeletons
+  to be applied first).
 
 
 Development
