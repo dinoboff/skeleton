@@ -21,7 +21,7 @@ PYTHON3 = PYTHONPATH="$(srcdir)/" $(PYTHON_BIN3)
 SETUP = $(PYTHON) $(srcdir)/setup.py $(setupoptions)
 SETUP3 = $(PYTHON3) $(srcdir)/setup.py $(setupoptions)
 GIT_BIN = git
-RELEASE_BRANCH = master
+RELEASE_BRANCH = release-0.2
 GIT_DIR = $(srcdir)/.git
 GIT_WORK_TREE = $(srcdir)
 GIT = $(GIT_BIN) --git-dir="$(GIT_DIR)" --work-tree="$(GIT_WORK_TREE)"
