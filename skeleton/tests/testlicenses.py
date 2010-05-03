@@ -1,8 +1,7 @@
 """
-Created on May 2, 2010
-
-@author: dinoboff
+Tests the BDS, GPL and LGPL skeleton
 """
+
 from os import path
 import unittest
 
@@ -91,6 +90,14 @@ class TestLGPL(TestCase):
         self.assertTrue(
             path.exists(path.join(self.tmp_dir.path, 'COPYING.LESSER')))
 
+
+def suite():
+    """Get all licence releated test"""
+    tests = unittest.TestSuite()
+    tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestBSD))
+    tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestGPL))
+    tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestLGPL))
+    return tests
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
