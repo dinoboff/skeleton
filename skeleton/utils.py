@@ -43,13 +43,15 @@ def insert_into_file(
     eg, for a file "test.txt" with::
     
         foo
-        -*- Insert Here -*-
+        # -*- Insert Here -*-
         baz
     
-    `insert_into_file('test.txt', 'Insert Here', 'bar\n', keep_marker=False)`
-    would result in::
+    "-*- Insert Here -*-" is the marker; anything can be added in front or 
+    after. `insert_into_file('test.txt', 'Insert Here', 'bar\n')` would result
+    with::
     
         foo
+        # -*- Insert Here -*-
         bar
         baz
     
