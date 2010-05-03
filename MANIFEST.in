@@ -15,6 +15,11 @@ include skeleton/examples/basic-package/setup.py_tmpl
 include skeleton/examples/basicpackage.py
 include skeleton/examples/license.py
 include skeleton/examples/licenses/bsd/LICENSE_tmpl
+include skeleton/examples/licenses/gpl/COPYING
+include skeleton/examples/licenses/gpl/LICENSE_tmpl
+include skeleton/examples/licenses/lgpl/COPYING
+include skeleton/examples/licenses/lgpl/COPYING.LESSER
+include skeleton/examples/licenses/lgpl/LICENSE_tmpl
 include skeleton/examples/mkmodule.py
 include skeleton/tests/__init__.py
 include skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl

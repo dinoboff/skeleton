@@ -8,11 +8,11 @@ import unittest
 
 
 from skeleton.tests.utils import TestCase
-from skeleton.examples.license import BSD, BSD_THIRD_CLAUSE
+from skeleton.examples.license import BSD, BSD_THIRD_CLAUSE, GPL, LGPL
 
 
 class TestBSD(TestCase):
-    """Test BSD Skeleton class"""
+    """Test skeleton.example.license.BSD."""
 
     def test_write_2clause(self):
         """Test write of a 2-clauses BSD license."""
@@ -46,6 +46,51 @@ class TestBSD(TestCase):
             BSD_THIRD_CLAUSE.format(Organization='Foo inc')
             )
         self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'LICENSE')))
+
+
+class TestGPL(TestCase):
+    """Test skeleton.example.license.GPL."""
+
+    def test_write(self):
+        """Test write of a GPL skeleton"""
+        # skip test on Python 2.5
+        if not hasattr('', 'format'):
+            return
+
+        variables = {
+            'Author': 'Damien Lebrun',
+            'ProjectName': 'Foo',
+            }
+
+        skel = GPL(variables)
+        skel.write(self.tmp_dir.path)
+
+        self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'LICENSE')))
+        self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'COPYING')))
+
+
+class TestLGPL(TestCase):
+    """Test skeleton.example.license.LGPL."""
+
+    def test_write(self):
+        """Test write of a LGPL skeleton"""
+        # skip test on Python 2.5
+        if not hasattr('', 'format'):
+            return
+
+        variables = {
+            'Author': 'Damien Lebrun',
+            'ProjectName': 'Foo',
+            }
+
+        skel = LGPL(variables)
+        skel.write(self.tmp_dir.path)
+
+        self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'LICENSE')))
+        self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'COPYING')))
+        self.assertTrue(
+            path.exists(path.join(self.tmp_dir.path, 'COPYING.LESSER')))
+
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

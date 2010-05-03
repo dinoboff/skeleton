@@ -39,3 +39,26 @@ class BSD(Skeleton):
             self['ThirdClause'] = self.template_formatter(BSD_THIRD_CLAUSE)
         else:
             self['ThirdClause'] = ''
+
+
+class GPL(Skeleton):
+    """
+    Adds a GPL notice and the GPLv3 license.
+    
+    Requires Author and ProjectName variables.
+    """
+
+    src = 'licenses/gpl'
+    vars = [
+        Var('Author'),
+        Var('ProjectName'),
+        ]
+
+
+class LGPL(GPL):
+    """
+    Add a LGPL Notice and the GPLv3 and LGPLv3 licenses
+    
+    Requires Author and ProjectName variables.
+    """
+    src = 'licenses/lgpl'
