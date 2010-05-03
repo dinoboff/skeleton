@@ -9,7 +9,7 @@ from skeleton.tests.utils import TestCase
 
 class Static(Skeleton):
     src = 'skeletons/static'
-    
+
     def template_formatter(self, template):
         return string.Template(template).substitute(self)
 
@@ -39,9 +39,9 @@ class TestSkeleton(TestCase):
     def test_write_with_missing_skeleton(self):
         s = MissingSkeleton()
         self.assertRaises(AttributeError, s.write, self.tmp_dir.path)
-        
+
     def test_write_with_dst_dir_to_create(self):
-        s= Static()
+        s = Static()
         dst = os.path.join(self.tmp_dir.path, 'missing-dir')
         s.write(dst)
         self.assertEqual(
@@ -54,7 +54,7 @@ class TestSkeleton(TestCase):
             )
 
     def test_write_static_file(self):
-        s= Static()
+        s = Static()
         s.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
@@ -66,7 +66,7 @@ class TestSkeleton(TestCase):
             )
 
     def test_write_dynamic_content(self):
-        s= DynamicContent(baz="<replaced>")
+        s = DynamicContent(baz="<replaced>")
         s.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
@@ -78,7 +78,7 @@ class TestSkeleton(TestCase):
             )
 
     def test_write_dynamic_file_names(self):
-        s= DynamicFileName(baz="replaced-name")
+        s = DynamicFileName(baz="replaced-name")
         s.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
@@ -92,8 +92,8 @@ class TestSkeleton(TestCase):
     def test_write_dynamic_content_with_var(self):
         resps = ['<input replacement>']
         self.input_mock.side_effect = lambda x: resps.pop(0)
-        
-        s= DynamicContent()
+
+        s = DynamicContent()
         s.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
