@@ -1,4 +1,4 @@
-MANIFEST.in
-README.rst
-distribute_setup.py
-setup.py
+include MANIFEST.in
+include README.rst
+include distribute_setup.py
+include setup.py
