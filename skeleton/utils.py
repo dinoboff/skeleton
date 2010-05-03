@@ -53,26 +53,15 @@ def insert_into_file(
         bar
         baz
     
-    @param file_path: file to insert content into
-    @type file_path: str
+    Arguments:
     
-    @param marker: Marker too look for in the file
-    @type marker: str
-    
-    @param text: text to insert in the file
-    @type text: unicode
-    
-    @param marker_tag: text surrounding the marker
-    @type marker_tag: str
-    
-    @param keep_indent: Should it insert the text with the same marker indent.
-    @type keep_indent: bool
-    
-    @param keep_marker: Should the marker be removed
-    @type keep_marker: bool
-    
-    @param encoding: file encoding.
-    @type encoding: str
+    - file_path:  file to insert content into.
+    - marker:  Marker to look for in the file.
+    - text (unicode):  text to insert in the file.
+    - marker_tag:  text surrounding the marker.
+    - keep_indent: Should it insert the text with the same marker indent.
+    - keep_marker: Should the marker be removed.
+    - encoding: file encoding.
     """
     marker_pattern = re.escape('%s %s %s' % (marker_tag, marker, marker_tag,))
     marker_re = re.compile(r"^(\s*).*%s.*$" % marker_pattern)
@@ -80,6 +69,7 @@ def insert_into_file(
     new_content = []
     with closing(codecs.open(file_path, 'r', encoding=encoding)) as opened_file:
         for line in opened_file:
+
             match = marker_re.match(line)
             if match is None:
                 new_content.append(line)
