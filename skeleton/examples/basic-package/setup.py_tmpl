@@ -26,7 +26,14 @@ setup(
     packages={Packages!r},
     include_package_data=True,
     zip_safe=False,
-    install_requires=[],
-    entry_points = {{}},
-    classifiers=[],
+    install_requires=[
+        # -*- Requirements -*-
+    ],
+    entry_points = {{
+        # -*- Entry points -*-
+    }},
+    classifiers=[
+    	# see http://pypi.python.org/pypi?:action=list_classifiers
+        # -*- Classifiers -*- 
+    ],
 )
