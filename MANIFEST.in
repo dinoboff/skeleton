@@ -33,6 +33,7 @@ include skeleton/tests/testbasicpackage.py
 include skeleton/tests/testdefaulttemplate.py
 include skeleton/tests/testlicenses.py
 include skeleton/tests/testskeleton.py
+include skeleton/tests/testutils.py
 include skeleton/tests/testvar.py
 include skeleton/tests/utils.py
 include skeleton/utils.py
