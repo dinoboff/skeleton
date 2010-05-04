@@ -21,6 +21,7 @@ include skeleton/examples/licenses/gpl/LICENSE_tmpl
 include skeleton/examples/licenses/lgpl/COPYING
 include skeleton/examples/licenses/lgpl/COPYING.LESSER
 include skeleton/examples/licenses/lgpl/LICENSE_tmpl
+include skeleton/examples/licenses/no-license/LICENSE_tmpl
 include skeleton/examples/mkmodule.py
 include skeleton/tests/__init__.py
 include skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl

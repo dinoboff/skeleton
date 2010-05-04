@@ -12,6 +12,14 @@ BSD_THIRD_CLAUSE = """
 """
 
 
+class NoLicense(Skeleton):
+    """
+    Had the a license with copyright notice only.
+    """
+    src = 'licenses/no-license'
+    vars = [ Var('Author') ]
+
+
 class BSD(Skeleton):
     """
     Adds a 2 or 3 clauses BSD License.

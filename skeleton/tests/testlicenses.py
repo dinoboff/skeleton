@@ -7,7 +7,8 @@ import unittest
 
 
 from skeleton.tests.utils import TestCase
-from skeleton.examples.licenses import BSD, BSD_THIRD_CLAUSE, GPL, LGPL
+from skeleton.examples.licenses import BSD, BSD_THIRD_CLAUSE, GPL, LGPL, \
+    NoLicense
 
 
 class TestBSD(TestCase):
@@ -91,12 +92,33 @@ class TestLGPL(TestCase):
             path.exists(path.join(self.tmp_dir.path, 'COPYING.LESSER')))
 
 
+class TestNoLicense(TestCase):
+    """
+    Test the NoLicense skeleton.
+    """
+
+    def test_write(self):
+        """Test write of a NoLicense skeleton"""
+        # skip test on Python 2.5
+        if not hasattr('', 'format'):
+            return
+
+        variables = {
+            'Author': 'Damien Lebrun',
+            }
+
+        skel = NoLicense(variables)
+        skel.write(self.tmp_dir.path)
+
+        self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'LICENSE')))
+
 def suite():
     """Get all licence releated test"""
     tests = unittest.TestSuite()
     tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestBSD))
     tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestGPL))
     tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestLGPL))
+    tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestNoLicense))
     return tests
 
 if __name__ == "__main__":
