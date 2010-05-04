@@ -50,9 +50,9 @@ class Skeleton(dict):
     def __init__(self, *arg, **kw):
         super(Skeleton, self).__init__(*arg, **kw)
         self['Year'] = datetime.datetime.utcnow().year
-        self._mapped_vars = dict(
-            [(var.name, var.default,) for var in self.vars]
-            )
+        for var in self.vars:
+            if var.default is not None:
+                self.setdefault(var.name, var.default)
 
     @property
     def skel_dir(self):
@@ -79,7 +79,7 @@ class Skeleton(dict):
         Raise a KeyError if any required variable is missing.
         """
         for var in self.vars:
-            if var.name not in self and self._mapped_vars.get(var.name) is None:
+            if var.name not in self:
                 raise KeyError("Variable %r not set." % var.name)
 
     def get_missing_variables(self):

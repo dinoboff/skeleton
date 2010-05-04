@@ -21,7 +21,16 @@ class MissingSkeleton(Static):
 class DynamicContent(Static):
     src = 'skeletons/dynamic-content'
     vars = [
-        Var('baz', 'Dummy variable')
+        Var('baz', 'Dummy variable'),
+        ]
+
+
+class DynamicContentWithOptional(DynamicContent):
+    """
+    Skeleton with an optional variable.
+    """
+    vars = [
+        Var('OpionalVar', default='<default>')
         ]
 
 
@@ -44,6 +53,24 @@ class TestSkeleton(TestCase):
         """Test write raise KeyError if a variable is not set."""
         skel = DynamicContent()
         self.assertRaises(KeyError, skel.write, self.tmp_dir.path)
+
+    def test_default_var_available(self):
+        """
+        Check Skeleton.__setitem__() return the set value or its default
+        """
+        skel = DynamicContentWithOptional()
+        self.assertEqual(skel['OpionalVar'], '<default>')
+
+
+    def test_default_var_is_overwritten(self):
+        """
+        Test the value given to the constructor overwrite the default.
+        """
+        skel = DynamicContentWithOptional()
+        self.assertEqual(skel['OpionalVar'], '<default>')
+
+        skel = DynamicContentWithOptional(OpionalVar='template value')
+        self.assertEqual(skel['OpionalVar'], 'template value')
 
     def test_write_with_dst_dir_to_create(self):
         s = Static()
