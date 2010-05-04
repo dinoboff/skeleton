@@ -9,6 +9,7 @@ include skeleton/examples/__init__.py
 include skeleton/examples/basic-module/README.rst
 include skeleton/examples/basic-module/setup.py_tmpl
 include skeleton/examples/basic-module/{ModuleName}.py
+include skeleton/examples/basic-package/LICENSE_tmpl
 include skeleton/examples/basic-package/MANIFEST.in
 include skeleton/examples/basic-package/README.rst
 include skeleton/examples/basic-package/setup.py_tmpl
