@@ -14,7 +14,7 @@ include skeleton/examples/basic-package/MANIFEST.in
 include skeleton/examples/basic-package/README.rst
 include skeleton/examples/basic-package/setup.py_tmpl
 include skeleton/examples/basicpackage.py
-include skeleton/examples/license.py
+include skeleton/examples/licenses.py
 include skeleton/examples/licenses/bsd/LICENSE_tmpl
 include skeleton/examples/licenses/gpl/COPYING
 include skeleton/examples/licenses/gpl/LICENSE_tmpl

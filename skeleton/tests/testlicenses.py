@@ -7,7 +7,7 @@ import unittest
 
 
 from skeleton.tests.utils import TestCase
-from skeleton.examples.license import BSD, BSD_THIRD_CLAUSE, GPL, LGPL
+from skeleton.examples.licenses import BSD, BSD_THIRD_CLAUSE, GPL, LGPL
 
 
 class TestBSD(TestCase):
