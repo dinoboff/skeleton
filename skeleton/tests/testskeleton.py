@@ -40,6 +40,11 @@ class TestSkeleton(TestCase):
         s = MissingSkeleton()
         self.assertRaises(AttributeError, s.write, self.tmp_dir.path)
 
+    def test_write_missing_variable(self):
+        """Test write raise KeyError if a variable is not set."""
+        skel = DynamicContent()
+        self.assertRaises(KeyError, skel.write, self.tmp_dir.path)
+
     def test_write_with_dst_dir_to_create(self):
         s = Static()
         dst = os.path.join(self.tmp_dir.path, 'missing-dir')
@@ -89,12 +94,14 @@ class TestSkeleton(TestCase):
             'baz'
             )
 
-    def test_write_dynamic_content_with_var(self):
+    def test_run_dynamic_content_with_var(self):
+        """Test Skeleton.run()"""
         resps = ['<input replacement>']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         s = DynamicContent()
-        s.write(self.tmp_dir.path)
+        s.run(self.tmp_dir.path)
+
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
             'foo'

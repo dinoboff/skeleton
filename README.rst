@@ -59,7 +59,7 @@ First, create the skeleton script layout::
 
 
 	def main():
-	    BasicModule().run()
+	    BasicModule.cmd()
 
 	if __name__ == '__main__':
 	    main()
@@ -71,7 +71,7 @@ script will find the files and directories to create.
 The `vars` attribute list the variables the templates will require.
 The variables with a default can be left blank by the user.
 
-`Skeleton.run()` is a convenient method to set an optparser and 
+`Skeleton.cmd()` is a convenient method to set an optparser and 
 the logging basic config, and to apply the skeleton::
 
 	Usage: mkmodule.py [options] dst_dir
@@ -87,8 +87,9 @@ the logging basic config, and to apply the skeleton::
  
 If you needed to run a `Skeleton` yourself, you would use the 
 constructor, the `update` or `__setitem__` methods to set the variables
-(`Skeleton` is a `dict` subclass), and the `write(dstdir)` method to apply
-the skeleton.
+(`Skeleton` is a `dict` subclass), and the `write(dst_dir)` or `run(dst_dir)`
+methods to apply the skeleton. `write()` will raise a `KeyException` if a 
+variable is not set; `run()` will prompt the user for the missing variables
 
 
 basic-module/README`
@@ -142,6 +143,17 @@ at run time.
 
 CHANGES:
 ========
+
+Master
+------
+
+- New class method, `Skeleton.cmd` to create the logger and optparser.
+- `Skeleton.run` doesn't set the logger and optparser anymore.
+- `Skeleton.write` raises a KeyError exception if a key is missing
+  instead of prompting the user.
+- Removed the `pre_run`, `post_write` and `pre_write` methods. Overwrite
+  the `write` and `run` instead.
+- Added configure_parser(parser) to configure the parser set by `Skeleton.cmd`.
 
 0.2.1 (Mai 2, 2010):
 --------------------

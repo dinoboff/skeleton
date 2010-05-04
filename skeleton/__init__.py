@@ -50,22 +50,135 @@ class Skeleton(dict):
     def __init__(self, *arg, **kw):
         super(Skeleton, self).__init__(*arg, **kw)
         self['Year'] = datetime.datetime.utcnow().year
+        self._mapped_vars = dict(
+            [(var.name, var.default,) for var in self.vars]
+            )
 
-    def pre_write(self, dst_dir):
+    @property
+    def skel_dir(self):
         """
-        Called after the vars have been checked
-        and before the creation of the files and directories.
+        return the path (absolute path or relative to the current working
+        directory).
         """
+        if self.src is None:
+            raise AttributeError(
+                "The src attribute of the %s Skeleton is not set" %
+                self.__class__.__name__
+                )
 
-    def post_write(self, dst_dir):
-        """
-        Called after the files and directory have been created.
-        """
+        mod = sys.modules[self.__class__.__module__]
+        mod_dir = os.path.dirname(mod.__file__)
+        skel_path = os.path.join(mod_dir, self.src)
 
-    def pre_run(self, parser):
+        if not os.path.exists(skel_path):
+            raise AttributeError("No skeleton at %r" % skel_path)
+        return skel_path
+
+    def check_vars(self):
         """
-        Called before parsing arguments and running Skeleton.
+        Raise a KeyError if any required variable is missing.
         """
+        for var in self.vars:
+            if var.name not in self and self._mapped_vars.get(var.name) is None:
+                raise KeyError("Variable %r not set." % var.name)
+
+    def get_missing_variables(self):
+        """
+        Prompt user for any missing variable 
+        (even the ones with a default value).
+        """
+        for var in self.vars:
+            if var.name not in self:
+                self[var.name] = var.prompt()
+            else:
+                log.debug("Varaiable %r already set", var.name)
+
+    def write(self, dst_dir):
+        """
+        Apply skeleton to dst_dir.
+        
+        Copy files and folders from the src folder to the dst_dir. If dst_dir 
+        doesn't exist, it will be created.
+        
+        The file name are formatted by the template formatter so that file
+        names can do dynamically generated. Make sure that any special charters
+        for the formatters are escaped.
+        
+        If the file name ends by "_tmpl" its content will be formatted by the
+        template formatter.
+        
+        Raises:
+        - KeyError if a variable is missing and doesn't have a default.
+        - IOError if it cannot read the skeleton files, or cannot create
+          files and folder.
+        """
+        log.info(
+            "Rendering %s skeleton at %r...",
+            self.__class__.__name__,
+            dst_dir)
+
+        self.check_vars()
+
+        if not os.path.exists(dst_dir):
+            self._mkdir(dst_dir)
+
+        skel_dir = self.skel_dir
+        skel_dir_len = len(skel_dir)
+        log.debug("Getting skeleton from %r" % skel_dir)
+
+        for dir_path, dir_names, file_names in os.walk(skel_dir):
+            rel_dir_path = dir_path[skel_dir_len:].lstrip(r'\/')
+
+            #copy files
+            for file_name in file_names:
+                src = os.path.join(dir_path, file_name)
+                dst = os.path.join(
+                    dst_dir,
+                    rel_dir_path,
+                    self.template_formatter(file_name))
+                self._copy_file(src, dst)
+
+            #copy directories
+            for dir_name in dir_names:
+                src = os.path.join(dir_path, dir_name)
+                dst = os.path.join(
+                    dst_dir,
+                    rel_dir_path,
+                    self.template_formatter(dir_name))
+                self._mkdir(dst, like=src)
+
+    def run(self, dst_dir):
+        """
+        Like write() but prompt user for missing variables.
+        """
+        self.get_missing_variables()
+        self.write(dst_dir)
+
+    @classmethod
+    def cmd(cls, argv=None):
+        """
+        Convenient method to set a logger, an optpaser and run the skeleton
+        """
+        logging.basicConfig(level=logging.ERROR)
+
+        skel = cls()
+        parser = vars_to_optparser(skel.vars)
+        parser.usage = "%prog [options] dst_dir"
+
+        skel.configure_parser(parser)
+        options, args = parser.parse_args(argv)
+        if len(args) != 1:
+            parser.error("incorrect number of arguments")
+
+        for var in skel.vars:
+            value = getattr(options, var.name)
+            if value is not None:
+                skel[var.name] = value
+
+        skel.run(args[0])
+
+    def configure_parser(self, parser):
+        """Hooks to update the parser set by Skeleton.cmd()"""
 
     def template_formatter(self, template):
         """
@@ -81,86 +194,46 @@ class Skeleton(dict):
             raise NotImplementedError(msg % self.__class__.__name__)
         return template.format(**self)
 
-    @property
-    def skel_dir(self):
+    def _mkdir(self, path, like=None):
         """
-        return the path (absolute path or relative to the current working
-        directory).
-        """
-        if self.src is None:
-            raise AttributeError("The src attribute of the %s Skeleton is not set" %
-                self.__class__.__name__
-                )
-
-        mod = sys.modules[self.__class__.__module__]
-        mod_dir = os.path.dirname(mod.__file__)
-        skel_path = os.path.join(mod_dir, self.src)
-
-        if not os.path.exists(skel_path):
-            raise AttributeError("No skeleton at %r" % skel_path)
-        return skel_path
-
-    def write(self, dst_dir):
-        """
-        Copy files and folders from the skeleton folder to the dst_dir.
+        Create a directory (using os.mkdir)
         
-        The file name will be formatted by the template formatter so that file
-        names can dynamically generated. Make sure that any special charters for
-        the formatters are escaped.
-        
-        If the file name ends by "_tmpl" its content will be formatted by the
-        template formatter.
+        Only log the event if self.run_dry is True.
         """
-        log.info(
-            "Rendering %s skeleton at %r...",
-            self.__class__.__name__,
-            dst_dir)
-
-        if not os.path.exists(dst_dir):
-            self._mkdir(dst_dir)
-
-        self._check_vars()
-
-        skel_dir = self.skel_dir
-        skel_dir_len = len(skel_dir)
-        log.debug("Getting skeleton from %r" % skel_dir)
-
-        self.pre_write(dst_dir)
-        for dir_path, dir_names, file_names in os.walk(skel_dir):
-            rel_dir_path = dir_path[skel_dir_len:].lstrip(r'\/')
-
-            #copy files
-            for file_name in file_names:
-                src = os.path.join(dir_path, file_name)
-                dst = os.path.join(
-                    dst_dir,
-                    rel_dir_path,
-                    self.template_formatter(file_name))
-                self.copy_file(src, dst)
-
-            #copy directories
-            for dir_name in dir_names:
-                src = os.path.join(dir_path, dir_name)
-                dst = os.path.join(
-                    dst_dir,
-                    rel_dir_path,
-                    self.template_formatter(dir_name))
-                self._mkdir(dst, like=src)
-        self.post_write(dst_dir)
-
-    def copy_file(self, src, dst):
-        if src.endswith(self.template_suffix):
-            self._format_file(src, dst[:-len(self.template_suffix)])
-        else:
-            self._copy_file(src, dst)
+        log.info("Create directory %r", path)
+        if not self.run_dry:
+            os.mkdir(path)
+        if like is not None:
+            self._set_mode(path, like)
 
     def _copy_file(self, src, dst):
+        """
+        Copy src file to dst and format dst if src is a template.
+        
+        The template suffix should be removed from dst.
+        """
+        if dst.endswith(self.template_suffix):
+            self._format_file(src, dst[:-len(self.template_suffix)])
+        else:
+            self._copy_static_file(src, dst)
+
+    def _copy_static_file(self, src, dst):
+        """
+        Copy file and mode.
+        
+        Only log the event if self.run_dry is True.
+        """
         log.info("Copy %r to %r", src, dst)
         if not self.run_dry:
             shutil.copyfile(src , dst)
         self._set_mode(dst, like=src)
 
     def _format_file(self, src, dst):
+        """
+        Copy src to dst and format it.
+        
+        Raises a KeyError if a variable is missing.
+        """
         log.info("Creating %r from %r template...", dst, src)
         if not self.run_dry:
             fd_src = None
@@ -176,45 +249,13 @@ class Skeleton(dict):
                     fd_dst.close()
         self._set_mode(dst, like=src)
 
-
-    def _mkdir(self, path, like=None):
-        log.info("Create directory %r", path)
-        if not self.run_dry:
-            os.mkdir(path)
-        if like is not None:
-            self._set_mode(path, like)
-
     def _set_mode(self, path, like):
+        """
+        Set mode of `path` with the mode of `like`.
+        """
         log.info("Set mode of %r to %r", path, get_file_mode(like))
         if not self.run_dry:
             shutil.copymode(like, path)
-
-    def _check_vars(self):
-        for var in self.vars:
-            if var.name in self:
-                log.debug("Varaiable %r already set" % var.name)
-                continue
-            self[var.name] = var.prompt()
-
-    def run(self, args=None):
-        logging.basicConfig(level=logging.INFO)
-
-        parser = vars_to_optparser(self.vars)
-        parser.usage = "%prog [options] dst_dir"
-        self.pre_run(parser)
-
-        options, args = parser.parse_args(args)
-        if len(args) != 1:
-            parser.error("incorrect number of arguments")
-
-        for var in self.vars:
-            value = getattr(options, var.name)
-            if value is not None:
-                self[var.name] = value
-        for k, v in self.items():
-            print k, v
-        self.write(args[0])
-
 
 
 class Var(object):

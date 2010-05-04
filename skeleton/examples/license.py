@@ -31,7 +31,7 @@ class BSD(Skeleton):
             ),
         ]
 
-    def pre_write(self, *args, **kw):
+    def write(self, dst_dir):
         """
         Set the ThirdClause if an organization name has been given.
         """
@@ -39,6 +39,7 @@ class BSD(Skeleton):
             self['ThirdClause'] = self.template_formatter(BSD_THIRD_CLAUSE)
         else:
             self['ThirdClause'] = ''
+        super(BSD, self).write(dst_dir)
 
 
 class GPL(Skeleton):

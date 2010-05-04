@@ -13,7 +13,7 @@ class BasicModule(Skeleton):
 
 
 def main():
-    BasicModule().run()
-    
+    BasicModule.cmd()
+
 if __name__ == '__main__':
     main()
