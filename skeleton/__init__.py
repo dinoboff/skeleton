@@ -170,6 +170,8 @@ class Skeleton(dict):
         - IOError if it cannot read the skeleton files, or cannot create
           files and folder.
         """
+        self.run_dry = run_dry
+
         log.info(
             "Rendering %s skeleton at %r...",
             self.__class__.__name__,
