@@ -158,6 +158,7 @@ class Skeleton(dict):
           files and folder.
         """
         for skel in self._required_skeletons:
+            skel.run_dry = self.run_dry
             skel.write(dst_dir)
             self.update(skel)
 
