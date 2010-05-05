@@ -11,6 +11,7 @@ import os
 import re
 import stat
 import sys
+import collections
 
 
 VALID_OPTION_NAME = re.compile("[a-z]([\w\d]*[a-z0-9])?", re.IGNORECASE)
@@ -71,29 +72,30 @@ def insert_into_file(
     new_content = []
     with closing(codecs.open(file_path, 'r', encoding=encoding)) as opened_file:
         for line in opened_file:
-
             match = marker_re.match(line)
             if match is None:
-                new_content.append(line)
+                new_content.append(line.rstrip('\n\r'))
                 continue
 
             edited = True
 
             if keep_marker:
-                new_content.append(line)
+                new_content.append(line.rstrip('\n\r'))
 
             if keep_indent:
                 indent = match.groups()[0]
-                new_content.append('%s%s' % (indent, text,))
+                for text_line in text.splitlines():
+                    new_content.append('%s%s' % (indent, text_line,))
             else:
-                new_content.append(text)
+                for text_line in text.splitlines():
+                    new_content.append(text_line)
 
     if not edited:
         return
 
     with closing(codecs.open(file_path, 'w', encoding=encoding)) as opened_file:
         for line in new_content:
-            opened_file.write(line)
+            opened_file.write('%s%s' % (line, os.linesep,))
 
 
 class NullHandler(logging.Handler):

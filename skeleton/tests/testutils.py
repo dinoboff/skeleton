@@ -32,11 +32,11 @@ class TestInsertIntoFile(TestCase):
         with open(target, 'w') as f_target:
             f_target.write("""foo\n  # -*- insert here -*- #\nbaz\n""")
 
-        insert_into_file(target, 'insert here', 'bar\n')
+        insert_into_file(target, 'insert here', 'bar\nfooz\n')
         with open(target) as f_target:
             self.assertEqual(
-                f_target.readlines(),
-                ['foo\n', '  # -*- insert here -*- #\n', '  bar\n', 'baz\n']
+                f_target.read().strip(),
+                'foo\n  # -*- insert here -*- #\n  bar\n  fooz\nbaz'
                 )
 
     def test_insert_with_indent_to_lose(self):
