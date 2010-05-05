@@ -7,6 +7,8 @@ import unittest
 
 from skeleton.examples.basicpackage import BasicPackage, main
 from skeleton.tests.utils import TestCase
+import subprocess
+import sys
 
 
 class TestBasicPackage(TestCase):
@@ -72,8 +74,6 @@ class TestBasicPackage(TestCase):
             content = license_file.read()
             self.assertTrue(fragment in content)
 
-
-
     def test_write_namespaces(self):
         """
         Test skeleton.examples.basicpackage.BasicPackage with namespaces
@@ -132,11 +132,22 @@ class TestBasicPackage(TestCase):
             os.path.join(self.tmp_dir.path, 'README.rst')
             ))
         self.assertTrue(os.path.exists(
-            os.path.join(self.tmp_dir.path, 'setup.py')
-            ))
-        self.assertTrue(os.path.exists(
             os.path.join(self.tmp_dir.path, 'foo/__init__.py')
             ))
+
+        setup = os.path.join(self.tmp_dir.path, 'setup.py')
+        cwd = os.getcwd()
+        os.chdir(self.tmp_dir.path)
+        try:
+            # Test egg_info can be run
+            proc = subprocess.Popen(
+                [sys.executable, setup, 'egg_info', '-e', self.tmp_dir.path],
+                shell=False,
+                stdout=subprocess.PIPE)
+            self.assertEqual(proc.wait(), 0)
+        finally:
+            os.chdir(cwd)
+
 
 def suite():
     """
