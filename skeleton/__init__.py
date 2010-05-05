@@ -43,17 +43,44 @@ class Skeleton(dict):
     """
     src = None
     vars = []
+    required_skeletons = []
     template_suffix = '_tmpl'
     file_encoding = 'UTF-8'
     run_dry = False
 
     def __init__(self, *arg, **kw):
         super(Skeleton, self).__init__(*arg, **kw)
+
+        self._required_skeletons = []
+        for skel_class in self.required_skeletons:
+            self._required_skeletons.append(skel_class(*arg, **kw))
+
+        # Set global variables
         self['Year'] = datetime.datetime.utcnow().year
+
+        # Set defaults
         self._defaults = dict([
             (var.name, var.default,)
                 for var in self.vars if var.default is not None
                 ])
+
+    def update(self, *args, **kw):
+        """
+        Add or update entries in the skeleton
+        
+        See dict.update()
+        """
+        for skel in self._required_skeletons:
+            skel.update(*args, **kw)
+        super(Skeleton, self).update(*args, **kw)
+
+    def __setitem__(self, key, value):
+        """
+        Add or update an entry in the skeleton
+        """
+        for skel in self._required_skeletons:
+            skel.__setitem__(key, value)
+        super(Skeleton, self).__setitem__(key, value)
 
     def get(self, variable_name, default=None):
         """
@@ -86,6 +113,8 @@ class Skeleton(dict):
         """
         Raise a KeyError if any required variable is missing.
         """
+        for skel in self._required_skeletons:
+            skel.check_vars()
         for var in self.vars:
             if var.name not in self and var.name not in self._defaults:
                 raise KeyError("Variable %r not set." % var.name)
@@ -95,6 +124,8 @@ class Skeleton(dict):
         Prompt user for any missing variable 
         (even the ones with a default value).
         """
+        for skel in self._required_skeletons:
+            skel.get_missing_variables()
         for var in self.vars:
             if var.name not in self:
                 self[var.name] = var.prompt()
@@ -120,6 +151,9 @@ class Skeleton(dict):
         - IOError if it cannot read the skeleton files, or cannot create
           files and folder.
         """
+        for skel in self._required_skeletons:
+            skel.write(dst_dir)
+
         log.info(
             "Rendering %s skeleton at %r...",
             self.__class__.__name__,
@@ -211,7 +245,7 @@ class Skeleton(dict):
         Only log the event if self.run_dry is True.
         """
         log.info("Create directory %r", path)
-        if not self.run_dry:
+        if not self.run_dry and not os.path.exists(path):
             os.mkdir(path)
         if like is not None:
             self._set_mode(path, like)

@@ -28,6 +28,8 @@ include skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl
 include skeleton/tests/skeletons/dynamic-content/foo.txt
 include skeleton/tests/skeletons/dynamic-file-name/bar/${baz}.txt
 include skeleton/tests/skeletons/dynamic-file-name/foo.txt
+include skeleton/tests/skeletons/required/${FileName}.txt
+include skeleton/tests/skeletons/required/bar/empty
 include skeleton/tests/skeletons/static/bar/baz.txt
 include skeleton/tests/skeletons/static/foo.txt
 include skeleton/tests/testbasicmodule.py

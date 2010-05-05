@@ -1,3 +1,7 @@
+"""
+Test Skeleton base class
+"""
+from __future__ import with_statement
 import os
 import string
 import unittest
@@ -36,6 +40,22 @@ class DynamicContentWithOptional(DynamicContent):
 
 class DynamicFileName(Static):
     src = 'skeletons/dynamic-file-name'
+
+
+class Required(Static):
+    """
+    Just a ${FileName}.txt file.
+    """
+    src = "skeletons/required"
+    vars = [ Var('FileName') ]
+
+
+class StaticWithRequirement(Static):
+    """
+    Add the requirment to the Static class
+    """
+    required_skeletons = [Required]
+
 
 
 class TestSkeleton(TestCase):
@@ -160,6 +180,29 @@ class TestSkeleton(TestCase):
         self.assertEqual(self.input_mock.call_count, 1)
         self.assertEqual(skel.get('OpionalVar'), '<input replacement>')
 
+    def test_write_required_skel(self):
+        """
+        Test it write the of required 
+        """
+        skel = StaticWithRequirement(FileName="fooz")
+        skel.write(self.tmp_dir.path)
+        self.assertTrue(
+            os.path.exists(os.path.join(self.tmp_dir.path, 'foo.txt')))
+        self.assertTrue(
+            os.path.exists(os.path.join(self.tmp_dir.path, 'bar/baz.txt')))
+        self.assertTrue(
+            os.path.exists(os.path.join(self.tmp_dir.path, 'fooz.txt')))
+
+    def test_overwrite_required_skel(self):
+        """
+        Test it write the of required 
+        """
+        skel = StaticWithRequirement(FileName="foo")
+        skel.write(self.tmp_dir.path)
+
+        foo = os.path.join(self.tmp_dir.path, 'foo.txt')
+        with open(foo) as foo_file:
+            self.assertEqual(foo_file.read().strip(), 'foo')
 
 def suite():
     return unittest.TestLoader().loadTestsFromTestCase(TestSkeleton)
