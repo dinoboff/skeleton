@@ -209,16 +209,18 @@ class Skeleton(dict):
         """
         Convenient method to set a logger, an optpaser and run the skeleton
         """
-        logging.basicConfig(level=logging.ERROR)
 
         skel = cls()
-        parser = vars_to_optparser(skel.vars)
-        parser.usage = "%prog [options] dst_dir"
 
-        skel.configure_parser(parser)
+        parser = skel.configure_parser()
         options, args = parser.parse_args(argv)
         if len(args) != 1:
             parser.error("incorrect number of arguments")
+
+        logging.basicConfig(
+            level=options.verbose_,
+            format="%(levelname)s - %(message)s"
+            )
 
         for var in skel.vars:
             value = getattr(options, var.name)
@@ -227,8 +229,20 @@ class Skeleton(dict):
 
         skel.run(args[0])
 
-    def configure_parser(self, parser):
-        """Hooks to update the parser set by Skeleton.cmd()"""
+    def configure_parser(self):
+        """Configure parser for Skeleton.cmd()"""
+        parser = vars_to_optparser(self.vars)
+
+        parser.usage = "%prog [options] dst_dir"
+        parser.add_option("-q", help="Be verbose",
+            action="store_const", const=logging.FATAL, dest="verbose_")
+        parser.add_option("-v", help="Only display fatal errors",
+            action="store_const", const=logging.INFO, dest="verbose_")
+        parser.add_option("--d", help="Display debug information",
+            action="store_const", const=logging.DEBUG, dest="verbose_")
+        parser.set_default('verbose_', logging.ERROR)
+
+        return parser
 
     def template_formatter(self, template):
         """
