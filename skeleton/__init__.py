@@ -326,7 +326,7 @@ class Skeleton(dict):
         """
         Set mode of `path` with the mode of `like`.
         """
-        log.info("Set mode of %r to %r", path, get_file_mode(like))
+        log.info("Set mode of %r to '%o'", path, get_file_mode(like))
         if not self.run_dry:
             shutil.copymode(like, path)
 

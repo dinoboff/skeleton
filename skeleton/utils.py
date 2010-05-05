@@ -33,7 +33,10 @@ def vars_to_optparser(vars):
     return parser
 
 def get_file_mode(path):
-    stat.S_IMODE(os.stat(path)[stat.ST_MODE])
+    """
+    Return the mode of a file, the part usable with os.chmod
+    """
+    return stat.S_IMODE(os.stat(path)[stat.ST_MODE])
 
 def insert_into_file(
     file_path, marker, text,
