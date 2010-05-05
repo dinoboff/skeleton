@@ -11,6 +11,7 @@ import urllib
 from skeleton import Skeleton, Var
 from skeleton.utils import get_loggger
 import logging
+from skeleton.examples.licenses import LicenseChoice
 
 
 log = get_loggger(__name__)
@@ -33,7 +34,7 @@ class BasicPackage(Skeleton):
     - Author;
     - and AuthorEmail.
     
-    Todo: Allow to set defaults for AUthor and AuthorEmail.
+    Todo: Allow to set a global defaults for AUthor and AuthorEmail.
     Todo: Better README.rst content like Having a basic Installation and
     requirement section.
     Todo: Setup a test package and the distribute use_2to3 option.
@@ -45,6 +46,9 @@ class BasicPackage(Skeleton):
         Var('PackageName'),
         Var('Author'),
         Var('AuthorEmail')
+        ]
+    required_skeletons = [
+        LicenseChoice,
         ]
 
     def write(self, dst_dir):

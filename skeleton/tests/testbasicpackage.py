@@ -1,7 +1,7 @@
 """
 Test skeleton.examples.basicpackage
 """
-
+from __future__ import with_statement
 import os
 import unittest
 
@@ -44,6 +44,35 @@ class TestBasicPackage(TestCase):
             os.path.join(self.tmp_dir.path, 'setup.py')))
         self.assertTrue(os.path.exists(
             os.path.join(self.tmp_dir.path, 'foo/__init__.py')))
+
+    def test_write_with_bsd(self):
+        """
+        Test skeleton.examples.basicpackage.BasicPackage add BSD license
+        """
+        # skip test on python 2.5
+        if not hasattr('', 'format'):
+            return
+        variables = {
+            'ProjectName': 'foo',
+            'PackageName': 'foo',
+            'Author': 'Damien Lebrun',
+            'AuthorEmail': 'dinoboff@gmail.com',
+            'License': 'BSD',
+            }
+        skel = BasicPackage(variables)
+        skel.write(self.tmp_dir.path)
+
+        license_path = os.path.join(self.tmp_dir.path, 'LICENSE')
+        self.assertTrue(os.path.exists(license_path))
+
+        fragment = """
+        Redistributions of source code must retain the above copyright notice
+        """.strip()
+        with open(license_path) as license_file:
+            content = license_file.read()
+            self.assertTrue(fragment in content)
+
+
 
     def test_write_namespaces(self):
         """
@@ -88,7 +117,7 @@ class TestBasicPackage(TestCase):
         if not hasattr('', 'format'):
             return
 
-        resps = ['foo', 'foo', 'Damien Lebrun', 'dinoboff@gmail.com']
+        resps = ['foo', 'Damien Lebrun', 'dinoboff@gmail.com', 'BSD', '', 'foo']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         main([self.tmp_dir.path])
