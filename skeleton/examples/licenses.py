@@ -17,7 +17,9 @@ class NoLicense(Skeleton):
     Had the a license with copyright notice only.
     """
     src = 'licenses/no-license'
-    vars = [ Var('Author') ]
+    vars = [
+        Var('Author'),
+        ]
 
 
 class BSD(Skeleton):
@@ -71,3 +73,55 @@ class LGPL(GPL):
     Requires Author and ProjectName variables.
     """
     src = 'licenses/lgpl'
+
+
+class LicenseChoice(Skeleton):
+    """
+    Let the use pick the licence
+    """
+    vars = [
+        Var('ProjectName'),
+        Var('Author'),
+        Var('License', description='BSD/GPL/LGPL', default=''),
+        ]
+
+    supported_licenses = {
+        'BSD' : BSD,
+        'GPL' : GPL,
+        'LGPL': LGPL
+        }
+    default_license = NoLicense
+    _licence_skel = None
+
+    @property
+    def license_skel(self):
+        """
+        Return the skeleton for the set License.
+        """
+        if self._licence_skel is None:
+            self._licence_skel = self.supported_licenses.get(
+                self['License'].upper(),
+                self.default_license
+                )(self)
+        return self._licence_skel
+
+    def check_vars(self):
+        """
+        Check variables of the license skeleton.
+        """
+        super(LicenseChoice, self).check_vars()
+        self.license_skel.check_vars()
+
+    def get_missing_variables(self):
+        """
+        Prompt for the license skeleton variables.
+        """
+        super(LicenseChoice, self).get_missing_variables()
+        self.license_skel.get_missing_variables()
+
+    def write(self, dst):
+        """
+        Apply the license skeleton
+        """
+        self.license_skel.run_dry = self.run_dry
+        self.license_skel.write(dst)
