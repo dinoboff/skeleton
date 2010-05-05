@@ -18,6 +18,7 @@ import sys
 
 from skeleton.utils import get_loggger, get_file_mode, vars_to_optparser, prompt
 import functools
+import optparse
 
 
 log = get_loggger(__name__)
