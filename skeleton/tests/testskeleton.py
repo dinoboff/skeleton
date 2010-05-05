@@ -54,12 +54,23 @@ class TestSkeleton(TestCase):
         skel = DynamicContent()
         self.assertRaises(KeyError, skel.write, self.tmp_dir.path)
 
-    def test_default_var_available(self):
+    def test_default_var_available1(self):
         """
-        Check Skeleton.__setitem__() return the set value or its default
+        Check Skeleton.get() return the set value or its default
         """
         skel = DynamicContentWithOptional()
-        self.assertEqual(skel['OpionalVar'], '<default>')
+        self.assertEqual(skel.get('OpionalVar'), '<default>')
+
+    def test_check_var_with_default_var(self):
+        """
+        Check Skeleton.get() return the set value or its default
+        """
+        skel = DynamicContentWithOptional()
+        try:
+            skel.check_vars()
+        except KeyError:
+            self.fail("check_vars() should not raise KayError "
+                "if the missing variable has a default.")
 
 
     def test_default_var_is_overwritten(self):
@@ -67,10 +78,10 @@ class TestSkeleton(TestCase):
         Test the value given to the constructor overwrite the default.
         """
         skel = DynamicContentWithOptional()
-        self.assertEqual(skel['OpionalVar'], '<default>')
+        self.assertEqual(skel.get('OpionalVar'), '<default>')
 
         skel = DynamicContentWithOptional(OpionalVar='template value')
-        self.assertEqual(skel['OpionalVar'], 'template value')
+        self.assertEqual(skel.get('OpionalVar'), 'template value')
 
     def test_write_with_dst_dir_to_create(self):
         s = Static()
@@ -147,7 +158,7 @@ class TestSkeleton(TestCase):
 
         skel.get_missing_variables()
         self.assertEqual(self.input_mock.call_count, 1)
-        self.assertEqual(skel['OpionalVar'], '<input replacement>')
+        self.assertEqual(skel.get('OpionalVar'), '<input replacement>')
 
 
 def suite():

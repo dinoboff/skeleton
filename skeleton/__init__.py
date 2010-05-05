@@ -50,22 +50,17 @@ class Skeleton(dict):
     def __init__(self, *arg, **kw):
         super(Skeleton, self).__init__(*arg, **kw)
         self['Year'] = datetime.datetime.utcnow().year
-        self._defaults = dict([(var.name, var.default,) for var in self.vars])
+        self._defaults = dict([
+            (var.name, var.default,)
+                for var in self.vars if var.default is not None
+                ])
 
-    def __getitem__(self, key):
+    def get(self, variable_name, default=None):
         """
-        Returns  the variable default if the variable is not set.
-        
-        Raises a KeyError if the variable is not set and dosn't have a default.
+        Get the set variable value or its default or the given default
         """
-        try:
-            return super(Skeleton, self).__getitem__(key)
-        except KeyError:
-            default = self._defaults.get(key)
-            if default is None:
-                raise
-            else:
-                return default
+        default = self._defaults.get(variable_name, default)
+        return super(Skeleton, self).get(variable_name, default)
 
     @property
     def skel_dir(self):
@@ -92,7 +87,7 @@ class Skeleton(dict):
         Raise a KeyError if any required variable is missing.
         """
         for var in self.vars:
-            if var.name not in self:
+            if var.name not in self and var.name not in self._defaults:
                 raise KeyError("Variable %r not set." % var.name)
 
     def get_missing_variables(self):
@@ -205,7 +200,9 @@ class Skeleton(dict):
                 "like object (with a format method).")
             log.critical(msg, self.__class__.__name__)
             raise NotImplementedError(msg % self.__class__.__name__)
-        return template.format(**self)
+        context = dict(self._defaults)
+        context.update(self)
+        return template.format(**context)
 
     def _mkdir(self, path, like=None):
         """

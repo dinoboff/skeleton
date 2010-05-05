@@ -100,7 +100,7 @@ class LicenseChoice(Skeleton):
         """
         if self._licence_skel is None:
             self._licence_skel = self.supported_licenses.get(
-                self['License'].upper(),
+                self.get('License').upper(),
                 self.default_license
                 )(self)
         return self._licence_skel
