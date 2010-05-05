@@ -82,6 +82,7 @@ class LicenseChoice(Skeleton):
     vars = [
         Var('ProjectName'),
         Var('Author'),
+        Var('AuthorEmail'),
         Var('License', description='BSD/GPL/LGPL', default=''),
         ]
 

@@ -187,13 +187,13 @@ class TestLicenseChoice(TestCase):
         if not hasattr('', 'format'):
             return
 
-        resps = ['Foo', 'Damien Lebrun', 'LGPL', ]
+        resps = ['Foo', 'Damien Lebrun', 'dinoboff@gmail.com', 'LGPL', ]
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         skel = LicenseChoice()
         skel.run(self.tmp_dir.path)
 
-        self.assertEqual(self.input_mock.call_count, 3)
+        self.assertEqual(self.input_mock.call_count, 4)
 
         self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'LICENSE')))
         self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'COPYING')))
