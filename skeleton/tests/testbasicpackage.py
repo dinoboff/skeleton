@@ -21,7 +21,7 @@ class TestBasicPackage(TestCase):
         Test skeleton.examples.basicpackage.BasicPackage with a single package
         """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         variables = {
             'ProjectName': 'foo',
@@ -52,7 +52,7 @@ class TestBasicPackage(TestCase):
         Test skeleton.examples.basicpackage.BasicPackage add BSD license
         """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         variables = {
             'ProjectName': 'foo',
@@ -79,7 +79,7 @@ class TestBasicPackage(TestCase):
         Test skeleton.examples.basicpackage.BasicPackage with namespaces
         """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         variables = {
             'ProjectName': 'foo-bar-baz',
@@ -114,7 +114,7 @@ class TestBasicPackage(TestCase):
     def test_main(self):
         """Test basicpackage.main() """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         resps = ['foo', 'Damien Lebrun', 'dinoboff@gmail.com', 'BSD', '', 'foo']

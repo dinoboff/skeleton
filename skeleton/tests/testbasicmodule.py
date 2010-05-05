@@ -2,6 +2,7 @@
 Tests for skeleton.examples.basicmodule module.
 """
 import os
+import sys
 import unittest
 
 from skeleton.examples.mkmodule import BasicModule
@@ -18,7 +19,7 @@ class TestBasicModule(TestCase):
         Test BasicModule.write()
         """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         variables = {
             'ModuleName': 'foo',

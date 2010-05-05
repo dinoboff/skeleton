@@ -265,7 +265,7 @@ class Skeleton(dict):
         
         Require Python 2.6+
         """
-        if not hasattr(template, 'format'):
+        if sys.version_info < (2, 6):
             msg = (
                 "%s's template_formatter expect a python 2.6+ string "
                 "like object (with a format method).")

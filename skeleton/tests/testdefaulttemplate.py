@@ -1,7 +1,7 @@
 """
 Test The default template formatter.
 """
-
+import sys
 import unittest
 
 from skeleton import Skeleton, Var
@@ -24,7 +24,7 @@ class TestDefaultTemplate(unittest.TestCase):
         Test template formatting
         """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         skel = Skeleton(bar="substituted")
         self.assertEqual(
@@ -36,7 +36,7 @@ class TestDefaultTemplate(unittest.TestCase):
         Test template formatting a variable not set
         """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         skel = Skeleton(bar="substituted")
         self.assertRaises(KeyError,
@@ -47,7 +47,7 @@ class TestDefaultTemplate(unittest.TestCase):
         Test the template uses the default value if the variable is not set
         """
         # skip test on python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         skel = WithDefault()
         self.assertEqual(

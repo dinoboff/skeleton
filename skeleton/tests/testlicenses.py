@@ -3,6 +3,7 @@ Tests the BDS, GPL and LGPL skeleton
 """
 
 from os import path
+import sys
 import unittest
 
 
@@ -17,7 +18,7 @@ class TestBSD(TestCase):
     def test_write_2clause(self):
         """Test write of a 2-clauses BSD license."""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         variables = {
             'Author': 'Damien Lebrun',
@@ -32,7 +33,7 @@ class TestBSD(TestCase):
     def test_write_3clause(self):
         """Test write of a 3-clauses BSD license."""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
         variables = {
             'Author': 'Damien Lebrun',
@@ -54,7 +55,7 @@ class TestGPL(TestCase):
     def test_write(self):
         """Test write of a GPL skeleton"""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -75,7 +76,7 @@ class TestLGPL(TestCase):
     def test_write(self):
         """Test write of a LGPL skeleton"""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -100,7 +101,7 @@ class TestNoLicense(TestCase):
     def test_write(self):
         """Test write of a NoLicense skeleton"""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -121,7 +122,7 @@ class TestLicenseChoice(TestCase):
     def test_licence_skel_default(self):
         """Test the default license_ske property"""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -137,7 +138,7 @@ class TestLicenseChoice(TestCase):
     def test_bsd_licence_skel(self):
         """Test for a BSD license_ske property"""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -152,7 +153,7 @@ class TestLicenseChoice(TestCase):
     def test_gpl_licence_skel(self):
         """Test for a GPL license_ske property"""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -167,7 +168,7 @@ class TestLicenseChoice(TestCase):
     def test_lgpl_licence_skel(self):
         """Test for a LGPL license_ske property"""
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -184,7 +185,7 @@ class TestLicenseChoice(TestCase):
         Test run of a LicenceChoice with license set to "LGPL"
         """
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         resps = ['Foo', 'Damien Lebrun', 'dinoboff@gmail.com', 'LGPL', ]
@@ -205,7 +206,7 @@ class TestLicenseChoice(TestCase):
         Test write of a LicenceChoice with license set to "LGPL"
         """
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
@@ -227,7 +228,7 @@ class TestLicenseChoice(TestCase):
         Test write of a LicenceChoice fails if a key is missing
         """
         # skip test on Python 2.5
-        if not hasattr('', 'format'):
+        if sys.version_info < (2, 6):
             return
 
         variables = {
