@@ -1,3 +1,6 @@
+"""
+Test tools
+"""
 import unittest
 import tempfile
 import shutil
@@ -6,15 +9,16 @@ from skeleton import Var
 
 
 class RawInputMock(object):
-    
+    """Basic mock object"""
+
     def __init__(self):
         self.return_value = None
         self.side_effect = None
         self.call_args_list = []
-        
+
     def __call__(self, *args, **kw):
-        self.call_args_list.append((args,kw,))
-        
+        self.call_args_list.append((args, kw,))
+
         if self.side_effect is not None:
             return self.side_effect(*args, **kw)
         elif self.return_value is not None:
@@ -24,39 +28,66 @@ class RawInputMock(object):
 
     @property
     def call_count(self):
+        """
+        Return number of time the mock object has been called
+        """
         return len(self.call_args_list)
-    
+
     @property
     def called(self):
+        """Check if the mock object has been called"""
         return self.call_count > 0
 
 
 class TempDir(object):
-    
+    """
+    Wrapper class around tempfile.mkdtemp compatible with the "with statement"
+    """
+
+    def __init__(self):
+        self.path = None
+
     def create(self):
+        """
+        Create temporary directory.
+        
+        set the path attribute to the this directory path
+        """
         self.path = tempfile.mkdtemp()
         return self.path
-    
+
     def remove(self):
+        """
+        remove temporary directory.
+        """
         shutil.rmtree(self.path)
-        
+
     __enter__ = create
-        
-    def __exit__(self, type, value, traceback):
+
+    def __exit__(self, exc_type, value, traceback):
         self.remove()
 
-    
+
 class TestCase(unittest.TestCase):
-    
+    """
+    Basic test case.
+    """
+
     def setUp(self):
+        """
+        Mock Var._prompt and create a temporary directory
+        """
         super(TestCase, self).setUp()
         self.tmp_dir = TempDir()
         self.tmp_dir.create()
         self.input_mock = RawInputMock()
-        self._input = Var._prompt 
+        self._input = Var._prompt
         Var._prompt = self.input_mock
-        
+
     def tearDown(self):
+        """
+        Reset Var._prompt and remove the temporary directory.
+        """
         super(TestCase, self).tearDown()
         self.tmp_dir.remove()
         Var._prompt = self._input

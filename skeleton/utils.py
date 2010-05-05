@@ -11,19 +11,26 @@ import os
 import re
 import stat
 import sys
-import collections
 
 
 VALID_OPTION_NAME = re.compile("[a-z]([\w\d]*[a-z0-9])?", re.IGNORECASE)
 
 def get_loggger(name):
+    """
+    Get the logger for the given name and assign an dummy handler to it.
+    """
     logger = logging.getLogger(name)
     logger.addHandler(NullHandler())
     return logger
 
-def vars_to_optparser(vars):
-    parser = optparse.OptionParser()
-    for var in vars:
+def vars_to_optparser(variables, parser=None):
+    """
+    Augments the parser with option to set value for the list of variables.
+    """
+    if parser is None:
+        parser = optparse.OptionParser()
+
+    for var in variables:
         if not VALID_OPTION_NAME.match(var.name):
             continue
         parser.add_option(
@@ -102,10 +109,21 @@ def insert_into_file(
 
 
 class NullHandler(logging.Handler):
+    """
+    Dummy log handler.
+    """
+
     def emit(self, record):
-        pass
+        """
+        Doesn't do anything with record
+        """
 
 def prompt(prompt_):
+    """
+    Wrapper around the raw_input builtin function
+    
+    Will return unicode in Python 2 like in Python 3
+    """
     result = raw_input(prompt_)
     try:
         return result.decode(sys.stdin.encoding)

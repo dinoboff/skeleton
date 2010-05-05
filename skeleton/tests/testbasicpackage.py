@@ -1,5 +1,5 @@
 """
-Test skeleton.examples.basicpackage
+Tests for skeleton.examples.basicpackage module
 """
 from __future__ import with_statement
 import os

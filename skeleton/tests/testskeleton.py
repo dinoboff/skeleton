@@ -12,17 +12,34 @@ from skeleton.tests.utils import TestCase
 
 
 class Static(Skeleton):
+    """
+    Skeleton with only static files:
+    
+    - foo.txt
+    - bar/baz.txt
+    """
     src = 'skeletons/static'
 
     def template_formatter(self, template):
-        return string.Template(template).substitute(self)
+        """
+        Set a python 2.5 compatible formatter
+        """
+        context = dict(self._defaults)
+        context.update(self)
+        return string.Template(template).substitute(context)
 
 
 class MissingSkeleton(Static):
+    """
+    Skeleton with invalid src attribute
+    """
     src = 'skeletons/missing'
 
 
 class DynamicContent(Static):
+    """
+    Skeleton dynamic content (bar/bax.txt_tmpl)
+    """
     src = 'skeletons/dynamic-content'
     vars = [
         Var('baz', 'Dummy variable'),
@@ -39,6 +56,9 @@ class DynamicContentWithOptional(DynamicContent):
 
 
 class DynamicFileName(Static):
+    """
+    Skeleton with a dynamic file name (bar/${baz}.txt)
+    """
     src = 'skeletons/dynamic-file-name'
 
 
@@ -59,15 +79,21 @@ class StaticWithRequirement(Static):
 
 
 class TestSkeleton(TestCase):
+    """
+    Test for skeleton.Skeleton
+    """
 
     def test_default_variables(self):
         """Test Skeleton set the default Year variable."""
         skel = Skeleton()
         self.assertTrue('Year' in skel)
 
-    def test_write_with_missing_skeleton(self):
-        s = MissingSkeleton()
-        self.assertRaises(AttributeError, s.write, self.tmp_dir.path)
+    def test_write_without_src(self):
+        """
+        test skeleton src pointing to a missing folder
+        """
+        skel = MissingSkeleton()
+        self.assertRaises(AttributeError, skel.write, self.tmp_dir.path)
 
     def test_write_missing_variable(self):
         """Test write raise KeyError if a variable is not set."""
@@ -83,7 +109,7 @@ class TestSkeleton(TestCase):
 
     def test_check_var_with_default_var(self):
         """
-        Check Skeleton.get() return the set value or its default
+        Checks Skeleton.get() return the set value or its default
         """
         skel = DynamicContentWithOptional()
         try:
@@ -95,7 +121,7 @@ class TestSkeleton(TestCase):
 
     def test_default_var_is_overwritten(self):
         """
-        Test the value given to the constructor overwrite the default.
+        Tests the value given to the constructor overwrite the default.
         """
         skel = DynamicContentWithOptional()
         self.assertEqual(skel.get('OpionalVar'), '<default>')
@@ -103,10 +129,13 @@ class TestSkeleton(TestCase):
         skel = DynamicContentWithOptional(OpionalVar='template value')
         self.assertEqual(skel.get('OpionalVar'), 'template value')
 
-    def test_write_with_dst_dir_to_create(self):
-        s = Static()
+    def test_write_create_dst_dir(self):
+        """
+        tests Skeleton.write() create the missing dst directory
+        """
+        skel = Static()
         dst = os.path.join(self.tmp_dir.path, 'missing-dir')
-        s.write(dst)
+        skel.write(dst)
         self.assertEqual(
             open(os.path.join(dst, 'foo.txt')).read().strip(),
             'foo'
@@ -117,8 +146,11 @@ class TestSkeleton(TestCase):
             )
 
     def test_write_static_file(self):
-        s = Static()
-        s.write(self.tmp_dir.path)
+        """
+        Tests Skeleton.write() with static file
+        """
+        skel = Static()
+        skel.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
             'foo'
@@ -129,8 +161,11 @@ class TestSkeleton(TestCase):
             )
 
     def test_write_dynamic_content(self):
-        s = DynamicContent(baz="<replaced>")
-        s.write(self.tmp_dir.path)
+        """
+        Tests Skeleton.write() with dynamic content.
+        """
+        skel = DynamicContent(baz="<replaced>")
+        skel.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
             'foo'
@@ -141,24 +176,32 @@ class TestSkeleton(TestCase):
             )
 
     def test_write_dynamic_file_names(self):
-        s = DynamicFileName(baz="replaced-name")
-        s.write(self.tmp_dir.path)
+        """
+        Tests Skeleton.write() with dynamic file name
+        """
+        skel = DynamicFileName(baz="replaced-name")
+        skel.write(self.tmp_dir.path)
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
             'foo'
             )
         self.assertEqual(
-            open(os.path.join(self.tmp_dir.path, 'bar/replaced-name.txt')).read().strip(),
+            open(os.path.join(
+                self.tmp_dir.path,
+                'bar/replaced-name.txt')
+                ).read().strip(),
             'baz'
             )
 
-    def test_run_dynamic_content_with_var(self):
-        """Test Skeleton.run()"""
+    def test_run_with_var(self):
+        """
+        Test Skeleton.run() with dynamic content and variable prompt.
+        """
         resps = ['<input replacement>']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
-        s = DynamicContent()
-        s.run(self.tmp_dir.path)
+        skel = DynamicContent()
+        skel.run(self.tmp_dir.path)
 
         self.assertEqual(
             open(os.path.join(self.tmp_dir.path, 'foo.txt')).read().strip(),
@@ -200,11 +243,12 @@ class TestSkeleton(TestCase):
         skel = StaticWithRequirement(FileName="foo")
         skel.write(self.tmp_dir.path)
 
-        foo = os.path.join(self.tmp_dir.path, 'foo.txt')
-        with open(foo) as foo_file:
+        foo_path = os.path.join(self.tmp_dir.path, 'foo.txt')
+        with open(foo_path) as foo_file:
             self.assertEqual(foo_file.read().strip(), 'foo')
 
 def suite():
+    """Return all tests for skeleton.Skeleton"""
     return unittest.TestLoader().loadTestsFromTestCase(TestSkeleton)
 
 if __name__ == "__main__":

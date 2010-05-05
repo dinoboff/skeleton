@@ -27,7 +27,8 @@ def _run_requirement(skel_method):
     """
     Decorator for Skeleton methods
     
-    The return wrapper will first the run the method of the required templates.
+    The return wrapper will first run the same  method of the required
+    templates.
     """
     def wrapper(self, *args, **kw):
         """Method wrapper."""
@@ -58,6 +59,9 @@ class Skeleton(dict):
     You can set an alternative formatter by overwriting the `template_formatter`
     method. It takes for argument the template to parse and self for
     variable mapping.
+    
+    If the skeleton require other skeleton to be run first, list them in the
+    required_skeletons attribute.
     """
     src = None
     vars = []
@@ -86,7 +90,8 @@ class Skeleton(dict):
 
     def update(self, *args, **kw):
         """
-        Add or update entries in the skeleton
+        Add or update entries to the skeleton and its required skeleton
+        instances.
         
         See dict.update()
         """
@@ -96,7 +101,8 @@ class Skeleton(dict):
 
     def __setitem__(self, key, value):
         """
-        Add or update an entry in the skeleton
+        Add or update an entry in the skeleton and its required skeleton
+        instances. 
         """
         for skel in self._required_skeletons:
             skel.__setitem__(key, value)
@@ -348,6 +354,10 @@ class Var(object):
 
     @property
     def full_description(self):
+        """
+        Return the name of the variable and short description if description
+        is set.
+        """
         if self.description:
             return u'%s (%s)' % (self.name, self.description,)
         else:

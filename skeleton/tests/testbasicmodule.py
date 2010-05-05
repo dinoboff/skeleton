@@ -1,3 +1,6 @@
+"""
+Tests for skeleton.examples.basicmodule module.
+"""
 import os
 import unittest
 
@@ -6,25 +9,35 @@ from skeleton.tests.utils import TestCase
 
 
 class TestBasicModule(TestCase):
+    """
+    Test BasicModule Skeleton
+    """
 
     def test_write(self):
+        """
+        Test BasicModule.write()
+        """
         # skip test on python 2.5
         if not hasattr('', 'format'):
             return
-        vars = {
+        variables = {
             'ModuleName': 'foo',
             'Author': 'Damien Lebrun',
             'AuthorEmail': 'dinoboff@gmail.com',
             }
-        s = BasicModule(vars)
-        s.write(self.tmp_dir.path)
+        skel = BasicModule(variables)
+        skel.write(self.tmp_dir.path)
 
-        self.assertTrue(os.path.exists(os.path.join(self.tmp_dir.path, 'README.rst')))
-        self.assertTrue(os.path.exists(os.path.join(self.tmp_dir.path, 'setup.py')))
-        self.assertTrue(os.path.exists(os.path.join(self.tmp_dir.path, 'foo.py')))
+        self.assertTrue(os.path.exists(
+            os.path.join(self.tmp_dir.path, 'README.rst')))
+        self.assertTrue(os.path.exists(
+            os.path.join(self.tmp_dir.path, 'setup.py')))
+        self.assertTrue(os.path.exists(
+            os.path.join(self.tmp_dir.path, 'foo.py')))
 
 
 def suite():
+    """Return all tests for skeleton.examples.basicmodule module"""
     return unittest.TestLoader().loadTestsFromTestCase(TestBasicModule)
 
 if __name__ == "__main__":
