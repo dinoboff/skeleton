@@ -53,7 +53,9 @@ class Skeleton(dict):
 
         self._required_skeletons = []
         for skel_class in self.required_skeletons:
-            self._required_skeletons.append(skel_class(*arg, **kw))
+            skel = skel_class(*arg, **kw)
+            self.update(skel)
+            self._required_skeletons.append(skel)
 
         # Set global variables
         self['Year'] = datetime.datetime.utcnow().year
@@ -115,6 +117,8 @@ class Skeleton(dict):
         """
         for skel in self._required_skeletons:
             skel.check_vars()
+            self.update(skel)
+
         for var in self.vars:
             if var.name not in self and var.name not in self._defaults:
                 raise KeyError("Variable %r not set." % var.name)
@@ -126,6 +130,8 @@ class Skeleton(dict):
         """
         for skel in self._required_skeletons:
             skel.get_missing_variables()
+            self.update(skel)
+
         for var in self.vars:
             if var.name not in self:
                 self[var.name] = var.prompt()
@@ -153,6 +159,7 @@ class Skeleton(dict):
         """
         for skel in self._required_skeletons:
             skel.write(dst_dir)
+            self.update(skel)
 
         log.info(
             "Rendering %s skeleton at %r...",
