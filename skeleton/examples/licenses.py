@@ -41,7 +41,7 @@ class BSD(Skeleton):
             ),
         ]
 
-    def write(self, dst_dir):
+    def write(self, dst_dir, run_dry=False):
         """
         Set the ThirdClause if an organization name has been given.
         """
@@ -49,7 +49,7 @@ class BSD(Skeleton):
             self['ThirdClause'] = self.template_formatter(BSD_THIRD_CLAUSE)
         else:
             self['ThirdClause'] = ''
-        super(BSD, self).write(dst_dir)
+        super(BSD, self).write(dst_dir, run_dry=run_dry)
 
 
 class GPL(Skeleton):
@@ -120,9 +120,8 @@ class LicenseChoice(Skeleton):
         super(LicenseChoice, self).get_missing_variables()
         self.license_skel.get_missing_variables()
 
-    def write(self, dst):
+    def write(self, dst, run_dry=False):
         """
         Apply the license skeleton
         """
-        self.license_skel.run_dry = self.run_dry
-        self.license_skel.write(dst)
+        self.license_skel.write(dst, run_dry=run_dry)

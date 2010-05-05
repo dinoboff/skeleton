@@ -138,7 +138,7 @@ class Skeleton(dict):
             else:
                 log.debug("Varaiable %r already set", var.name)
 
-    def write(self, dst_dir):
+    def write(self, dst_dir, run_dry=False):
         """
         Apply skeleton to dst_dir.
         
@@ -158,8 +158,7 @@ class Skeleton(dict):
           files and folder.
         """
         for skel in self._required_skeletons:
-            skel.run_dry = self.run_dry
-            skel.write(dst_dir)
+            skel.write(dst_dir, run_dry=run_dry)
             self.update(skel)
 
         log.info(
@@ -197,12 +196,12 @@ class Skeleton(dict):
                     self.template_formatter(dir_name))
                 self._mkdir(dst, like=src)
 
-    def run(self, dst_dir):
+    def run(self, dst_dir, run_dry=False):
         """
         Like write() but prompt user for missing variables.
         """
         self.get_missing_variables()
-        self.write(dst_dir)
+        self.write(dst_dir, run_dry=run_dry)
 
     @classmethod
     def cmd(cls, argv=None):

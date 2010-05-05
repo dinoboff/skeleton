@@ -56,7 +56,7 @@ class BasicPackage(Skeleton):
                         'GNU Library or Lesser General Public License (LGPL)'),
         }
 
-    def write(self, dst_dir):
+    def write(self, dst_dir, run_dry=False):
         """
         Create package(s) dynamically and get the lastdistribute_setup snapshot
         
@@ -65,7 +65,7 @@ class BasicPackage(Skeleton):
         the skeleton write.
         """
         self._set_packages_and_namespaces()
-        super(BasicPackage, self).write(dst_dir)
+        super(BasicPackage, self).write(dst_dir, run_dry=run_dry)
         self._create_packages(dst_dir)
         self._add_classifier(dst_dir)
 
