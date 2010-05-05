@@ -131,7 +131,7 @@ class BasicPackage(Skeleton):
             )
 
 
-def virtualenv_warpper_hook(_):
+def virtualenv_warpper_hook(*args, **kw):
     """
     Create a new package package (with namespace support)
     with the setup.py, README.rst and MANIFEST.in files already setup.
