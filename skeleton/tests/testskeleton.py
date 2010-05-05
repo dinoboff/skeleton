@@ -138,6 +138,17 @@ class TestSkeleton(TestCase):
             'foo <input replacement> bar'
             )
 
+    def test_get_variables_with_default(self):
+        """Test prompt of variable with default"""
+        resps = ['<input replacement>']
+        self.input_mock.side_effect = lambda x: resps.pop(0)
+
+        skel = DynamicContentWithOptional()
+
+        skel.get_missing_variables()
+        self.assertEqual(self.input_mock.call_count, 1)
+        self.assertEqual(skel['OpionalVar'], '<input replacement>')
+
 
 def suite():
     return unittest.TestLoader().loadTestsFromTestCase(TestSkeleton)

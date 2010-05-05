@@ -50,9 +50,22 @@ class Skeleton(dict):
     def __init__(self, *arg, **kw):
         super(Skeleton, self).__init__(*arg, **kw)
         self['Year'] = datetime.datetime.utcnow().year
-        for var in self.vars:
-            if var.default is not None:
-                self.setdefault(var.name, var.default)
+        self._defaults = dict([(var.name, var.default,) for var in self.vars])
+
+    def __getitem__(self, key):
+        """
+        Returns  the variable default if the variable is not set.
+        
+        Raises a KeyError if the variable is not set and dosn't have a default.
+        """
+        try:
+            return super(Skeleton, self).__getitem__(key)
+        except KeyError:
+            default = self._defaults.get(key)
+            if default is None:
+                raise
+            else:
+                return default
 
     @property
     def skel_dir(self):
