@@ -145,6 +145,18 @@ class TestBasicPackage(TestCase):
                 shell=False,
                 stdout=subprocess.PIPE)
             self.assertEqual(proc.wait(), 0)
+
+            # Test classifiers
+            proc = subprocess.Popen(
+                [sys.executable, setup, '--classifiers'],
+                shell=False,
+                stdout=subprocess.PIPE)
+            self.assertEqual(proc.wait(), 0)
+            classifiers = proc.stdout.read().splitlines()
+            self.assertTrue(
+                "License :: OSI Approved" in classifiers)
+            self.assertTrue(
+                "License :: OSI Approved :: BSD License" in classifiers)
         finally:
             os.chdir(cwd)
 

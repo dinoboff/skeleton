@@ -10,7 +10,7 @@ import os
 import urllib
 
 from skeleton import Skeleton, Var
-from skeleton.utils import get_loggger
+from skeleton.utils import get_loggger, insert_into_file
 from skeleton.examples.licenses import LicenseChoice
 
 
@@ -48,6 +48,13 @@ class BasicPackage(Skeleton):
     required_skeletons = [
         LicenseChoice,
         ]
+    licence_classifiers = {
+            'BSD': 'License :: OSI Approved :: BSD License',
+            'GPL': ('License :: OSI Approved :: '
+                        'GNU General Public License (GPL)'),
+            'LGPL': ('License :: OSI Approved :: '
+                        'GNU Library or Lesser General Public License (LGPL)'),
+        }
 
     def write(self, dst_dir):
         """
@@ -60,6 +67,7 @@ class BasicPackage(Skeleton):
         self._set_packages_and_namespaces()
         super(BasicPackage, self).write(dst_dir)
         self._create_packages(dst_dir)
+        self._add_classifier(dst_dir)
 
     def _set_packages_and_namespaces(self):
         """
@@ -103,6 +111,26 @@ class BasicPackage(Skeleton):
         os.mkdir(path)
         with open(os.path.join(path, '__init__.py'), 'w') as init_file:
             init_file.write(init_body)
+
+    def _add_classifier(self, dst_dir):
+        """
+        Add license classifiers
+        """
+        setup = os.path.join(dst_dir, 'setup.py')
+        license_name = self.get('License', '').upper()
+        if license_name not in self.licence_classifiers:
+            return
+        classifiers = [
+            "License :: OSI Approved",
+            self.licence_classifiers[license_name],
+            ]
+
+        insert_into_file(
+            setup,
+            "Classifiers",
+            '\n'.join(['%r,' % cla for cla in classifiers])
+            )
+
 
 
 def virtualenv_warpper_hook(_):
