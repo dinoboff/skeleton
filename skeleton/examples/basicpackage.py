@@ -7,7 +7,6 @@ from __future__ import with_statement
 
 import logging
 import os
-import urllib
 
 from skeleton import Skeleton, Var
 from skeleton.utils import get_loggger, insert_into_file
@@ -132,13 +131,15 @@ class BasicPackage(Skeleton):
             )
 
 
-
 def virtualenv_warpper_hook(_):
     """
     Create a new package package (with namespace support)
     with the setup.py, README.rst and MANIFEST.in files already setup.
     """
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(levelname)s - %(message)s"
+        )
     BasicPackage().run('src/')
 
 
