@@ -238,17 +238,16 @@ class Skeleton(dict):
 
     def configure_parser(self):
         """Configure parser for Skeleton.cmd()"""
-        parser = vars_to_optparser(self.vars)
-
-        parser.usage = "%prog [options] dst_dir"
-        parser.add_option("-q", help="Be verbose",
+        parser = optparse.OptionParser(usage="%prog [options] dst_dir")
+        parser.add_option("-q", "--quiet",
             action="store_const", const=logging.FATAL, dest="verbose_")
-        parser.add_option("-v", help="Only display fatal errors",
+        parser.add_option("-v", "--verbose",
             action="store_const", const=logging.INFO, dest="verbose_")
-        parser.add_option("--d", help="Display debug information",
+        parser.add_option("-d", "--debug",
             action="store_const", const=logging.DEBUG, dest="verbose_")
         parser.set_default('verbose_', logging.ERROR)
 
+        parser = vars_to_optparser(self.vars, parser=parser)
         return parser
 
     def template_formatter(self, template):
