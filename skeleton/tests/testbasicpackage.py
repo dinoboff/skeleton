@@ -136,29 +136,24 @@ class TestBasicPackage(TestCase):
             ))
 
         setup = os.path.join(self.tmp_dir.path, 'setup.py')
-        cwd = os.getcwd()
-        os.chdir(self.tmp_dir.path)
-        try:
-            # Test egg_info can be run
-            proc = subprocess.Popen(
-                [sys.executable, setup, 'egg_info', '-e', self.tmp_dir.path],
-                shell=False,
-                stdout=subprocess.PIPE)
-            self.assertEqual(proc.wait(), 0)
+        # Test egg_info can be run
+        proc = subprocess.Popen(
+            [sys.executable, setup, 'egg_info'],
+            shell=False,
+            stdout=subprocess.PIPE)
+        self.assertEqual(proc.wait(), 0)
 
-            # Test classifiers
-            proc = subprocess.Popen(
-                [sys.executable, setup, '--classifiers'],
-                shell=False,
-                stdout=subprocess.PIPE)
-            self.assertEqual(proc.wait(), 0)
-            classifiers = proc.stdout.read().splitlines()
-            self.assertTrue(
-                "License :: OSI Approved" in classifiers)
-            self.assertTrue(
-                "License :: OSI Approved :: BSD License" in classifiers)
-        finally:
-            os.chdir(cwd)
+        # Test classifiers
+        proc = subprocess.Popen(
+            [sys.executable, setup, '--classifiers'],
+            shell=False,
+            stdout=subprocess.PIPE)
+        self.assertEqual(proc.wait(), 0)
+        classifiers = proc.stdout.read().splitlines()
+        self.assertTrue(
+            "License :: OSI Approved" in classifiers)
+        self.assertTrue(
+            "License :: OSI Approved :: BSD License" in classifiers)
 
 
 def suite():
