@@ -149,7 +149,7 @@ class TestBasicPackage(TestCase):
             shell=False,
             stdout=subprocess.PIPE)
         self.assertEqual(proc.wait(), 0)
-        classifiers = proc.stdout.read().splitlines()
+        classifiers = proc.stdout.read().decode().splitlines()
         self.assertTrue(
             "License :: OSI Approved" in classifiers)
         self.assertTrue(
