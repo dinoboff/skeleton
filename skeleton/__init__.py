@@ -17,9 +17,26 @@ import shutil
 import sys
 
 from skeleton.utils import get_loggger, get_file_mode, vars_to_optparser, prompt
+import functools
 
 
 log = get_loggger(__name__)
+
+def _run_requirement(skel_method):
+    """
+    Decorator for Skeleton methods
+    
+    The return wrapper will first the run the method of the required templates.
+    """
+    def wrapper(self, *args, **kw):
+        """Method wrapper."""
+        for skel in self._required_skeletons:
+            if hasattr(skel, skel_method.__name__):
+                getattr(skel, skel_method.__name__)(*args, **kw)
+            self.update(skel)
+        return skel_method(self, *args, **kw)
+    functools.update_wrapper(wrapper, skel_method)
+    return wrapper
 
 
 class Skeleton(dict):
@@ -111,33 +128,28 @@ class Skeleton(dict):
             raise AttributeError("No skeleton at %r" % skel_path)
         return skel_path
 
+    @_run_requirement
     def check_vars(self):
         """
         Raise a KeyError if any required variable is missing.
         """
-        for skel in self._required_skeletons:
-            skel.check_vars()
-            self.update(skel)
-
         for var in self.vars:
             if var.name not in self and var.name not in self._defaults:
                 raise KeyError("Variable %r not set." % var.name)
 
+    @_run_requirement
     def get_missing_variables(self):
         """
         Prompt user for any missing variable 
         (even the ones with a default value).
         """
-        for skel in self._required_skeletons:
-            skel.get_missing_variables()
-            self.update(skel)
-
         for var in self.vars:
             if var.name not in self:
                 self[var.name] = var.prompt()
             else:
                 log.debug("Varaiable %r already set", var.name)
 
+    @_run_requirement
     def write(self, dst_dir, run_dry=False):
         """
         Apply skeleton to dst_dir.
@@ -157,10 +169,6 @@ class Skeleton(dict):
         - IOError if it cannot read the skeleton files, or cannot create
           files and folder.
         """
-        for skel in self._required_skeletons:
-            skel.write(dst_dir, run_dry=run_dry)
-            self.update(skel)
-
         log.info(
             "Rendering %s skeleton at %r...",
             self.__class__.__name__,
