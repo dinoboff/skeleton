@@ -74,17 +74,21 @@ The variables with a default can be left blank by the user.
 `Skeleton.cmd()` is a convenient method to set an optparser and 
 the logging basic config, and to apply the skeleton::
 
+
 	Usage: mkmodule.py [options] dst_dir
 
 	Options:
 	  -h, --help            show this help message and exit
+	  -q, --quiet           
+	  -v, --verbose         
+	  -d, --debug           
 	  --ModuleName=MODULENAME
 	                        ModuleName
 	  --Author=AUTHOR       Author
 	  --AuthorEmail=AUTHOREMAIL
 	                        AuthorEmail
-	
- 
+
+
 If you needed to run a `Skeleton` yourself, you would use the 
 constructor, the `update` or `__setitem__` methods to set the variables
 (`Skeleton` is a `dict` subclass), and the `write(dst_dir)` or `run(dst_dir)`
@@ -140,12 +144,29 @@ at run time.
 	use `{{` to render `{` and `}}` for `}` - unless you want to render
 	a variable).
 
+EXTRA
+-----
+
+`skeleton` includes a skeleton for a basic package layout, you can 
+run it with::
+
+	python -m skeleton.examples.basicpackage <dst_dir>
+
+or with `virtualenvwrapper.project`. Install it::
+
+	pip install skeleton[virtualenv-templates]
+
+Configure virtualenvwrapper_ and virtualenwrapper.project_; then,
+create a new project::
+
+	mkproject -t package <project name>
+
 
 CHANGES:
 ========
 
-Master
-------
+0.3 (Mai 6, 2010)
+-----------------
 
 - New class method, `Skeleton.cmd` to create the logger and optparser.
 - `Skeleton.run` doesn't set the logger and optparser anymore.
@@ -153,7 +174,12 @@ Master
   instead of prompting the user.
 - Removed the `pre_run`, `post_write` and `pre_write` methods. Overwrite
   the `write` and `run` instead.
-- Added configure_parser(parser) to configure the parser set by `Skeleton.cmd`.
+- Added configure_parser() to configure the parser set by `Skeleton.cmd`.
+- Add required_skeleton attribute to Skeleton. These skeleton will be run
+  before the main. They all share the same entries.
+- Added verbose options to the Skeleton optparser.
+- Added a basic package template extension for virtualenwrapper.project_.
+
 
 0.2.1 (Mai 2, 2010):
 --------------------
@@ -194,3 +220,5 @@ http://github.com/dinoboff/skeleton/ .
 .. _distribute: http://packages.python.org/distribute/
 .. _Mock: http://www.voidspace.org.uk/python/mock/
 .. _string formatting: http://docs.python.org/library/functions.html#format
+.. _virtualenwrapper.project: http://www.doughellmann.com/projects/virtualenvwrapper.project/
+.. _virtualenvwrapper: http://www.doughellmann.com/projects/virtualenvwrapper/
