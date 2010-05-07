@@ -218,7 +218,6 @@ http://github.com/dinoboff/skeleton/ .
 .. _PasteScript: http://pythonpaste.org/script/
 .. _pip: http://pip.openplans.org/
 .. _distribute: http://packages.python.org/distribute/
-.. _Mock: http://www.voidspace.org.uk/python/mock/
 .. _string formatting: http://docs.python.org/library/functions.html#format
 .. _virtualenwrapper.project: http://www.doughellmann.com/projects/virtualenvwrapper.project/
 .. _virtualenvwrapper: http://www.doughellmann.com/projects/virtualenvwrapper/
