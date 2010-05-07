@@ -199,12 +199,13 @@ CHANGES:
 
 - first release.
 
+
 TODO:
 =====
 
 - Write documentation.
-- Allow skeletons to chain each other (a skeleton could require other skeletons
-  to be applied first).
+- Improve variable prompt and command line option.
+- add more example.
 
 
 Development
