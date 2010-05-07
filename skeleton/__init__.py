@@ -353,15 +353,25 @@ class Var(object):
             self.__class__.__name__, self.name, self.default,)
 
     @property
+    def display_name(self):
+        """
+        Return a titled version of name were "_" are replace by space.
+        
+        Allows to get sice looking name at prompt while following pip8 quide
+        (a Var name can be use as argument of skeleton to set to variable).
+        """
+        return self.name.replace('_', ' ').title()
+
+    @property
     def full_description(self):
         """
         Return the name of the variable and short description if description
         is set.
         """
         if self.description:
-            return u'%s (%s)' % (self.name, self.description,)
+            return u'%s (%s)' % (self.display_name, self.description,)
         else:
-            return self.name
+            return self.display_name
 
     def prompt(self):
         """Prompt the user for a value.

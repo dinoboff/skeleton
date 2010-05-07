@@ -23,14 +23,21 @@ class TestVar(TestCase):
         Tests Var full description (complete)
         """
         var = Var('foo', description='dummy var')
-        self.assertEqual(var.full_description, 'foo (dummy var)')
+        self.assertEqual(var.full_description, 'Foo (dummy var)')
 
     def test_basic_full_description(self):
         """
         Tests Var full description (missing description)
         """
         var = Var('foo')
-        self.assertEqual(var.full_description, 'foo')
+        self.assertEqual(var.full_description, 'Foo')
+
+    def test_pep8_name(self):
+        """
+        Tests Var full description (missing description)
+        """
+        var = Var('foo_bar')
+        self.assertEqual(var.full_description, 'Foo Bar')
 
     def test_prompt(self):
         """
@@ -44,7 +51,7 @@ class TestVar(TestCase):
 
         self.assertEqual(self.input_mock.call_count, 2)
         for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (('Enter foo: ',), {},))
+            self.assertEqual(args, (('Enter Foo: ',), {},))
 
     def test_prompt_with_default(self):
         """
@@ -58,7 +65,7 @@ class TestVar(TestCase):
 
         self.assertEqual(self.input_mock.call_count, 1)
         for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (("""Enter foo ['baz']: """,), {},))
+            self.assertEqual(args, (("""Enter Foo ['baz']: """,), {},))
 
     def test_prompt_empty_default(self):
         """
@@ -72,7 +79,7 @@ class TestVar(TestCase):
 
         self.assertEqual(self.input_mock.call_count, 1)
         for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (("""Enter foo ['']: """,), {},))
+            self.assertEqual(args, (("""Enter Foo ['']: """,), {},))
 
 
 def suite():
