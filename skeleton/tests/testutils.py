@@ -2,12 +2,13 @@
 Test in skeleton.utils.*
 """
 from __future__ import with_statement
-
+import optparse
 import os
 import unittest
 
+from skeleton import Var
 from skeleton.tests.utils import TestCase
-from skeleton.utils import insert_into_file
+from skeleton.utils import insert_into_file, vars_to_optparser
 
 
 class TestInsertIntoFile(TestCase):
@@ -65,9 +66,45 @@ class TestInsertIntoFile(TestCase):
                 ['foo\n', 'bar\n', 'baz\n']
                 )
 
+
+class TestVarsToOptparser(unittest.TestCase):
+    """
+    Tests skeleton.utils.vars_to_optparser
+    """
+
+    def test_create_parser(self):
+        """
+        Tests vars_to_optparser create the OptParser if none are given
+        """
+
+        self.assertTrue(
+            isinstance(vars_to_optparser([]), optparse.OptionParser)
+            )
+
+    def test_augment_parser(self):
+        """
+        Tests vars_to_optparser augment the parser given as argument
+        """
+        parser = optparse.OptionParser()
+        self.assertTrue(vars_to_optparser([], parser) is parser)
+
+    def test_pep8_var_name(self):
+        """
+        Tests long string formatting of options added by vars_to_optparser.
+        
+        All lower case with hyphen instead of underscore
+        """
+        parser = vars_to_optparser([Var('Foo'), Var('foo_bar')])
+        self.assertEqual(parser.get_option('--foo').dest, 'Foo')
+        self.assertEqual(parser.get_option('--foo-bar').dest, 'foo_bar')
+
+
 def suite():
     """Return tests for skeleton.utils.*  """
-    return unittest.TestLoader().loadTestsFromTestCase(TestInsertIntoFile)
+    tests = unittest.TestSuite()
+    tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestInsertIntoFile))
+    tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestVarsToOptparser))
+    return tests
 
 
 if __name__ == "__main__":

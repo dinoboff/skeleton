@@ -34,7 +34,7 @@ def vars_to_optparser(variables, parser=None):
         if not VALID_OPTION_NAME.match(var.name):
             continue
         parser.add_option(
-            "--%s" % var.name.replace('_', '-'),
+            "--%s" % var.name.lower().replace('_', '-'),
             dest=var.name,
             help=var.full_description)
     return parser
