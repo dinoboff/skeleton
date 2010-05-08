@@ -22,9 +22,9 @@ class TestBasicModule(TestCase):
         if sys.version_info < (2, 6):
             return
         variables = {
-            'ModuleName': 'foo',
-            'Author': 'Damien Lebrun',
-            'AuthorEmail': 'dinoboff@gmail.com',
+            'module_name': 'foo',
+            'author': 'Damien Lebrun',
+            'author_email': 'dinoboff@gmail.com',
             }
         skel = BasicModule(variables)
         skel.write(self.tmp_dir.path)

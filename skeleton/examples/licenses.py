@@ -6,7 +6,7 @@ from skeleton import Skeleton, Var
 
 
 BSD_THIRD_CLAUSE = """
-    - Neither the name of the {Organization} nor the names of its contributors 
+    - Neither the name of the {organization} nor the names of its contributors 
       may be used to endorse or promote products derived from this software 
       without specific prior written permission.
 """
@@ -18,7 +18,7 @@ class NoLicense(Skeleton):
     """
     src = 'licenses/no-license'
     vars = [
-        Var('Author'),
+        Var('author'),
         ]
 
 
@@ -26,15 +26,15 @@ class BSD(Skeleton):
     """
     Adds a 2 or 3 clauses BSD License.
     
-    Requires Author and Organization variables.
+    Requires author and organization variables.
     
     Sets a ThirdClause variable.
     """
 
     src = 'licenses/bsd'
     vars = [
-        Var('Author'),
-        Var('Organization',
+        Var('author'),
+        Var('organization',
             default='',
             description="required for a 3 clauses-BSD license - "
                 "leave it empty for a 2 clauses-BSD license."
@@ -45,10 +45,10 @@ class BSD(Skeleton):
         """
         Set the ThirdClause if an organization name has been given.
         """
-        if self.get('Organization'):
-            self['ThirdClause'] = self.template_formatter(BSD_THIRD_CLAUSE)
+        if self.get('organization'):
+            self['third_clause'] = self.template_formatter(BSD_THIRD_CLAUSE)
         else:
-            self['ThirdClause'] = ''
+            self['third_clause'] = ''
         super(BSD, self).write(dst_dir, run_dry=run_dry)
 
 
@@ -61,8 +61,8 @@ class GPL(Skeleton):
 
     src = 'licenses/gpl'
     vars = [
-        Var('Author'),
-        Var('ProjectName'),
+        Var('author'),
+        Var('project_name'),
         ]
 
 
@@ -80,10 +80,10 @@ class LicenseChoice(Skeleton):
     Let the use pick the licence
     """
     vars = [
-        Var('ProjectName'),
-        Var('Author'),
-        Var('AuthorEmail'),
-        Var('License', description='BSD/GPL/LGPL', default=''),
+        Var('project_name'),
+        Var('author'),
+        Var('author_email'),
+        Var('license', description='BSD/GPL/LGPL/other', default=''),
         ]
 
     supported_licenses = {
@@ -101,7 +101,7 @@ class LicenseChoice(Skeleton):
         """
         if self._licence_skel is None:
             self._licence_skel = self.supported_licenses.get(
-                self.get('License').upper(),
+                self.get('license').upper(),
                 self.default_license
                 )(self)
         return self._licence_skel

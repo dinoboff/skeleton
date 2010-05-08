@@ -51,7 +51,7 @@ class DynamicContentWithOptional(DynamicContent):
     Skeleton with an optional variable.
     """
     vars = [
-        Var('OpionalVar', default='<default>')
+        Var('opional_var', default='<default>')
         ]
 
 
@@ -67,7 +67,7 @@ class Required(Static):
     Just a ${FileName}.txt file.
     """
     src = "skeletons/required"
-    vars = [ Var('FileName') ]
+    vars = [ Var('file_name') ]
 
 
 class StaticWithRequirement(Static):
@@ -86,7 +86,7 @@ class TestSkeleton(TestCase):
     def test_default_variables(self):
         """Test Skeleton set the default Year variable."""
         skel = Skeleton()
-        self.assertTrue('Year' in skel)
+        self.assertTrue('year' in skel)
 
     def test_write_without_src(self):
         """
@@ -105,7 +105,7 @@ class TestSkeleton(TestCase):
         Check Skeleton.get() return the set value or its default
         """
         skel = DynamicContentWithOptional()
-        self.assertEqual(skel.get('OpionalVar'), '<default>')
+        self.assertEqual(skel.get('opional_var'), '<default>')
 
     def test_check_var_with_default_var(self):
         """
@@ -124,10 +124,10 @@ class TestSkeleton(TestCase):
         Tests the value given to the constructor overwrite the default.
         """
         skel = DynamicContentWithOptional()
-        self.assertEqual(skel.get('OpionalVar'), '<default>')
+        self.assertEqual(skel.get('opional_var'), '<default>')
 
-        skel = DynamicContentWithOptional(OpionalVar='template value')
-        self.assertEqual(skel.get('OpionalVar'), 'template value')
+        skel = DynamicContentWithOptional(opional_var='template value')
+        self.assertEqual(skel.get('opional_var'), 'template value')
 
     def test_write_create_dst_dir(self):
         """
@@ -221,13 +221,13 @@ class TestSkeleton(TestCase):
 
         skel.get_missing_variables()
         self.assertEqual(self.input_mock.call_count, 1)
-        self.assertEqual(skel.get('OpionalVar'), '<input replacement>')
+        self.assertEqual(skel.get('opional_var'), '<input replacement>')
 
     def test_write_required_skel(self):
         """
         Test it write the of required 
         """
-        skel = StaticWithRequirement(FileName="fooz")
+        skel = StaticWithRequirement(file_name="fooz")
         skel.write(self.tmp_dir.path)
         self.assertTrue(
             os.path.exists(os.path.join(self.tmp_dir.path, 'foo.txt')))
@@ -240,12 +240,13 @@ class TestSkeleton(TestCase):
         """
         Test it write the of required 
         """
-        skel = StaticWithRequirement(FileName="foo")
+        skel = StaticWithRequirement(file_name="foo")
         skel.write(self.tmp_dir.path)
 
         foo_path = os.path.join(self.tmp_dir.path, 'foo.txt')
         with open(foo_path) as foo_file:
             self.assertEqual(foo_file.read().strip(), 'foo')
+
 
 def suite():
     """Return all tests for skeleton.Skeleton"""

@@ -3,10 +3,10 @@
 from distutils.core import setup
 
 
-PROJECT = {ModuleName!r}
+PROJECT = {module_name!r}
 VERSION = '0.1'
-AUTHOR = {Author!r}
-AUTHOR_EMAIL = {AuthorEmail!r}
+AUTHOR = {author!r}
+AUTHOR_EMAIL = {author_email!r}
 DESC = "A short description..."
 
 setup(
@@ -16,5 +16,5 @@ setup(
     long_description=open('README.rst').read(),
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
-    py_module={ModuleName!r}
+    py_module=[{module_name!r},],
 )

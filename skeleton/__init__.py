@@ -80,7 +80,7 @@ class Skeleton(dict):
             self._required_skeletons.append(skel)
 
         # Set global variables
-        self['Year'] = datetime.datetime.utcnow().year
+        self['year'] = datetime.datetime.utcnow().year
 
         # Set defaults
         self._defaults = dict([
@@ -340,7 +340,13 @@ class Skeleton(dict):
 
 
 class Var(object):
-    """Define a template variable."""
+    """
+    Define a template variable.
+    
+    The variable names should follow pep8 guidelines about variable names.
+    pep8 variable are easier to set with a Skeleton constructor and you should
+    not assume the skeleton template formatter can use any name formatting.
+    """
     _prompt = staticmethod(prompt)
 
     def __init__(self, name, description=None, default=None):

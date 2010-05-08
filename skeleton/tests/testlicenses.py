@@ -21,13 +21,13 @@ class TestBSD(TestCase):
         if sys.version_info < (2, 6):
             return
         variables = {
-            'Author': 'Damien Lebrun',
-            'Organization': '',
+            'author': 'Damien Lebrun',
+            'organization': '',
             }
         skel = BSD(variables)
         skel.write(self.tmp_dir.path)
 
-        self.assertEqual(skel['ThirdClause'], '')
+        self.assertEqual(skel['third_clause'], '')
         self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'LICENSE')))
 
     def test_write_3clause(self):
@@ -36,15 +36,15 @@ class TestBSD(TestCase):
         if sys.version_info < (2, 6):
             return
         variables = {
-            'Author': 'Damien Lebrun',
-            'Organization': 'Foo inc',
+            'author': 'Damien Lebrun',
+            'organization': 'Foo inc',
             }
         skel = BSD(variables)
         skel.write(self.tmp_dir.path)
 
         self.assertEqual(
-            skel['ThirdClause'],
-            BSD_THIRD_CLAUSE.format(Organization='Foo inc')
+            skel['third_clause'],
+            BSD_THIRD_CLAUSE.format(organization='Foo inc')
             )
         self.assertTrue(path.exists(path.join(self.tmp_dir.path, 'LICENSE')))
 
@@ -59,8 +59,8 @@ class TestGPL(TestCase):
             return
 
         variables = {
-            'Author': 'Damien Lebrun',
-            'ProjectName': 'Foo',
+            'author': 'Damien Lebrun',
+            'project_name': 'Foo',
             }
 
         skel = GPL(variables)
@@ -80,8 +80,8 @@ class TestLGPL(TestCase):
             return
 
         variables = {
-            'Author': 'Damien Lebrun',
-            'ProjectName': 'Foo',
+            'author': 'Damien Lebrun',
+            'project_name': 'Foo',
             }
 
         skel = LGPL(variables)
@@ -105,7 +105,7 @@ class TestNoLicense(TestCase):
             return
 
         variables = {
-            'Author': 'Damien Lebrun',
+            'author': 'Damien Lebrun',
             }
 
         skel = NoLicense(variables)
@@ -126,13 +126,13 @@ class TestLicenseChoice(TestCase):
             return
 
         variables = {
-            'ProjectName': 'Foo',
-            'Author': 'Damien Lebrun',
+            'project_name': 'Foo',
+            'author': 'Damien Lebrun',
             }
 
         skel = LicenseChoice(variables)
         self.assertTrue(isinstance(skel.license_skel, NoLicense))
-        self.assertEqual(skel.license_skel['Author'], 'Damien Lebrun')
+        self.assertEqual(skel.license_skel['author'], 'Damien Lebrun')
 
 
     def test_bsd_licence_skel(self):
@@ -142,9 +142,9 @@ class TestLicenseChoice(TestCase):
             return
 
         variables = {
-            'ProjectName': 'Foo',
-            'Author': 'Damien Lebrun',
-            'License': 'BSD'
+            'project_name': 'Foo',
+            'author': 'Damien Lebrun',
+            'license': 'BSD'
             }
 
         skel = LicenseChoice(variables)
@@ -157,9 +157,9 @@ class TestLicenseChoice(TestCase):
             return
 
         variables = {
-            'ProjectName': 'Foo',
-            'Author': 'Damien Lebrun',
-            'License': 'GPL'
+            'project_name': 'Foo',
+            'author': 'Damien Lebrun',
+            'license': 'GPL'
             }
 
         skel = LicenseChoice(variables)
@@ -172,9 +172,9 @@ class TestLicenseChoice(TestCase):
             return
 
         variables = {
-            'ProjectName': 'Foo',
-            'Author': 'Damien Lebrun',
-            'License': 'LGPL'
+            'project_name': 'Foo',
+            'author': 'Damien Lebrun',
+            'license': 'LGPL'
             }
 
         skel = LicenseChoice(variables)
@@ -210,9 +210,9 @@ class TestLicenseChoice(TestCase):
             return
 
         variables = {
-            'ProjectName': 'Foo',
-            'Author': 'Damien Lebrun',
-            'License': 'LGPL'
+            'project_name': 'Foo',
+            'author': 'Damien Lebrun',
+            'license': 'LGPL'
             }
 
         skel = LicenseChoice(variables)
@@ -232,8 +232,8 @@ class TestLicenseChoice(TestCase):
             return
 
         variables = {
-            'Author': 'Damien Lebrun',
-            'License': 'LGPL'
+            'author': 'Damien Lebrun',
+            'license': 'LGPL'
             }
 
         skel = LicenseChoice(variables)

@@ -11,9 +11,9 @@ class BasicModule(Skeleton):
     """
     src = 'basic-module'
     vars = [
-        Var('ModuleName'),
-        Var('Author'),
-        Var('AuthorEmail'),
+        Var('module_name'),
+        Var('author'),
+        Var('author_email'),
         ]
 
 

@@ -8,7 +8,7 @@ include skeleton/__init__.py
 include skeleton/examples/__init__.py
 include skeleton/examples/basic-module/README.rst
 include skeleton/examples/basic-module/setup.py_tmpl
-include skeleton/examples/basic-module/{ModuleName}.py
+include skeleton/examples/basic-module/{module_name}.py
 include skeleton/examples/basic-package/MANIFEST.in
 include skeleton/examples/basic-package/README.rst
 include skeleton/examples/basic-package/distribute_setup.py
@@ -28,7 +28,7 @@ include skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl
 include skeleton/tests/skeletons/dynamic-content/foo.txt
 include skeleton/tests/skeletons/dynamic-file-name/bar/${baz}.txt
 include skeleton/tests/skeletons/dynamic-file-name/foo.txt
-include skeleton/tests/skeletons/required/${FileName}.txt
+include skeleton/tests/skeletons/required/${file_name}.txt
 include skeleton/tests/skeletons/required/bar/empty
 include skeleton/tests/skeletons/static/bar/baz.txt
 include skeleton/tests/skeletons/static/foo.txt

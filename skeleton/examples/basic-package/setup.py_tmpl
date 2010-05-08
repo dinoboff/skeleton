@@ -9,11 +9,11 @@ import os
 from setuptools import setup
 
 
-PROJECT = {ProjectName!r}
+PROJECT = {project_name!r}
 VERSION = '0.1'
 URL = ''
-AUTHOR = {Author!r}
-AUTHOR_EMAIL = {AuthorEmail!r}
+AUTHOR = {author!r}
+AUTHOR_EMAIL = {author_email!r}
 DESC = "A short description..."
 
 def read_file(file_name):
@@ -32,8 +32,8 @@ setup(
     author_email=AUTHOR_EMAIL,
     url=URL,
     license=read_file('LICENSE'),
-    namespace_packages={NSPackages!r},
-    packages={Packages!r},
+    namespace_packages={ns_packages!r},
+    packages={packages!r},
     package_dir = {{'': os.path.dirname(__file__)}},
     include_package_data=True,
     zip_safe=False,

@@ -26,12 +26,12 @@ class BasicPackage(Skeleton):
     
     Require the following variables:
     
-    - ProjectName;
-    - PackageName;
-    - Author;
-    - and AuthorEmail.
+    - project_name;
+    - package_name;
+    - author;
+    - and author_email.
     
-    Todo: Allow to set a global defaults for AUthor and AuthorEmail.
+    Todo: Allow to set a global defaults for author and author_email.
     Todo: Better README.rst content like Having a basic Installation and
     requirement section.
     Todo: Setup a test package and the distribute use_2to3 option.
@@ -39,10 +39,10 @@ class BasicPackage(Skeleton):
 
     src = 'basic-package'
     vars = [
-        Var('ProjectName'),
-        Var('PackageName'),
-        Var('Author'),
-        Var('AuthorEmail')
+        Var('project_name'),
+        Var('package_name'),
+        Var('author'),
+        Var('author_email')
         ]
     required_skeletons = [
         LicenseChoice,
@@ -72,27 +72,27 @@ class BasicPackage(Skeleton):
         """
         Create a list of package and namespaces suitable for setuptools.
         """
-        self['NSPackages'] = []
-        self['Packages'] = [self['PackageName']]
+        self['ns_packages'] = []
+        self['packages'] = [self['package_name']]
 
         # Add parent package to the list of package and namespaces
         current_ns = []
-        package_parts = self['PackageName'].split('.')
+        package_parts = self['package_name'].split('.')
         for part in package_parts[:-1]:
             current_ns.append(part)
             parent_package = '.'.join(current_ns)
-            self['NSPackages'].append(parent_package)
-            self['Packages'].append(parent_package)
+            self['ns_packages'].append(parent_package)
+            self['packages'].append(parent_package)
 
     def _create_packages(self, dst_dir):
         """
         Create a packages listed in self['Packages']
         """
-        packages = self.get('Packages', [])
+        packages = self.get('packages', [])
         packages.sort()
         for package in packages:
             init_body = ''
-            if package in self.get('NSPackages', []):
+            if package in self.get('ns_packages', []):
                 init_body = NS_HEADER
             self._create_package(dst_dir, package, init_body)
 
@@ -116,7 +116,7 @@ class BasicPackage(Skeleton):
         Add license classifiers
         """
         setup = os.path.join(dst_dir, 'setup.py')
-        license_name = self.get('License', '').upper()
+        license_name = self.get('license', '').upper()
         if license_name not in self.licence_classifiers:
             return
         classifiers = [

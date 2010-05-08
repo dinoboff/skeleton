@@ -24,16 +24,16 @@ class TestBasicPackage(TestCase):
         if sys.version_info < (2, 6):
             return
         variables = {
-            'ProjectName': 'foo',
-            'PackageName': 'foo',
-            'Author': 'Damien Lebrun',
-            'AuthorEmail': 'dinoboff@gmail.com',
+            'project_name': 'foo',
+            'package_name': 'foo',
+            'author': 'Damien Lebrun',
+            'author_email': 'dinoboff@gmail.com',
             }
         skel = BasicPackage(variables)
         skel.write(self.tmp_dir.path)
 
-        self.assertEqual(skel['NSPackages'], [])
-        self.assertEqual(skel['Packages'], ['foo'])
+        self.assertEqual(skel['ns_packages'], [])
+        self.assertEqual(skel['packages'], ['foo'])
         self.assertTrue(os.path.exists(
             os.path.join(self.tmp_dir.path, 'distribute_setup.py')))
         self.assertTrue(os.path.exists(
@@ -55,11 +55,11 @@ class TestBasicPackage(TestCase):
         if sys.version_info < (2, 6):
             return
         variables = {
-            'ProjectName': 'foo',
-            'PackageName': 'foo',
-            'Author': 'Damien Lebrun',
-            'AuthorEmail': 'dinoboff@gmail.com',
-            'License': 'BSD',
+            'project_name': 'foo',
+            'package_name': 'foo',
+            'author': 'Damien Lebrun',
+            'author_email': 'dinoboff@gmail.com',
+            'license': 'BSD',
             }
         skel = BasicPackage(variables)
         skel.write(self.tmp_dir.path)
@@ -82,17 +82,17 @@ class TestBasicPackage(TestCase):
         if sys.version_info < (2, 6):
             return
         variables = {
-            'ProjectName': 'foo-bar-baz',
-            'PackageName': 'foo.bar.baz',
-            'Author': 'Damien Lebrun',
-            'AuthorEmail': 'dinoboff@gmail.com',
+            'project_name': 'foo-bar-baz',
+            'package_name': 'foo.bar.baz',
+            'author': 'Damien Lebrun',
+            'author_email': 'dinoboff@gmail.com',
             }
         skel = BasicPackage(variables)
         skel.write(self.tmp_dir.path)
 
-        self.assertEqual(set(skel['NSPackages']), set(['foo', 'foo.bar']))
+        self.assertEqual(set(skel['ns_packages']), set(['foo', 'foo.bar']))
         self.assertEqual(
-            set(skel['Packages']),
+            set(skel['packages']),
             set(['foo', 'foo.bar', 'foo.bar.baz']))
         self.assertTrue(os.path.exists(
             os.path.join(self.tmp_dir.path, 'distribute_setup.py')))
