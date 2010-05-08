@@ -32,7 +32,7 @@ RELEASE_REMOTE = origin
 
 
 all: clean test dist
-test-all: test-py2.5 test-py2.6 test-py3.1 test-deploy
+test-all: test test-py2.5 test-py2.6 test-py3.1 test-deploy
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -101,7 +101,7 @@ register: README.html
 	@echo "Creating or updating skeleton v$(DIST_VERSION) pypi page."
 	$(PYTHON) $(SETUP) $(REGISTER_CMD)
 
-release: clean MANIFEST.in all-test tag upload upload-egg-3.1
+release: clean MANIFEST.in test-all tag upload upload-egg-3.1
 	@echo "Version $(DIST_VERSION) released."
 	@echo
 
