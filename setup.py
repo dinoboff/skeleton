@@ -7,7 +7,7 @@ distribute_setup.use_setuptools()
 from setuptools import setup
 
 PROJECT = 'skeleton'
-VERSION = '0.3'
+VERSION = '0.4'
 URL = 'http://github.com/dinoboff/skeleton'
 AUTHOR = 'Damien Lebrun'
 AUTHOR_EMAIL = 'dinoboff@gmail.com'
@@ -24,18 +24,18 @@ setup(
     url=URL,
     license='BSD',
     packages=['skeleton', 'skeleton.tests', 'skeleton.examples'],
-    test_suite = 'skeleton.tests',
-    use_2to3 = True,
+    test_suite='skeleton.tests',
+    use_2to3=True,
     include_package_data=True,
     zip_safe=False,
     install_requires=[],
-    extras_require = {
+    extras_require={
         'virtualenv-templates':  [
             'virtualenvwrapper>=2.1.1',
             'virtualenvwrapper.project>=1.0'
             ],
     },
-    entry_points = {
+    entry_points={
         'virtualenvwrapper.project.template': [
             'package = skeleton.examples.basicpackage:virtualenv_warpper_hook',
             ],
