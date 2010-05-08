@@ -98,6 +98,11 @@ class TestVarsToOptparser(unittest.TestCase):
         self.assertEqual(parser.get_option('--foo').dest, 'Foo')
         self.assertEqual(parser.get_option('--foo-bar').dest, 'foo_bar')
 
+    def test_default_metavar(self):
+        parser = vars_to_optparser([Var('Foo'), Var('bar_name')])
+        self.assertEqual(parser.get_option('--foo').metavar, 'FOO')
+        self.assertEqual(parser.get_option('--bar-name').metavar, 'NAME')
+
 
 def suite():
     """Return tests for skeleton.utils.*  """

@@ -36,7 +36,8 @@ def vars_to_optparser(variables, parser=None):
         parser.add_option(
             "--%s" % var.name.lower().replace('_', '-'),
             dest=var.name,
-            help=var.full_description)
+            help=var.full_description,
+            metavar=var.name.split('_')[-1].upper())
     return parser
 
 def get_file_mode(path):
