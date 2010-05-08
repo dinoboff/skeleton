@@ -1,7 +1,6 @@
 `skeleton` is similar to the template part of PasteScript_ but 
 without any dependencies; it is also compatible with Python 3.
 
-
 Requirements
 ============
 
@@ -36,29 +35,35 @@ First, create the skeleton script layout::
 	mkmodule.py
 	basic-module/README
 	basic-module/setup.py_tmpl
-	basic-module/{ModuleName}.py
+	basic-module/{module_name}.py
 
 `mkmodule.py`
 -------------
 
-`mkmodule.py` is the script that create new module::
+`mkmodule.py` is the script that create new modules::
 
 
 	#!/usr/bin/env python
-	
+	"""
+	Basic script to create an empty python package containing one module
+	"""
 	from skeleton import Skeleton, Var
 
 
 	class BasicModule(Skeleton):
+	    """
+	    Create an empty module with its etup script and a README file.
+	    """
 	    src = 'basic-module'
 	    vars = [
-	        Var('ModuleName'),
-	        Var('Author'),
-	        Var('AuthorEmail'),
+	        Var('module_name'),
+	        Var('author'),
+	        Var('author_email'),
 	        ]
 
 
 	def main():
+	    """Basic command line bootstrap for the BasicModule Skeleton"""
 	    BasicModule.cmd()
 
 	if __name__ == '__main__':
@@ -82,11 +87,9 @@ the logging basic config, and to apply the skeleton::
 	  -q, --quiet           
 	  -v, --verbose         
 	  -d, --debug           
-	  --ModuleName=MODULENAME
-	                        ModuleName
-	  --Author=AUTHOR       Author
-	  --AuthorEmail=AUTHOREMAIL
-	                        AuthorEmail
+	  --module-name=NAME    Module Name
+	  --author=AUTHOR       Author
+	  --author-email=EMAIL  Author Email
 
 
 If you needed to run a `Skeleton` yourself, you would use the 
@@ -164,6 +167,15 @@ create a new project::
 
 CHANGES:
 ========
+
+0.4 (Mai 8, 2010)
+-----------------
+
+- Convert Var names to lower_case_with_underscores.
+- improve Var name display in command
+- improve long string option for Vars in command line.
+- fix bug in setup.py_tmpl of the mkmodule.py example.
+
 
 0.3 (Mai 6, 2010)
 -----------------
