@@ -117,10 +117,10 @@ to create a `setup.py` file::
 	from distutils.core import setup
 
 
-	PROJECT = {ModuleName!r}
+	PROJECT = {module_name!r}
 	VERSION = '0.1'
-	AUTHOR = {Author!r}
-	AUTHOR_EMAIL = {AuthorEmail!r}
+	AUTHOR = {author!r}
+	AUTHOR_EMAIL = {author_email!r}
 	DESC = "A short description..."
 
 	setup(
@@ -130,15 +130,15 @@ to create a `setup.py` file::
 	    long_description=open('README.rst').read(),
 	    author=AUTHOR,
 	    author_email=AUTHOR_EMAIL,
-	    py_module={ModuleName!r}
+	    py_module=[{module_name!r},],
 	)
 
 By default, `Skeleton` uses python 2.6+ `string formatting`_.
 
-`basic-module/{ModuleName}.py`
-------------------------------
+`basic-module/{module_name}.py`
+-------------------------------
 
-`{ModuleName}.py` is the module file for which the name will be set dynamically
+`{module_name}.py` is the module file for which the name will be set dynamically
 at run time.
 
 .. NOTE::
