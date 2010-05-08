@@ -148,7 +148,7 @@ at run time.
 	a variable).
 
 EXTRA
------
+=====
 
 `skeleton` includes a skeleton for a basic package layout, you can 
 run it with::
@@ -216,8 +216,9 @@ TODO:
 =====
 
 - Write documentation.
-- Improve variable prompt and command line option.
-- add more example.
+- add more examples.
+- better error handling 
+  (e.g. give the source of template formatting error).
 
 
 Development
