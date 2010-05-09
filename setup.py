@@ -4,6 +4,8 @@
 import distribute_setup
 distribute_setup.use_setuptools()
 
+import sys
+
 from setuptools import setup
 
 PROJECT = 'skeleton'
@@ -12,6 +14,11 @@ URL = 'http://github.com/dinoboff/skeleton'
 AUTHOR = 'Damien Lebrun'
 AUTHOR_EMAIL = 'dinoboff@gmail.com'
 DESC = "Basic Template system for project skeleton."
+
+EXTRAS = {}
+
+if sys.version_info < (3,):
+    EXTRAS['use_2to3'] = True
 
 
 setup(
@@ -25,7 +32,6 @@ setup(
     license='BSD',
     packages=['skeleton', 'skeleton.tests', 'skeleton.examples'],
     test_suite='skeleton.tests',
-    use_2to3=True,
     include_package_data=True,
     zip_safe=False,
     install_requires=[],
@@ -51,4 +57,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.1',
         ],
+    **EXTRAS
 )
