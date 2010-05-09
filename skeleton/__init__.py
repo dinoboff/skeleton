@@ -23,7 +23,7 @@ import optparse
 
 log = get_loggger(__name__)
 
-def _run_requirement(skel_method):
+def run_requirement(skel_method):
     """
     Decorator for Skeleton methods
     
@@ -32,7 +32,7 @@ def _run_requirement(skel_method):
     """
     def wrapper(self, *args, **kw):
         """Method wrapper."""
-        for skel in self._required_skeletons:
+        for skel in self.required_skeletons_instances:
             if hasattr(skel, skel_method.__name__):
                 getattr(skel, skel_method.__name__)(*args, **kw)
             self.update(skel)
@@ -72,12 +72,7 @@ class Skeleton(dict):
 
     def __init__(self, *arg, **kw):
         super(Skeleton, self).__init__(*arg, **kw)
-
-        self._required_skeletons = []
-        for skel_class in self.required_skeletons:
-            skel = skel_class(*arg, **kw)
-            self.update(skel)
-            self._required_skeletons.append(skel)
+        self._required_skeletons_instances = None
 
         # Set global variables
         self['year'] = datetime.datetime.utcnow().year
@@ -87,6 +82,19 @@ class Skeleton(dict):
             (var.name, var.default,)
                 for var in self.vars if var.default is not None
                 ])
+    @property
+    def required_skeletons_instances(self):
+        """
+        Return skeletons required by this skeleton
+        """
+        if self._required_skeletons_instances is None:
+            self._required_skeletons_instances = []
+            for skel_class in self.required_skeletons:
+                skel = skel_class(self)
+                self.update(skel)
+                self._required_skeletons_instances.append(skel)
+        return self._required_skeletons_instances
+
 
     def update(self, *args, **kw):
         """
@@ -95,7 +103,7 @@ class Skeleton(dict):
         
         See dict.update()
         """
-        for skel in self._required_skeletons:
+        for skel in self.required_skeletons_instances:
             skel.update(*args, **kw)
         super(Skeleton, self).update(*args, **kw)
 
@@ -104,7 +112,7 @@ class Skeleton(dict):
         Add or update an entry in the skeleton and its required skeleton
         instances. 
         """
-        for skel in self._required_skeletons:
+        for skel in self.required_skeletons_instances:
             skel.__setitem__(key, value)
         super(Skeleton, self).__setitem__(key, value)
 
@@ -135,7 +143,7 @@ class Skeleton(dict):
             raise AttributeError("No skeleton at %r" % skel_path)
         return skel_path
 
-    @_run_requirement
+    @run_requirement
     def check_vars(self):
         """
         Raise a KeyError if any required variable is missing.
@@ -144,7 +152,7 @@ class Skeleton(dict):
             if var.name not in self and var.name not in self._defaults:
                 raise KeyError("Variable %r not set." % var.name)
 
-    @_run_requirement
+    @run_requirement
     def get_missing_variables(self):
         """
         Prompt user for any missing variable 
@@ -156,7 +164,7 @@ class Skeleton(dict):
             else:
                 log.debug("Varaiable %r already set", var.name)
 
-    @_run_requirement
+    @run_requirement
     def write(self, dst_dir, run_dry=False):
         """
         Apply skeleton to dst_dir.
