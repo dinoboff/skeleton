@@ -119,6 +119,7 @@ test: clean
 
 test-py%: clean
 	@echo "Running skeleton unit tests with "$(PYTHON$*)"..."
+	rm -rf ./build
 	which "$(PYTHON$*)"
 	$(PYTHON$*) -c "import sys; sys.version.startswith('$*') or exit(1)"
 	$(PYTHON$*) $(SETUP) $(TEST_CMD)
