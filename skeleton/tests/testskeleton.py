@@ -24,7 +24,7 @@ class Static(Skeleton):
         """
         Set a python 2.5 compatible formatter
         """
-        context = dict(self._defaults)
+        context = dict(self.defaults)
         context.update(self)
         return string.Template(template).substitute(context)
 
@@ -105,6 +105,7 @@ class TestSkeleton(TestCase):
         Check Skeleton.get() return the set value or its default
         """
         skel = DynamicContentWithOptional()
+        self.assertEqual(skel.defaults['opional_var'], '<default>')
         self.assertEqual(skel.get('opional_var'), '<default>')
 
     def test_check_var_with_default_var(self):

@@ -72,16 +72,12 @@ class Skeleton(dict):
 
     def __init__(self, *arg, **kw):
         super(Skeleton, self).__init__(*arg, **kw)
+        self._defaults = None
         self._required_skeletons_instances = None
 
         # Set global variables
         self['year'] = datetime.datetime.utcnow().year
 
-        # Set defaults
-        self._defaults = dict([
-            (var.name, var.default,)
-                for var in self.vars if var.default is not None
-                ])
     @property
     def required_skeletons_instances(self):
         """
@@ -95,6 +91,17 @@ class Skeleton(dict):
                 self._required_skeletons_instances.append(skel)
         return self._required_skeletons_instances
 
+    @property
+    def defaults(self):
+        """
+        return variables' default values
+        """
+        if self._defaults is None:
+            self._defaults = dict([
+                (var.name, var.default,)
+                    for var in self.vars if var.default is not None
+                    ])
+        return self._defaults
 
     def update(self, *args, **kw):
         """
@@ -120,7 +127,7 @@ class Skeleton(dict):
         """
         Get the set variable value or its default or the given default
         """
-        default = self._defaults.get(variable_name, default)
+        default = self.defaults.get(variable_name, default)
         return super(Skeleton, self).get(variable_name, default)
 
     @property
@@ -149,7 +156,7 @@ class Skeleton(dict):
         Raise a KeyError if any required variable is missing.
         """
         for var in self.vars:
-            if var.name not in self and var.name not in self._defaults:
+            if var.name not in self and var.name not in self.defaults:
                 raise KeyError("Variable %r not set." % var.name)
 
     @run_requirement
@@ -279,7 +286,7 @@ class Skeleton(dict):
                 "like object (with a format method).")
             log.critical(msg, self.__class__.__name__)
             raise NotImplementedError(msg % self.__class__.__name__)
-        context = dict(self._defaults)
+        context = dict(self.defaults)
         context.update(self)
         return template.format(**context)
 
