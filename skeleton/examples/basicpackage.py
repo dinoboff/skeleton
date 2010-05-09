@@ -13,7 +13,7 @@ from skeleton.utils import get_loggger, insert_into_file
 from skeleton.examples.licenses import LicenseChoice
 
 
-log = get_loggger(__name__)
+_LOG = get_loggger(__name__)
 
 NS_HEADER = """
 __import__('pkg_resources').declare_namespace(__name__)
@@ -104,7 +104,7 @@ class BasicPackage(Skeleton):
         """
         package_part = package.split('.')
         path = os.path.join(dst_dir, *package_part)
-        log.info("Creating package %s" % package)
+        _LOG.info("Creating package %s" % package)
         if self.run_dry:
             return
         os.mkdir(path)
@@ -136,7 +136,7 @@ def virtualenv_warpper_hook(*args, **kw):
     Create a new package package (with namespace support)
     with the setup.py, README.rst and MANIFEST.in files already setup.
     """
-    logging.basicConfig(
+    _LOGging.basicConfig(
         level=logging.INFO,
         format="%(levelname)s - %(message)s"
         )

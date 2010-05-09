@@ -21,7 +21,7 @@ import functools
 import optparse
 
 
-log = get_loggger(__name__)
+_LOG = get_loggger(__name__)
 
 def run_requirement(skel_method):
     """
@@ -169,7 +169,7 @@ class Skeleton(dict):
             if var.name not in self:
                 self[var.name] = var.prompt()
             else:
-                log.debug("Varaiable %r already set", var.name)
+                _LOG.debug("Varaiable %r already set", var.name)
 
     @run_requirement
     def write(self, dst_dir, run_dry=False):
@@ -193,7 +193,7 @@ class Skeleton(dict):
         """
         self.run_dry = run_dry
 
-        log.info(
+        _LOG.info(
             "Rendering %s skeleton at %r...",
             self.__class__.__name__,
             dst_dir)
@@ -205,7 +205,7 @@ class Skeleton(dict):
 
         skel_dir = self.skel_dir
         skel_dir_len = len(skel_dir)
-        log.debug("Getting skeleton from %r" % skel_dir)
+        _LOG.debug("Getting skeleton from %r" % skel_dir)
 
         for dir_path, dir_names, file_names in os.walk(skel_dir):
             rel_dir_path = dir_path[skel_dir_len:].lstrip(r'\/')
@@ -284,7 +284,7 @@ class Skeleton(dict):
             msg = (
                 "%s's template_formatter expect a python 2.6+ string "
                 "like object (with a format method).")
-            log.critical(msg, self.__class__.__name__)
+            _LOG.critical(msg, self.__class__.__name__)
             raise NotImplementedError(msg % self.__class__.__name__)
         context = dict(self.defaults)
         context.update(self)
@@ -296,7 +296,7 @@ class Skeleton(dict):
         
         Only log the event if self.run_dry is True.
         """
-        log.info("Create directory %r", path)
+        _LOG.info("Create directory %r", path)
         if not self.run_dry and not os.path.exists(path):
             os.mkdir(path)
         if like is not None:
@@ -319,7 +319,7 @@ class Skeleton(dict):
         
         Only log the event if self.run_dry is True.
         """
-        log.info("Copy %r to %r", src, dst)
+        _LOG.info("Copy %r to %r", src, dst)
         if not self.run_dry:
             shutil.copyfile(src , dst)
         self._set_mode(dst, like=src)
@@ -330,7 +330,7 @@ class Skeleton(dict):
         
         Raises a KeyError if a variable is missing.
         """
-        log.info("Creating %r from %r template...", dst, src)
+        _LOG.info("Creating %r from %r template...", dst, src)
         if not self.run_dry:
             fd_src = None
             fd_dst = None
@@ -349,7 +349,7 @@ class Skeleton(dict):
         """
         Set mode of `path` with the mode of `like`.
         """
-        log.info("Set mode of %r to '%o'", path, get_file_mode(like))
+        _LOG.info("Set mode of %r to '%o'", path, get_file_mode(like))
         if not self.run_dry:
             shutil.copymode(like, path)
 
