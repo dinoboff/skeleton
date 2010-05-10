@@ -127,10 +127,12 @@ class Skeleton(collections.MutableMapping):
         self._required_skeletons_instances = None
         self._defaults = {}
 
-        if skeleton is not None:
+        if isinstance(skeleton, Skeleton):
             self.set_variables = weakref.proxy(skeleton)
         else:
             self.set_variables = {'year': datetime.datetime.utcnow().year}
+            if skeleton is not None:
+                self.set_variables.update(skeleton)
         self.set_variables.update(kw)
 
         for var in self.vars:
