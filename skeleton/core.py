@@ -38,6 +38,23 @@ class TemplateKeyError(KeyError, SkeletonError):
         return self.message
 
 
+class FileNameKeyError(KeyError, SkeletonError):
+    """Raised by Skeleton when a name cannot be formmatted
+    """
+
+    def __init__(self, variable_name, file_path):
+        super(FileNameKeyError, self).__init__(variable_name)
+        self.variable_name = variable_name
+        self.file_path = file_path
+        self.message = (
+            "Found unexpected variable %r in file name %r"
+                % (variable_name, file_path)
+            )
+
+    def __str__(self):
+        return self.message
+
+
 def run_requirements_last(skel_method):
     """
     Decorator for Skeleton methods
@@ -251,7 +268,8 @@ class Skeleton(collections.MutableMapping):
                 dst = os.path.join(
                     dst_dir,
                     rel_dir_path,
-                    self.template_formatter(file_name))
+                    self._format_file_name(file_name, dir_path)
+                    )
                 self._copy_file(src, dst)
 
             #copy directories
@@ -323,6 +341,15 @@ class Skeleton(collections.MutableMapping):
             raise NotImplementedError(msg % self.__class__.__name__)
 
         return template.format(**self)
+
+    def _format_file_name(self, file_name, dir_path):
+        try:
+            return self.template_formatter(file_name)
+        except (KeyError,), exc:
+            raise FileNameKeyError(
+                exc.args[0],
+                os.path.join(dir_path, file_name)
+                )
 
     def _mkdir(self, path, like=None):
         """

@@ -7,7 +7,7 @@ import datetime
 import unittest
 
 from skeleton.tests.utils import TestCase, TempDir
-from skeleton.core import Skeleton, Var, TemplateKeyError
+from skeleton.core import Skeleton, Var, TemplateKeyError, FileNameKeyError
 
 
 THIS_YEAR = datetime.datetime.utcnow().year
@@ -58,6 +58,12 @@ class StaticWithRequirement(Static):
 
 
 class MissingVariable(DynamicContent):
+    """We forgot to declare the variable "baz"
+    """
+    vars = []
+
+
+class MissingVariableForFileName(DynamicFileName):
     """We forgot to declare the variable "baz"
     """
     vars = []
@@ -238,6 +244,17 @@ class TestSkeleton(TestCase):
                 open(tmp_dir.join('bar/replaced-name.txt')).read().strip(),
                 'baz'
                 )
+
+    def test_write_file_name_fails(self):
+        """Tests Skeleton.write() with dynamic file name fails"""
+        skel = MissingVariableForFileName()
+        with TempDir() as tmp_dir:
+            try:
+                skel.write(tmp_dir.path)
+                self.fail("An exception should be raised")
+            except (FileNameKeyError,), exc:
+                self.assertTrue(exc.file_path.endswith('bar/{baz}.txt'))
+                self.assertEqual(exc.variable_name, 'baz')
 
     def test_run_with_var(self):
         """Tests Skeleton.run() with dynamic content and variable prompt."""
