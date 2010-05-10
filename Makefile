@@ -25,7 +25,7 @@ RST2HTML = rst2html.py --strict
 
 VIRTUALENV = virtualenv
 
-DIST_VERSION   = `$(PYTHON) setup.py --version`
+DIST_VERSION   = $(shell $(PYTHON) setup.py --version)
 RELEASE_BRANCH = release-0.5
 RELEASE_REMOTE = origin
 
