@@ -149,15 +149,15 @@ class TestSkeleton(TestCase):
         """Tests Skeleton.check_va() on no set variables with defaults"""
         skel = WithDefault(foo=1, baz=3)
         try:
-            skel.check_vars()
+            skel.check_variables()
         except KeyError:
-            self.fail("check_vars() should not raise KayError "
+            self.fail("check_variables() should not raise KayError "
                 "if the missing variable has a default.")
 
     def test_check_var_fails(self):
         """Tests Skeleton.check_var() on exception to raise."""
         skel = WithDefault(foo=1)
-        self.assertRaises(KeyError, skel.check_vars)
+        self.assertRaises(KeyError, skel.check_variables)
 
     def test_get_variables_with_default(self):
         """Tests prompt of variable with default"""
