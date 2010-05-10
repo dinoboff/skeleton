@@ -8,24 +8,37 @@ import sys
 
 from setuptools import setup
 
+
+def read_file(name):
+    """
+    Read file content
+    """
+    f = open(name)
+    try:
+        return f.read()
+    except IOError:
+        print "could not read %r" % name
+        f.close()
+
+
 PROJECT = 'skeleton'
 VERSION = '0.5'
 URL = 'http://github.com/dinoboff/skeleton'
 AUTHOR = 'Damien Lebrun'
 AUTHOR_EMAIL = 'dinoboff@gmail.com'
 DESC = "Basic Template system for project skeleton."
+LONG_DESC = read_file('README.rst') + '\n\n' + read_file('HISTORY.rst')
 
 EXTRAS = {}
 
 if sys.version_info > (3,):
     EXTRAS['use_2to3'] = True
 
-
 setup(
     name=PROJECT,
     version=VERSION,
     description=DESC,
-    long_description=open('README.rst').read(),
+    long_description=LONG_DESC,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     url=URL,
