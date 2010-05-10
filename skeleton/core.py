@@ -30,12 +30,10 @@ class TemplateKeyError(KeyError, SkeletonError):
         super(TemplateKeyError, self).__init__(variable_name)
         self.variable_name = variable_name
         self.file_path = file_path
-        self.message = (
-            "Found unexpected variable %r in %r." % (variable_name, file_path,)
-            )
 
     def __str__(self):
-        return self.message
+        return ("Found unexpected variable %r in %r."
+            % (self.variable_name, self.file_path,))
 
 
 class FileNameKeyError(KeyError, SkeletonError):
@@ -46,13 +44,10 @@ class FileNameKeyError(KeyError, SkeletonError):
         super(FileNameKeyError, self).__init__(variable_name)
         self.variable_name = variable_name
         self.file_path = file_path
-        self.message = (
-            "Found unexpected variable %r in file name %r"
-                % (variable_name, file_path)
-            )
 
     def __str__(self):
-        return self.message
+        return ("Found unexpected variable %r in file name %r"
+            % (self.variable_name, self.file_path))
 
 
 def run_requirements_last(skel_method):
