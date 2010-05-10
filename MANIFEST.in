@@ -1,3 +1,4 @@
+include .gitignore
 include LICENCE
 include MANIFEST.in
 include Makefile
@@ -5,6 +6,7 @@ include README.rst
 include distribute_setup.py
 include setup.py
 include skeleton/__init__.py
+include skeleton/core.py
 include skeleton/examples/__init__.py
 include skeleton/examples/basic-module/README.rst
 include skeleton/examples/basic-module/setup.py_tmpl
@@ -26,18 +28,14 @@ include skeleton/examples/mkmodule.py
 include skeleton/tests/__init__.py
 include skeleton/tests/skeletons/dynamic-content/bar/baz.txt_tmpl
 include skeleton/tests/skeletons/dynamic-content/foo.txt
-include skeleton/tests/skeletons/dynamic-file-name/bar/${baz}.txt
+include skeleton/tests/skeletons/dynamic-file-name/bar/{baz}.txt
 include skeleton/tests/skeletons/dynamic-file-name/foo.txt
-include skeleton/tests/skeletons/required/${file_name}.txt
 include skeleton/tests/skeletons/required/bar/empty
+include skeleton/tests/skeletons/required/{file_name}.txt
 include skeleton/tests/skeletons/static/bar/baz.txt
 include skeleton/tests/skeletons/static/foo.txt
-include skeleton/tests/testbasicmodule.py
-include skeleton/tests/testbasicpackage.py
-include skeleton/tests/testdefaulttemplate.py
-include skeleton/tests/testlicenses.py
-include skeleton/tests/testskeleton.py
-include skeleton/tests/testutils.py
-include skeleton/tests/testvar.py
+include skeleton/tests/test_core.py
+include skeleton/tests/test_examples.py
+include skeleton/tests/test_utils.py
 include skeleton/tests/utils.py
 include skeleton/utils.py

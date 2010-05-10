@@ -6,9 +6,10 @@ import tempfile
 import shutil
 
 from skeleton import Var
+import os
 
 
-class RawInputMock(object):
+class Mock(object):
     """Basic mock object"""
 
     def __init__(self):
@@ -54,13 +55,19 @@ class TempDir(object):
         set the path attribute to the this directory path
         """
         self.path = tempfile.mkdtemp()
-        return self.path
+        return self
 
     def remove(self):
         """
         remove temporary directory.
         """
         shutil.rmtree(self.path)
+
+    def join(self, *args):
+        return os.path.join(self.path, *args)
+
+    def exists(self, *args):
+        return os.path.exists(self.join(*args))
 
     __enter__ = create
 
@@ -75,12 +82,10 @@ class TestCase(unittest.TestCase):
 
     def setUp(self):
         """
-        Mock Var._prompt and create a temporary directory
+        Mock Var._prompt
         """
         super(TestCase, self).setUp()
-        self.tmp_dir = TempDir()
-        self.tmp_dir.create()
-        self.input_mock = RawInputMock()
+        self.input_mock = Mock()
         self._input = Var._prompt
         Var._prompt = self.input_mock
 
@@ -89,5 +94,4 @@ class TestCase(unittest.TestCase):
         Reset Var._prompt and remove the temporary directory.
         """
         super(TestCase, self).tearDown()
-        self.tmp_dir.remove()
         Var._prompt = self._input

@@ -6,7 +6,6 @@
 SHELL    = /bin/sh
 
 PYTHON   = python
-PYTHON2.5  = python2.5
 PYTHON2.6  = python2.6
 PYTHON3.1  = python3.1
 
@@ -32,7 +31,7 @@ RELEASE_REMOTE = origin
 
 
 all: clean test dist
-test-all: test test-py2.5 test-py2.6 test-py3.1 test-deploy
+test-all: test test-py2.6 test-py3.1 test-deploy
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
