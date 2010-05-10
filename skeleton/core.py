@@ -322,18 +322,8 @@ class Skeleton(collections.MutableMapping):
         return parser
 
     def template_formatter(self, template):
+        """Default template formatter.
         """
-        Default template formatter.
-        
-        Require Python 2.6+
-        """
-        if sys.version_info < (2, 6):
-            msg = (
-                "%s's template_formatter expect a python 2.6+ string "
-                "like object (with a format method).")
-            _LOG.critical(msg, self.__class__.__name__)
-            raise NotImplementedError(msg % self.__class__.__name__)
-
         return template.format(**self)
 
     def _format_file_name(self, file_name, dir_path):
