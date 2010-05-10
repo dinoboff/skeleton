@@ -4,9 +4,9 @@ without any dependencies; it is also compatible with Python 3.
 Requirements
 ============
 
-- Python 2.5+ (python 2.6+ to use the default template formatter)
+- Python 2.6 or 3.1
 
-It currently only has been tested with Python 2.5, 2.6 and 3.1 on Mac OSX.
+It currently only has been tested with Python 2.6 and 3.1 on Mac OSX.
 
 
 Installation
@@ -168,6 +168,15 @@ create a new project::
 CHANGES:
 ========
 
+0.5 (Mai 10, 2010)
+------------------
+
+- Drop Python 2.5 support (might get basic support back).
+- Various internal changes prior to 1.0 release.
+- Improve error related to unexpected variable names in templates
+  and file names
+
+
 0.4 (Mai 8, 2010)
 -----------------
 
@@ -217,8 +226,6 @@ TODO:
 
 - Write documentation.
 - add more examples.
-- better error handling 
-  (e.g. give the source of template formatting error).
 
 
 Development
