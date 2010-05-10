@@ -146,7 +146,7 @@ class TestSkeleton(TestCase):
         self.assertTrue('year' in skel)
 
     def test_check_var_with_default_var(self):
-        """Checks Skeleton.get() return the set value or its default"""
+        """Tests Skeleton.check_va() on no set variables with defaults"""
         skel = WithDefault(foo=1, baz=3)
         try:
             skel.check_vars()
@@ -155,13 +155,13 @@ class TestSkeleton(TestCase):
                 "if the missing variable has a default.")
 
     def test_check_var_fails(self):
-        """Checks Skeleton.get() return the set value or its default"""
+        """Tests Skeleton.check_var() on exception to raise."""
         skel = WithDefault(foo=1)
         self.assertRaises(KeyError, skel.check_vars)
 
     def test_get_variables_with_default(self):
         """Tests prompt of variable with default"""
-        resps = ['', '1', '2', '3']
+        resps = ['', '1', '', '3']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         skel = WithDefault()
@@ -169,7 +169,7 @@ class TestSkeleton(TestCase):
         skel.get_missing_variables()
         self.assertEqual(self.input_mock.call_count, 4)
         self.assertEqual(skel['foo'], '1')
-        self.assertEqual(skel['bar'], '2')
+        self.assertEqual(skel['bar'], 2)
         self.assertEqual(skel['baz'], '3')
 
     def test_write_without_src(self):
