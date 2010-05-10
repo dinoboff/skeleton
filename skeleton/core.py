@@ -105,13 +105,22 @@ class Skeleton(collections.MutableMapping):
     
     If the skeleton require other skeleton to be run first, list them in the
     required_skeletons attribute.
+    
     """
 
+    #: Path to skeleton folder, relative to Skeleton module
     src = None
+
+    #: List of variable required by templates
     vars = []
+
+    #: List of Skeleton to apply first
     required_skeletons = []
-    template_suffix = '_tmpl'
+
+    #: Encoding of template file (UTF-8 by default)
     file_encoding = 'UTF-8'
+
+    template_suffix = '_tmpl'
     run_dry = False
 
     def __init__(self, skeleton=None, **kw):
@@ -131,7 +140,7 @@ class Skeleton(collections.MutableMapping):
     @property
     def required_skeletons_instances(self):
         """
-        Return skeletons required by this skeleton
+        Return the skeletons required by this skeleton
         """
         if self._required_skeletons_instances is None:
             self._required_skeletons_instances = []
@@ -233,6 +242,7 @@ class Skeleton(collections.MutableMapping):
         template formatter.
         
         Raises:
+        
         - KeyError if a variable is missing and doesn't have a default.
         - IOError if it cannot read the skeleton files, or cannot create
           files and folder.
