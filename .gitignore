@@ -5,3 +5,4 @@ distribute-*egg
 dist/*
 build/*
 v/*
+docs/_build/doctrees/*

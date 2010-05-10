@@ -25,10 +25,11 @@ RST2HTML = rst2html.py --strict
 
 VIRTUALENV = virtualenv
 
-DIST_VERSION   = `$(PYTHON) setup.py --version`
-RELEASE_BRANCH = master
+DIST_VERSION   = $(shell $(PYTHON) setup.py --version)
+RELEASE_BRANCH = release-0.5
 RELEASE_REMOTE = origin
 
+GH_PAGES_SUBMODULE = docs/_build/html
 
 all: clean test dist
 test-all: test test-py2.6 test-py3.1 test-deploy
@@ -60,6 +61,11 @@ help:
 	@echo "            to make convert README.rst to html and test the result"
 	@echo "            in your browser"
 
+browse-doc: docs
+	@echo "Opening local doc in the browser"
+	$(PYTHON) -c "import os, webbrowser as w; w.open('file://%s/$(GH_PAGES_SUBMODULE)/index.html' % os.getcwd());"
+	@echo
+
 build: clean
 	@echo "Building squeleton package..."
 	$(PYTHON) $(SETUP) $(BUILD_CMD)
@@ -67,11 +73,27 @@ build: clean
 
 clean:
 	@echo "Removing build and dist directories, and pyc files..."
+	rm -rf ./docs/_build/*
 	rm -rf ./build/
 	rm -rf ./dist/
 	rm -rf ./v
+	rm -f README.html
+	rm -f HISTORY.html
 	rm -f distribute-*.egg
 	find . -name "*.pyc" -print0 | xargs -0 rm
+	@echo
+
+clean-gh-pages: clean
+	@echo "cleaning fh-pages submodule..."
+	git submodule init $(GH_PAGES_SUBMODULE)
+	git submodule update $(GH_PAGES_SUBMODULE)
+	cd $(GH_PAGES_SUBMODULE); git checkout -t origin/gh-pages
+	cd $(GH_PAGES_SUBMODULE); git ls-files -z | xargs rm -f
+	@echo
+
+docs: clean
+	@echo "Creating html docs..."
+	cd ./docs && $(MAKE) html
 	@echo
 
 test-deploy: test-deploy-pip test-deploy-easy_install
@@ -104,6 +126,14 @@ register: README.html HISTORY.html
 
 release: clean MANIFEST.in test-all readme tag upload upload-egg-3.1
 	@echo "Version $(DIST_VERSION) released."
+	@echo
+
+release-docs: clean-gh-pages docs
+	@echo "Updating gh-pages with the last version of the doc..."
+	cd $(GH_PAGES_SUBMODULE); touch .nojekyll
+	cd $(GH_PAGES_SUBMODULE); git add .
+	cd $(GH_PAGES_SUBMODULE); git commit -m "Updating docs for v$(DIST_VERSION)"
+	cd $(GH_PAGES_SUBMODULE); git push origin gh-pages
 	@echo
 
 tag:
