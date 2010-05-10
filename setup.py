@@ -17,7 +17,7 @@ DESC = "Basic Template system for project skeleton."
 
 EXTRAS = {}
 
-if sys.version_info < (3,):
+if sys.version_info > (3,):
     EXTRAS['use_2to3'] = True
 
 
