@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>overview &mdash; skeleton v0.5 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.5',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="skeleton v0.5 documentation" href="index.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="Welcome to skeleton’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to skeleton’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">skeleton v0.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="overview">
+<h1>overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p><cite>skeleton</cite> is similar to the template part of <a class="reference external" href="http://pythonpaste.org/script/">PasteScript</a> but
+without any dependencies; it is also compatible with Python 3.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Python 2.6 or 3.1</li>
+</ul>
+<p>It currently only has been tested with Python 2.6 and 3.1 on Mac OSX.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to get skeleton is if you have setuptools / <a class="reference external" href="http://packages.python.org/distribute/">distribute</a> or <a class="reference external" href="http://pip.openplans.org/">pip</a> installed:</p>
+<div class="highlight-python"><pre>easy_install skeleton</pre>
+</div>
+<p>or:</p>
+<div class="highlight-python"><pre>pip install skeleton</pre>
+</div>
+<p>The current development version can be found at
+<a class="reference external" href="http://github.com/dinoboff/skeleton/tarball/master">http://github.com/dinoboff/skeleton/tarball/master</a>.</p>
+</div>
+<div class="section" id="usage-example">
+<h2>Usage example<a class="headerlink" href="#usage-example" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create a basic module template; one with a <cite>setup.py</cite>, a <cite>README</cite> and the
+module files.</p>
+<p>First, create the skeleton script layout:</p>
+<div class="highlight-python"><pre>mkmodule.py
+basic-module/README
+basic-module/setup.py_tmpl
+basic-module/{module_name}.py</pre>
+</div>
+<div class="section" id="mkmodule-py">
+<h3><cite>mkmodule.py</cite><a class="headerlink" href="#mkmodule-py" title="Permalink to this headline">¶</a></h3>
+<p><cite>mkmodule.py</cite> is the script that create new modules:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Basic script to create an empty python package containing one module</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">skeleton</span> <span class="kn">import</span> <span class="n">Skeleton</span><span class="p">,</span> <span class="n">Var</span>
+
+
+<span class="k">class</span> <span class="nc">BasicModule</span><span class="p">(</span><span class="n">Skeleton</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create an empty module with its etup script and a README file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="s">&#39;basic-module&#39;</span>
+    <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Var</span><span class="p">(</span><span class="s">&#39;module_name&#39;</span><span class="p">),</span>
+        <span class="n">Var</span><span class="p">(</span><span class="s">&#39;author&#39;</span><span class="p">),</span>
+        <span class="n">Var</span><span class="p">(</span><span class="s">&#39;author_email&#39;</span><span class="p">),</span>
+        <span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Basic command line bootstrap for the BasicModule Skeleton&quot;&quot;&quot;</span>
+    <span class="n">BasicModule</span><span class="o">.</span><span class="n">cmd</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <cite>src</cite> attribute sets the relative path to the skeleton directory where the
+script will find the files and directories to create.</p>
+<p>The <cite>vars</cite> attribute list the variables the templates will require.
+The variables with a default can be left blank by the user.</p>
+<p><cite>Skeleton.cmd()</cite> is a convenient method to set an optparser and
+the logging basic config, and to apply the skeleton:</p>
+<div class="highlight-python"><pre>Usage: mkmodule.py [options] dst_dir
+
+Options:
+  -h, --help            show this help message and exit
+  -q, --quiet
+  -v, --verbose
+  -d, --debug
+  --module-name=NAME    Module Name
+  --author=AUTHOR       Author
+  --author-email=EMAIL  Author Email</pre>
+</div>
+<p>If you needed to run a <cite>Skeleton</cite> yourself, you would use the
+constructor, the <cite>update</cite> or <cite>__setitem__</cite> methods to set the variables
+(<cite>Skeleton</cite> is a <cite>dict</cite> subclass), and the <cite>write(dst_dir)</cite> or <cite>run(dst_dir)</cite>
+methods to apply the skeleton. <cite>write()</cite> will raise a <cite>KeyException</cite> if a
+variable is not set; <cite>run()</cite> will prompt the user for the missing variables</p>
+</div>
+<div class="section" id="basic-module-readme">
+<h3>basic-module/README`<a class="headerlink" href="#basic-module-readme" title="Permalink to this headline">¶</a></h3>
+<p><cite>README</cite> a is static file that will simply be copied:</p>
+<div class="highlight-python"><pre>TODO: write the description of this module.</pre>
+</div>
+</div>
+<div class="section" id="basic-module-setup-py-tmpl">
+<h3><cite>basic-module/setup.py_tmpl</cite><a class="headerlink" href="#basic-module-setup-py-tmpl" title="Permalink to this headline">¶</a></h3>
+<p><cite>setup.py_tmpl</cite> is a template (it ends with the _tmpl suffix) that will be used
+to create a <cite>setup.py</cite> file:</p>
+<div class="highlight-python"><pre>#!/usr/bin/env python
+
+from distutils.core import setup
+
+
+PROJECT = {module_name!r}
+VERSION = '0.1'
+AUTHOR = {author!r}
+AUTHOR_EMAIL = {author_email!r}
+DESC = "A short description..."
+
+setup(
+    name=PROJECT,
+    version=VERSION,
+    description=DESC,
+    long_description=open('README.rst').read(),
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    py_module=[{module_name!r},],
+)</pre>
+</div>
+<p>By default, <cite>Skeleton</cite> uses python 2.6+ <a class="reference external" href="http://docs.python.org/library/functions.html#format">string formatting</a>.</p>
+</div>
+<div class="section" id="basic-module-module-name-py">
+<h3><cite>basic-module/{module_name}.py</cite><a class="headerlink" href="#basic-module-module-name-py" title="Permalink to this headline">¶</a></h3>
+<p><cite>{module_name}.py</cite> is the module file for which the name will be set dynamically
+at run time.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All file names are formatted using <cite>Skeleton.template_formatter</cite> method.
+Watch out for special characters (with the default formatter,
+use <cite>{{</cite> to render <cite>{</cite> and <cite>}}</cite> for <cite>}</cite> - unless you want to render
+a variable).</p>
+</div>
+</div>
+</div>
+<div class="section" id="extra">
+<h2>Extra<a class="headerlink" href="#extra" title="Permalink to this headline">¶</a></h2>
+<p><cite>skeleton</cite> includes a skeleton for a basic package layout, you can
+run it with:</p>
+<div class="highlight-python"><pre>python -m skeleton.examples.basicpackage &lt;dst_dir&gt;</pre>
+</div>
+<p>or with <cite>virtualenvwrapper.project</cite>. Install it:</p>
+<div class="highlight-python"><pre>pip install skeleton[virtualenv-templates]</pre>
+</div>
+<p>Configure <a class="reference external" href="http://www.doughellmann.com/projects/virtualenvwrapper/">virtualenvwrapper</a> and <a class="reference external" href="http://www.doughellmann.com/projects/virtualenvwrapper.project/">virtualenwrapper.project</a>; then,
+create a new project:</p>
+<div class="highlight-python"><pre>mkproject -t package &lt;project name&gt;</pre>
+</div>
+</div>
+<div class="section" id="todo">
+<h2>Todo:<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Write documentation.</li>
+<li>add more examples.</li>
+</ul>
+</div>
+<div class="section" id="development">
+<h2>Development<a class="headerlink" href="#development" title="Permalink to this headline">¶</a></h2>
+<p>Report any issues and fork <cite>squeleton</cite> at
+<a class="reference external" href="http://github.com/dinoboff/skeleton/">http://github.com/dinoboff/skeleton/</a> .</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">overview</a><ul>
+<li><a class="reference external" href="#requirements">Requirements</a></li>
+<li><a class="reference external" href="#installation">Installation</a></li>
+<li><a class="reference external" href="#usage-example">Usage example</a><ul>
+<li><a class="reference external" href="#mkmodule-py"><cite>mkmodule.py</cite></a></li>
+<li><a class="reference external" href="#basic-module-readme">basic-module/README`</a></li>
+<li><a class="reference external" href="#basic-module-setup-py-tmpl"><cite>basic-module/setup.py_tmpl</cite></a></li>
+<li><a class="reference external" href="#basic-module-module-name-py"><cite>basic-module/{module_name}.py</cite></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#extra">Extra</a></li>
+<li><a class="reference external" href="#todo">Todo:</a></li>
+<li><a class="reference external" href="#development">Development</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="index.html"
+                                  title="previous chapter">Welcome to skeleton&#8217;s documentation!</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="api.html"
+                                  title="next chapter">API</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/overview.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to skeleton’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">skeleton v0.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Damien Lebrun.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

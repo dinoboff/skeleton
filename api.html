@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>API &mdash; skeleton v0.5 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.5',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="skeleton v0.5 documentation" href="index.html" />
+    <link rel="next" title="History" href="history.html" />
+    <link rel="prev" title="overview" href="overview.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="history.html" title="History"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="overview"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">skeleton v0.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-skeleton">
+<h1>API<a class="headerlink" href="#module-skeleton" title="Permalink to this headline">¶</a></h1>
+<p>Basic Template system for project skeleton.</p>
+<p>skeleton is similar to the template part of PasteScript but 
+without any dependencies.</p>
+<dl class="class">
+<dt id="skeleton.Skeleton">
+<em class="property">class </em><tt class="descclassname">skeleton.</tt><tt class="descname">Skeleton</tt><big>(</big><em>skeleton=None</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#skeleton.Skeleton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skeleton Class.</p>
+<p>It should have a <cite>src</cite> attribute set to the path to the skeleton folder
+(relative to the class module) and a list of variables, the <cite>vars</cite> 
+attribute, the skeleton template files require. The variable should be an 
+object with <cite>name</cite>, <cite>display_name</cite> and <cite>full_description</cite> attributes, 
+and a prompt method which prompt the user for the variable value 
+and return it. You can use <cite>skeleton.Var</cite>.</p>
+<p>By default a template file ends with &#8220;_tmpl&#8221; (see the <cite>template_suffix</cite> 
+attribute), is UTF-8 encoded (<cite>file_encoding</cite> attribute) and will be 
+formatted by Python 2.6+ string Formatter.</p>
+<p>You can set an alternative formatter by overwriting the <cite>template_formatter</cite>
+method. It takes for argument the template to parse and self for
+variable mapping.</p>
+<p>If the skeleton require other skeleton to be run first, list them in the
+required_skeletons attribute.</p>
+<dl class="method">
+<dt id="skeleton.Skeleton.check_variables">
+<tt class="descname">check_variables</tt><big>(</big><big>)</big><a class="headerlink" href="#skeleton.Skeleton.check_variables" title="Permalink to this definition">¶</a></dt>
+<dd>Raise a KeyError if any required variable is missing.</dd></dl>
+
+<dl class="method">
+<dt id="skeleton.Skeleton.get_missing_variables">
+<tt class="descname">get_missing_variables</tt><big>(</big><big>)</big><a class="headerlink" href="#skeleton.Skeleton.get_missing_variables" title="Permalink to this definition">¶</a></dt>
+<dd>Prompt user for any missing variable 
+(even the ones with a default value).</dd></dl>
+
+<dl class="method">
+<dt id="skeleton.Skeleton.write">
+<tt class="descname">write</tt><big>(</big><em>dst_dir</em>, <em>run_dry=False</em><big>)</big><a class="headerlink" href="#skeleton.Skeleton.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply skeleton to <cite>dst_dir</cite>.</p>
+<p>Copy files and folders from the <cite>src</cite> folder to the <cite>dst_dir</cite>. 
+If <cite>dst_dir</cite> doesn&#8217;t exist, it will be created.</p>
+<p>The file name are formatted by the template formatter so that file
+names can do dynamically generated. Make sure that any special 
+characters for the formatters are escaped.</p>
+<p>If the file name ends by &#8220;_tmpl&#8221; its content will be formatted by the
+template formatter.</p>
+<p>Raises:</p>
+<ul class="simple">
+<li><cite>KeyError</cite> if a variable is missing and doesn&#8217;t have a default.</li>
+<li><cite>TemplateKeyError</cite> if it found an unexpected variable in a template.</li>
+<li><cite>FileNameKeyError</cite> if it found an unexpected variable in a file name.</li>
+<li>IOError if it cannot read the skeleton files, or cannot create
+files and folder.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="skeleton.Skeleton.run">
+<tt class="descname">run</tt><big>(</big><em>dst_dir</em>, <em>run_dry=False</em><big>)</big><a class="headerlink" href="#skeleton.Skeleton.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like write() but prompt user for missing variables.</p>
+<p>Raises:</p>
+<ul class="simple">
+<li><cite>TemplateKeyError</cite> if it found an unexpected variable in a template.</li>
+<li><cite>FileNameKeyError</cite> if it found an unexpected variable in a file name.</li>
+<li>IOError if it cannot read the skeleton files, or cannot create
+files and folder.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="skeleton.Skeleton.template_formatter">
+<tt class="descname">template_formatter</tt><big>(</big><em>template</em><big>)</big><a class="headerlink" href="#skeleton.Skeleton.template_formatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a formatted version of of the string <cite>template</cite>.</p>
+<p>Raises a KeyError if a variable is missing.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="skeleton.Skeleton.cmd">
+<em class="property">classmethod </em><tt class="descname">cmd</tt><big>(</big><em>argv=None</em><big>)</big><a class="headerlink" href="#skeleton.Skeleton.cmd" title="Permalink to this definition">¶</a></dt>
+<dd>Convenient method to set a logger, an optpaser and run the skeleton</dd></dl>
+
+<dl class="method">
+<dt id="skeleton.Skeleton.configure_parser">
+<tt class="descname">configure_parser</tt><big>(</big><big>)</big><a class="headerlink" href="#skeleton.Skeleton.configure_parser" title="Permalink to this definition">¶</a></dt>
+<dd>Configure parser for Skeleton.cmd().</dd></dl>
+
+<dl class="attribute">
+<dt id="skeleton.Skeleton.src">
+<tt class="descname">src</tt><a class="headerlink" href="#skeleton.Skeleton.src" title="Permalink to this definition">¶</a></dt>
+<dd>Path to skeleton folder, relative to Skeleton module</dd></dl>
+
+<dl class="attribute">
+<dt id="skeleton.Skeleton.vars">
+<tt class="descname">vars</tt><a class="headerlink" href="#skeleton.Skeleton.vars" title="Permalink to this definition">¶</a></dt>
+<dd>List of variable required by templates</dd></dl>
+
+<dl class="attribute">
+<dt id="skeleton.Skeleton.file_encoding">
+<tt class="descname">file_encoding</tt><a class="headerlink" href="#skeleton.Skeleton.file_encoding" title="Permalink to this definition">¶</a></dt>
+<dd>Encoding of template file (UTF-8 by default)</dd></dl>
+
+<dl class="attribute">
+<dt id="skeleton.Skeleton.required_skeletons">
+<tt class="descname">required_skeletons</tt><a class="headerlink" href="#skeleton.Skeleton.required_skeletons" title="Permalink to this definition">¶</a></dt>
+<dd>List of Skeleton to apply first</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="skeleton.Var">
+<em class="property">class </em><tt class="descclassname">skeleton.</tt><tt class="descname">Var</tt><big>(</big><em>name</em>, <em>description=None</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#skeleton.Var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define a template variable.</p>
+<p>The variable names should follow pep8 guidelines about variable names.
+pep8 variable are easier to set with a Skeleton constructor and you should
+not assume the skeleton template formatter can use any name formatting.</p>
+<dl class="attribute">
+<dt id="skeleton.Var.display_name">
+<tt class="descname">display_name</tt><a class="headerlink" href="#skeleton.Var.display_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a titled version of name were &#8220;_&#8221; are replace by spaces.</p>
+<p>Allows to get nice looking name at prompt while following pip8 guidance
+(a Var name can be use as argument of skeleton to set the variable).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="skeleton.Var.full_description">
+<tt class="descname">full_description</tt><a class="headerlink" href="#skeleton.Var.full_description" title="Permalink to this definition">¶</a></dt>
+<dd>Return the name of the variable and a description if description
+is set.</dd></dl>
+
+<dl class="method">
+<dt id="skeleton.Var.prompt">
+<tt class="descname">prompt</tt><big>(</big><big>)</big><a class="headerlink" href="#skeleton.Var.prompt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prompt the user for a value.</p>
+<p>If no default is defined, the user will be prompted until he gives a 
+value.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="skeleton.insert_into_file">
+<tt class="descclassname">skeleton.</tt><tt class="descname">insert_into_file</tt><big>(</big><em>file_path</em>, <em>marker</em>, <em>text</em>, <em>marker_tag='-*-'</em>, <em>keep_indent=True</em>, <em>keep_marker=True</em>, <em>encoding='UTF-8'</em><big>)</big><a class="headerlink" href="#skeleton.insert_into_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert text into file at specific markers.</p>
+<p>eg, for a file &#8220;test.txt&#8221; with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">foo</span>
+<span class="c"># -*- Insert Here -*-</span>
+<span class="n">baz</span>
+</pre></div>
+</div>
+<p><cite>-*- Insert Here -*-</cite> is the marker; anything can be added in front or 
+after. <cite>insert_into_file(&#8216;test.txt&#8217;, &#8216;Insert Here&#8217;, &#8216;bar&#8217;)</cite> would result
+with:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">foo</span>
+<span class="c"># -*- Insert Here -*-</span>
+<span class="n">bar</span>
+<span class="n">baz</span>
+</pre></div>
+</div>
+<p>Arguments:</p>
+<ul class="simple">
+<li>file_path:  file to insert content into.</li>
+<li>marker:  Marker to look for in the file.</li>
+<li>text (unicode):  text to insert in the file.</li>
+<li>marker_tag:  text surrounding the marker.</li>
+<li>keep_indent: Should it insert the text with the same marker indent.</li>
+<li>keep_marker: Should the marker be removed.</li>
+<li>encoding: file encoding.</li>
+</ul>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="overview.html"
+                                  title="previous chapter">overview</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="history.html"
+                                  title="next chapter">History</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/api.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="history.html" title="History"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="overview"
+             >previous</a> |</li>
+        <li><a href="index.html">skeleton v0.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Damien Lebrun.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

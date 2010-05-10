@@ -1,0 +1,21 @@
+# Sphinx inventory version 1
+# Project: skeleton
+# Version: 0.5
+skeleton mod api.html
+skeleton.Var.display_name attribute api.html
+skeleton.Skeleton.configure_parser method api.html
+skeleton.Skeleton.get_missing_variables method api.html
+skeleton.Var.full_description attribute api.html
+skeleton.Skeleton.run method api.html
+skeleton.Skeleton.src attribute api.html
+skeleton.Skeleton.template_formatter method api.html
+skeleton.Var class api.html
+skeleton.Skeleton.check_variables method api.html
+skeleton.Skeleton.vars attribute api.html
+skeleton.Skeleton.file_encoding attribute api.html
+skeleton.Skeleton.required_skeletons attribute api.html
+skeleton.Skeleton.write method api.html
+skeleton.insert_into_file function api.html
+skeleton.Var.prompt method api.html
+skeleton.Skeleton class api.html
+skeleton.Skeleton.cmd classmethod api.html
