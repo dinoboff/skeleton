@@ -91,9 +91,9 @@ class Skeleton(collections.MutableMapping):
     It should have a `src` attribute set to the path to the skeleton folder
     (relative to the class module) and a list of variables, the `vars` 
     attribute, the skeleton template files require. The variable should be an 
-    object with name and full_description attribute, and a prompt method than 
-    prompt the user for the variable value and return it. You can use 
-    `skeleton.Var`.
+    object with `name`, `display_name` and `full_description` attributes, 
+    and a prompt method which prompt the user for the variable value 
+    and return it. You can use `skeleton.Var`.
     
     By default a template file ends with "_tmpl" (see the `template_suffix` 
     attribute), is UTF-8 encoded (`file_encoding` attribute) and will be 
@@ -231,21 +231,23 @@ class Skeleton(collections.MutableMapping):
     @run_requirements_first
     def write(self, dst_dir, run_dry=False):
         """
-        Apply skeleton to dst_dir.
+        Apply skeleton to `dst_dir`.
         
-        Copy files and folders from the src folder to the dst_dir. If dst_dir 
-        doesn't exist, it will be created.
+        Copy files and folders from the `src` folder to the `dst_dir`. 
+        If `dst_dir` doesn't exist, it will be created.
         
         The file name are formatted by the template formatter so that file
-        names can do dynamically generated. Make sure that any special charters
-        for the formatters are escaped.
+        names can do dynamically generated. Make sure that any special 
+        characters for the formatters are escaped.
         
         If the file name ends by "_tmpl" its content will be formatted by the
         template formatter.
         
         Raises:
         
-        - KeyError if a variable is missing and doesn't have a default.
+        - `KeyError` if a variable is missing and doesn't have a default.
+        - `TemplateKeyError` if it found an unexpected variable in a template.
+        - `FileNameKeyError` if it found an unexpected variable in a file name.
         - IOError if it cannot read the skeleton files, or cannot create
           files and folder.
         """
@@ -290,6 +292,13 @@ class Skeleton(collections.MutableMapping):
     def run(self, dst_dir, run_dry=False):
         """
         Like write() but prompt user for missing variables.
+        
+        Raises:
+        
+        - `TemplateKeyError` if it found an unexpected variable in a template.
+        - `FileNameKeyError` if it found an unexpected variable in a file name.
+        - IOError if it cannot read the skeleton files, or cannot create
+          files and folder.
         """
         self.get_missing_variables()
         self.write(dst_dir, run_dry=run_dry)
@@ -320,7 +329,8 @@ class Skeleton(collections.MutableMapping):
         skel.run(args[0])
 
     def configure_parser(self):
-        """Configure parser for Skeleton.cmd()"""
+        """Configure parser for Skeleton.cmd().
+        """
         parser = optparse.OptionParser(usage="%prog [options] dst_dir")
         parser.add_option("-q", "--quiet",
             action="store_const", const=logging.FATAL, dest="verbose_")
@@ -334,7 +344,9 @@ class Skeleton(collections.MutableMapping):
         return parser
 
     def template_formatter(self, template):
-        """Default template formatter.
+        """Return a formatted version of of the string `template`.
+        
+        Raises a KeyError if a variable is missing.
         """
         return template.format(**self)
 
@@ -436,17 +448,17 @@ class Var(object):
     @property
     def display_name(self):
         """
-        Return a titled version of name were "_" are replace by space.
+        Return a titled version of name were "_" are replace by spaces.
         
-        Allows to get sice looking name at prompt while following pip8 quide
-        (a Var name can be use as argument of skeleton to set to variable).
+        Allows to get nice looking name at prompt while following pip8 guidance
+        (a Var name can be use as argument of skeleton to set the variable).
         """
         return self.name.replace('_', ' ').title()
 
     @property
     def full_description(self):
         """
-        Return the name of the variable and short description if description
+        Return the name of the variable and a description if description
         is set.
         """
         if self.description:

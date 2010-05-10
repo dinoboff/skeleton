@@ -1,4 +1,4 @@
-HISTORY
+History
 =======
 
 0.5 (Mai 10, 2010)

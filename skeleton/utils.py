@@ -49,8 +49,7 @@ def get_file_mode(path):
 def insert_into_file(
     file_path, marker, text,
     marker_tag="-*-", keep_indent=True, keep_marker=True, encoding="UTF-8"):
-    """
-    Insert text into file at specific markers.
+    """Insert text into file at specific markers.
     
     eg, for a file "test.txt" with::
     
@@ -58,8 +57,8 @@ def insert_into_file(
         # -*- Insert Here -*-
         baz
     
-    "-*- Insert Here -*-" is the marker; anything can be added in front or 
-    after. `insert_into_file('test.txt', 'Insert Here', 'bar\n')` would result
+    `-*- Insert Here -*-` is the marker; anything can be added in front or 
+    after. `insert_into_file('test.txt', 'Insert Here', 'bar')` would result
     with::
     
         foo
