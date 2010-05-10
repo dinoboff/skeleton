@@ -141,10 +141,9 @@ class Skeleton(collections.MutableMapping):
         return self._required_skeletons_instances
 
     @property
-    def skel_dir(self):
+    def real_src(self):
         """
-        return the path (absolute path or relative to the current working
-        directory).
+        Absolute Path to skeleton directory (read-only).
         """
         if self.src is None:
             raise AttributeError(
@@ -250,12 +249,12 @@ class Skeleton(collections.MutableMapping):
         if not os.path.exists(dst_dir):
             self._mkdir(dst_dir)
 
-        skel_dir = self.skel_dir
-        skel_dir_len = len(skel_dir)
-        _LOG.debug("Getting skeleton from %r" % skel_dir)
+        real_src = self.real_src
+        real_src_len = len(real_src)
+        _LOG.debug("Getting skeleton from %r" % real_src)
 
-        for dir_path, dir_names, file_names in os.walk(skel_dir):
-            rel_dir_path = dir_path[skel_dir_len:].lstrip(r'\/')
+        for dir_path, dir_names, file_names in os.walk(real_src):
+            rel_dir_path = dir_path[real_src_len:].lstrip(r'\/')
 
             #copy files
             for file_name in file_names:
