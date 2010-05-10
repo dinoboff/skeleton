@@ -96,11 +96,13 @@ dist: clean
 install: clean
 	$(PYTHON) $(SETUP) INSTALL_CMD
 
-register: README.html
+readme: README.html HISTORY.html
+
+register: README.html HISTORY.html
 	@echo "Creating or updating skeleton v$(DIST_VERSION) pypi page."
 	$(PYTHON) $(SETUP) $(REGISTER_CMD)
 
-release: clean MANIFEST.in test-all tag upload upload-egg-3.1
+release: clean MANIFEST.in test-all readme tag upload upload-egg-3.1
 	@echo "Version $(DIST_VERSION) released."
 	@echo
 
@@ -139,9 +141,9 @@ MANIFEST.in:
 	$(GIT) ls-files --exclude=".git*" | sed -e 's/^/include /g' > ./MANIFEST.in
 	@echo
 
-README.html: README.rst
-	@echo "Making READM.html..."
-	$(RST2HTML) README.rst > README.html
-	$(PYTHON) -c "import os, webbrowser as w; w.open('file://%s/README.html' % os.getcwd());"
-
+%.html: %.rst
+	@echo "Making $@..."
+	$(RST2HTML) $^ > $@
+	$(PYTHON) -c "import os, webbrowser as w; w.open('file://%s/$@' % os.getcwd());"
+	
 .PHONY: MANIFEST.in clean tag
