@@ -18,6 +18,26 @@ import datetime
 _LOG = get_loggger(__name__)
 
 
+class SkeletonError(Exception):
+    """Root exception"""
+
+
+class TemplateKeyError(KeyError, SkeletonError):
+    """Raised by Skeleton when a template required an unknown variable
+    """
+
+    def __init__(self, variable_name, file_path):
+        super(TemplateKeyError, self).__init__(variable_name)
+        self.variable_name = variable_name
+        self.file_path = file_path
+        self.message = (
+            "Found unexpected variable %r in %r." % (variable_name, file_path,)
+            )
+
+    def __str__(self):
+        return self.message
+
+
 def run_requirements_last(skel_method):
     """
     Decorator for Skeleton methods
@@ -323,7 +343,10 @@ class Skeleton(collections.MutableMapping):
         The template suffix should be removed from dst.
         """
         if dst.endswith(self.template_suffix):
-            self._format_file(src, dst[:-len(self.template_suffix)])
+            try:
+                self._format_file(src, dst[:-len(self.template_suffix)])
+            except (KeyError,), exc:
+                raise TemplateKeyError(exc.args[0], src)
         else:
             self._copy_static_file(src, dst)
 

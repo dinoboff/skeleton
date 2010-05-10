@@ -7,7 +7,7 @@ import datetime
 import unittest
 
 from skeleton.tests.utils import TestCase, TempDir
-from skeleton.core import Skeleton, Var
+from skeleton.core import Skeleton, Var, TemplateKeyError
 
 
 THIS_YEAR = datetime.datetime.utcnow().year
@@ -55,6 +55,12 @@ class Required(Static):
 class StaticWithRequirement(Static):
     """Adds the requirment to the Static class"""
     required_skeletons = [Required]
+
+
+class MissingVariable(DynamicContent):
+    """We forgot to declare the variable "baz"
+    """
+    vars = []
 
 
 class TestSkeleton(TestCase):
@@ -168,9 +174,14 @@ class TestSkeleton(TestCase):
 
     def test_write_missing_variable(self):
         """Tests write raise KeyError if a variable is not set."""
-        skel = WithDefault()
+        skel = MissingVariable()
         with TempDir() as tmp_dir:
-            self.assertRaises(KeyError, skel.write, tmp_dir.path)
+            try:
+                skel.write(tmp_dir.path)
+                self.fail("An exception should be raised")
+            except (TemplateKeyError,), exc:
+                self.assertTrue(exc.file_path.endswith('bar/baz.txt_tmpl'))
+                self.assertEqual(exc.variable_name, 'baz')
 
     def test_write_create_dst_dir(self):
         """tests Skeleton.write() create the missing dst directory"""
