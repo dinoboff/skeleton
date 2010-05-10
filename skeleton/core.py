@@ -203,7 +203,7 @@ class Skeleton(collections.MutableMapping):
         self.set_variables.update(*args, **kw)
 
     @run_requirements_last
-    def check_vars(self):
+    def check_variables(self):
         """
         Raise a KeyError if any required variable is missing.
         """
@@ -249,7 +249,7 @@ class Skeleton(collections.MutableMapping):
             self.__class__.__name__,
             dst_dir)
 
-        self.check_vars()
+        self.check_variables()
 
         if not os.path.exists(dst_dir):
             self._mkdir(dst_dir)
