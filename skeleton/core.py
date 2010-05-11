@@ -51,10 +51,14 @@ class FileNameKeyError(KeyError, SkeletonError):
             % (self.variable_name, self.file_path))
 
 
-def run_requirements_last(skel_method):
+class ValidateError(SkeletonError):
+    """Raised if a variable value is invalid .
     """
-    Decorator for Skeleton methods
-    
+
+
+def run_requirements_last(skel_method):
+    """Decorator for Skeleton methods
+
     The return wrapper will run the same method of the required
     skeleton instances after the wrapped method exists.
     """
@@ -428,10 +432,11 @@ class Var(object):
     """
     _prompt = staticmethod(prompt)
 
-    def __init__(self, name, description=None, default=None):
+    def __init__(self, name, description=None, default=None, intro=None):
         self.name = name
         self.description = description
         self.default = default
+        self.intro = intro
 
     def __repr__(self):
         return u'<%s %s default=%r>' % (
@@ -462,16 +467,30 @@ class Var(object):
         If no default is defined, the user will be prompted until he gives a
         value.
         """
+        if self.intro:
+            print self.intro
         prompt_ = u'Enter %s' % self.full_description
         if self.default is not None:
             prompt_ += u' [%r]' % self.default
         prompt_ += u': '
 
         while True:
-            resp = self._prompt(prompt_)
-            if resp:
-                return resp
-            elif self.default is not None:
+            try:
+                return self.validate(self._prompt(prompt_))
+            except (ValidateError,), exc:
+                print str(exc)
+
+    def validate(self, response):
+        """Checks the user has given a non empty value or that the variable has
+        a default.
+
+        Returns the valide value or the default.
+
+        Raises a ValidateError if the response is invalid.
+        """
+        if response:
+            return response
+        elif self.default is not None:
                 return self.default
             else:
-                continue # persist asking
+                raise ValidateError("%s is required" % self.display_name)
