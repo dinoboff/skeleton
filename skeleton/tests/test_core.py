@@ -26,9 +26,10 @@ class WithRequirement(Skeleton):
 
 class Static(Skeleton):
     """Skeleton with only static files:
-    
+
     - foo.txt
     - bar/baz.txt
+
     """
     src = 'skeletons/static'
 
@@ -49,7 +50,7 @@ class DynamicFileName(Static):
 class Required(Static):
     """Just a ${FileName}.txt file"""
     src = "skeletons/required"
-    vars = [ Var('file_name') ]
+    vars = [Var('file_name') ]
 
 
 class StaticWithRequirement(Static):
@@ -119,8 +120,9 @@ class TestSkeleton(TestCase):
     def test_requirement_instances(self):
         """Tests skeleton and required skeletons hold the same set_variables
         """
-        # For skel, foo is not set but has default set to 1 
+        # For skel, foo is not set but has default set to 1
         skel = WithRequirement()
+
         # required_skel has foo set to 1 (get it from skel), bar is not set but
         # has a default set to 2; baz is not set and no default
         required_skel = skel.required_skeletons_instances[0]

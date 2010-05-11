@@ -51,8 +51,9 @@ class TempDir(object):
     def create(self):
         """
         Create temporary directory.
-        
+
         set the path attribute to the this directory path
+
         """
         self.path = tempfile.mkdtemp()
         return self

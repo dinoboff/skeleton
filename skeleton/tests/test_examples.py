@@ -13,7 +13,6 @@ from skeleton.examples.mkmodule import BasicModule
 from skeleton.tests.utils import TestCase, TempDir
 
 
-
 class TestBSD(TestCase):
     """Tests skeleton.example.license.BSD."""
 
@@ -92,7 +91,6 @@ class TestLicenseChoice(TestCase):
 
         self.assertTrue(isinstance(skel.license_skel, NoLicense))
         self.assertEqual(skel.license_skel['author'], 'Damien Lebrun')
-
 
     def test_bsd_licence_skel(self):
         """Tests for a BSD license_ske property"""
@@ -251,8 +249,7 @@ class TestBasicPackage(TestCase):
             self.assertTrue(tmp.exists('foo/bar/baz/__init__.py'))
 
     def test_main(self):
-        """Tests basicpackage.main() 
-        """
+        """Tests basicpackage.main()"""
         resps = ['foo', 'foo', 'Damien Lebrun', 'dinoboff@gmail.com', 'BSD', '']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 

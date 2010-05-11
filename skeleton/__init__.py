@@ -1,7 +1,7 @@
 """
 Basic Template system for project skeleton.
 
-skeleton is similar to the template part of PasteScript but 
+skeleton is similar to the template part of PasteScript but
 without any dependencies.
 """
 

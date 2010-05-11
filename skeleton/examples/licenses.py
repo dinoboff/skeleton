@@ -6,15 +6,15 @@ from skeleton import Skeleton, Var
 
 
 BSD_THIRD_CLAUSE = """
-    - Neither the name of the {organization} nor the names of its contributors 
-      may be used to endorse or promote products derived from this software 
+    - Neither the name of the {organization} nor the names of its contributors
+      may be used to endorse or promote products derived from this software
       without specific prior written permission.
 """
 
 
 class NoLicense(Skeleton):
-    """
-    Had the a license with copyright notice only.
+    """Had the a license with copyright notice only.
+
     """
     src = 'licenses/no-license'
     vars = [
@@ -23,12 +23,12 @@ class NoLicense(Skeleton):
 
 
 class BSD(Skeleton):
-    """
-    Adds a 2 or 3 clauses BSD License.
-    
+    """Adds a 2 or 3 clauses BSD License.
+
     Requires author and organization variables.
-    
+
     Sets a ThirdClause variable.
+
     """
 
     src = 'licenses/bsd'
@@ -42,8 +42,8 @@ class BSD(Skeleton):
         ]
 
     def write(self, dst_dir, run_dry=False):
-        """
-        Set the ThirdClause if an organization name has been given.
+        """Set the ThirdClause if an organization name has been given.
+
         """
         if self.get('organization'):
             self['third_clause'] = self.template_formatter(BSD_THIRD_CLAUSE)
@@ -55,8 +55,9 @@ class BSD(Skeleton):
 class GPL(Skeleton):
     """
     Adds a GPL notice and the GPLv3 license.
-    
+
     Requires Author and ProjectName variables.
+
     """
 
     src = 'licenses/gpl'
@@ -67,17 +68,17 @@ class GPL(Skeleton):
 
 
 class LGPL(GPL):
-    """
-    Add a LGPL Notice and the GPLv3 and LGPLv3 licenses
-    
+    """Add a LGPL Notice and the GPLv3 and LGPLv3 licenses
+
     Requires Author and ProjectName variables.
+
     """
     src = 'licenses/lgpl'
 
 
 class LicenseChoice(Skeleton):
-    """
-    Let the use pick the licence
+    """Let the use pick the licence
+
     """
     vars = [
         Var('project_name'),
@@ -96,8 +97,8 @@ class LicenseChoice(Skeleton):
 
     @property
     def license_skel(self):
-        """
-        Return the skeleton for the set License.
+        """Return the skeleton for the set License.
+
         """
         if self._licence_skel is None:
             self._licence_skel = self.supported_licenses.get(
@@ -107,21 +108,21 @@ class LicenseChoice(Skeleton):
         return self._licence_skel
 
     def check_vars(self):
-        """
-        Check variables of the license skeleton.
+        """Check variables of the license skeleton.
+
         """
         super(LicenseChoice, self).check_vars()
         self.license_skel.check_vars()
 
     def get_missing_variables(self):
-        """
-        Prompt for the license skeleton variables.
+        """Prompt for the license skeleton variables.
+
         """
         super(LicenseChoice, self).get_missing_variables()
         self.license_skel.get_missing_variables()
 
     def write(self, dst, run_dry=False):
-        """
-        Apply the license skeleton
+        """Apply the license skeleton
+
         """
         self.license_skel.write(dst, run_dry=run_dry)

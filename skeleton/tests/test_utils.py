@@ -89,8 +89,9 @@ class TestVarsToOptparser(unittest.TestCase):
 
     def test_pep8_var_name(self):
         """Tests long string formatting of options added by vars_to_optparser.
-        
+
         All lower case with hyphen instead of underscore
+
         """
         parser = vars_to_optparser([Var('Foo'), Var('foo_bar')])
         self.assertEqual(parser.get_option('--foo').dest, 'Foo')

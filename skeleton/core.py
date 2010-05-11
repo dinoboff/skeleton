@@ -3,6 +3,7 @@ Core skeleton component
 """
 import codecs
 import collections
+import datetime
 import functools
 import logging
 import optparse
@@ -11,8 +12,8 @@ import shutil
 import sys
 import weakref
 
-from skeleton.utils import get_loggger, get_file_mode, vars_to_optparser, prompt
-import datetime
+from skeleton.utils import (
+    get_loggger, get_file_mode, vars_to_optparser, prompt)
 
 
 _LOG = get_loggger(__name__)
@@ -67,10 +68,10 @@ def run_requirements_last(skel_method):
     functools.update_wrapper(wrapper, skel_method)
     return wrapper
 
+
 def run_requirements_first(skel_method):
-    """
-    Decorator for Skeleton methods
-    
+    """Decorator for Skeleton methods
+
     The return wrapper will first run the same method of the required
     skeleton instances.
     """
@@ -85,27 +86,25 @@ def run_requirements_first(skel_method):
 
 
 class Skeleton(collections.MutableMapping):
-    """
-    Skeleton Class.
-    
+    """Skeleton Class.
+
     It should have a `src` attribute set to the path to the skeleton folder
-    (relative to the class module) and a list of variables, the `vars` 
-    attribute, the skeleton template files require. The variable should be an 
-    object with `name`, `display_name` and `full_description` attributes, 
-    and a prompt method which prompt the user for the variable value 
+    (relative to the class module) and a list of variables, the `vars`
+    attribute, the skeleton template files require. The variable should be an
+    object with `name`, `display_name` and `full_description` attributes,
+    and a prompt method which prompt the user for the variable value
     and return it. You can use `skeleton.Var`.
-    
-    By default a template file ends with "_tmpl" (see the `template_suffix` 
-    attribute), is UTF-8 encoded (`file_encoding` attribute) and will be 
+
+    By default a template file ends with "_tmpl" (see the `template_suffix`
+    attribute), is UTF-8 encoded (`file_encoding` attribute) and will be
     formatted by Python 2.6+ string Formatter.
-    
-    You can set an alternative formatter by overwriting the `template_formatter`
-    method. It takes for argument the template to parse and self for
-    variable mapping.
-    
+
+    You can set an alternative formatter by overwriting the
+    `template_formatter` method. It takes for argument the template to parse
+    and self for variable mapping.
+
     If the skeleton require other skeleton to be run first, list them in the
     required_skeletons attribute.
-    
     """
 
     #: Path to skeleton folder, relative to Skeleton module
@@ -219,7 +218,7 @@ class Skeleton(collections.MutableMapping):
     @run_requirements_last
     def get_missing_variables(self):
         """
-        Prompt user for any missing variable 
+        Prompt user for any missing variable
         (even the ones with a default value).
         """
         for var in self.vars:
@@ -230,21 +229,20 @@ class Skeleton(collections.MutableMapping):
 
     @run_requirements_first
     def write(self, dst_dir, run_dry=False):
-        """
-        Apply skeleton to `dst_dir`.
-        
-        Copy files and folders from the `src` folder to the `dst_dir`. 
+        """Apply skeleton to `dst_dir`.
+
+        Copy files and folders from the `src` folder to the `dst_dir`.
         If `dst_dir` doesn't exist, it will be created.
-        
+
         The file name are formatted by the template formatter so that file
-        names can do dynamically generated. Make sure that any special 
+        names can do dynamically generated. Make sure that any special
         characters for the formatters are escaped.
-        
+
         If the file name ends by "_tmpl" its content will be formatted by the
         template formatter.
-        
+
         Raises:
-        
+
         - `KeyError` if a variable is missing and doesn't have a default.
         - `TemplateKeyError` if it found an unexpected variable in a template.
         - `FileNameKeyError` if it found an unexpected variable in a file name.
@@ -290,11 +288,10 @@ class Skeleton(collections.MutableMapping):
                 self._mkdir(dst, like=src)
 
     def run(self, dst_dir, run_dry=False):
-        """
-        Like write() but prompt user for missing variables.
-        
+        """Like write() but prompt user for missing variables.
+
         Raises:
-        
+
         - `TemplateKeyError` if it found an unexpected variable in a template.
         - `FileNameKeyError` if it found an unexpected variable in a file name.
         - IOError if it cannot read the skeleton files, or cannot create
@@ -345,7 +342,7 @@ class Skeleton(collections.MutableMapping):
 
     def template_formatter(self, template):
         """Return a formatted version of of the string `template`.
-        
+
         Raises a KeyError if a variable is missing.
         """
         return template.format(**self)
@@ -360,9 +357,8 @@ class Skeleton(collections.MutableMapping):
                 )
 
     def _mkdir(self, path, like=None):
-        """
-        Create a directory (using os.mkdir)
-        
+        """Create a directory (using os.mkdir)
+
         Only log the event if self.run_dry is True.
         """
         _LOG.info("Create directory %r", path)
@@ -372,9 +368,8 @@ class Skeleton(collections.MutableMapping):
             self._set_mode(path, like)
 
     def _copy_file(self, src, dst):
-        """
-        Copy src file to dst and format dst if src is a template.
-        
+        """Copy src file to dst and format dst if src is a template.
+
         The template suffix should be removed from dst.
         """
         if dst.endswith(self.template_suffix):
@@ -386,20 +381,18 @@ class Skeleton(collections.MutableMapping):
             self._copy_static_file(src, dst)
 
     def _copy_static_file(self, src, dst):
-        """
-        Copy file and mode.
-        
+        """Copy file and mode.
+
         Only log the event if self.run_dry is True.
         """
         _LOG.info("Copy %r to %r", src, dst)
         if not self.run_dry:
-            shutil.copyfile(src , dst)
+            shutil.copyfile(src, dst)
         self._set_mode(dst, like=src)
 
     def _format_file(self, src, dst):
-        """
-        Copy src to dst and format it.
-        
+        """Copy src to dst and format it.
+
         Raises a KeyError if a variable is missing.
         """
         _LOG.info("Creating %r from %r template...", dst, src)
@@ -427,9 +420,8 @@ class Skeleton(collections.MutableMapping):
 
 
 class Var(object):
-    """
-    Define a template variable.
-    
+    """Define a template variable.
+
     The variable names should follow pep8 guidelines about variable names.
     pep8 variable are easier to set with a Skeleton constructor and you should
     not assume the skeleton template formatter can use any name formatting.
@@ -447,9 +439,8 @@ class Var(object):
 
     @property
     def display_name(self):
-        """
-        Return a titled version of name were "_" are replace by spaces.
-        
+        """Return a titled version of name were "_" are replace by spaces.
+
         Allows to get nice looking name at prompt while following pip8 guidance
         (a Var name can be use as argument of skeleton to set the variable).
         """
@@ -457,8 +448,7 @@ class Var(object):
 
     @property
     def full_description(self):
-        """
-        Return the name of the variable and a description if description
+        """Return the name of the variable and a description if description
         is set.
         """
         if self.description:
@@ -468,8 +458,8 @@ class Var(object):
 
     def prompt(self):
         """Prompt the user for a value.
-        
-        If no default is defined, the user will be prompted until he gives a 
+
+        If no default is defined, the user will be prompted until he gives a
         value.
         """
         prompt_ = u'Enter %s' % self.full_description

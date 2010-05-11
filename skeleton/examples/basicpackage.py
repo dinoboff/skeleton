@@ -19,18 +19,18 @@ NS_HEADER = """
 __import__('pkg_resources').declare_namespace(__name__)
 """
 
+
 class BasicPackage(Skeleton):
-    """
-    Create a new package package (with namespace support) with the setup.py,
+    """Create a new package package (with namespace support) with the setup.py,
     README.rst and MANIFEST.in files already setup.
-    
+
     Require the following variables:
-    
+
     - project_name;
     - package_name;
     - author;
     - and author_email.
-    
+
     Todo: Allow to set a global defaults for author and author_email.
     Todo: Better README.rst content like Having a basic Installation and
     requirement section.
@@ -42,7 +42,7 @@ class BasicPackage(Skeleton):
         Var('project_name'),
         Var('package_name'),
         Var('author'),
-        Var('author_email')
+        Var('author_email'),
         ]
     required_skeletons = [
         LicenseChoice,
@@ -56,12 +56,12 @@ class BasicPackage(Skeleton):
         }
 
     def write(self, dst_dir, run_dry=False):
-        """
-        Create package(s) dynamically and get the lastdistribute_setup snapshot
-        
+        """Create package(s) dynamically.
+
         Overwrite the write method to add the NSPackages and Packages entry
         before skeleton write, and create the list of package they hold after
         the skeleton write.
+
         """
         self._set_packages_and_namespaces()
         super(BasicPackage, self).write(dst_dir, run_dry=run_dry)
@@ -97,10 +97,10 @@ class BasicPackage(Skeleton):
             self._create_package(dst_dir, package, init_body)
 
     def _create_package(self, dst_dir, package, init_body=''):
-        """
-        Create a package - directory and __init__.py file.
-        
-        The parent package should already exist
+        """Create a package - directory and __init__.py file.
+
+        The parent package should already exist.
+
         """
         package_part = package.split('.')
         path = os.path.join(dst_dir, *package_part)
@@ -112,8 +112,8 @@ class BasicPackage(Skeleton):
             init_file.write(init_body)
 
     def _add_classifier(self, dst_dir):
-        """
-        Add license classifiers
+        """Add license classifiers
+
         """
         setup = os.path.join(dst_dir, 'setup.py')
         license_name = self.get('license', '').upper()
