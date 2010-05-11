@@ -323,39 +323,46 @@ class TestVar(TestCase):
 
     def test_prompt(self):
         """Tests Var.prompt()"""
+        var = Var('foo')
+        self.assertEqual(var.prompt, 'Enter Foo: ')
+
+    def test_do_prompt(self):
+        """Tests Var.do_prompt()
+        """
         resps = ['', 'bar']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         var = Var('foo')
-        self.assertEqual(var.prompt(), 'bar')
-
+        self.assertEqual(var.do_prompt(), 'bar')
         self.assertEqual(self.input_mock.call_count, 2)
-        for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (('Enter Foo: ',), {},))
 
     def test_prompt_with_default(self):
-        """Tests Var.prompt() without default"""
+        """Tests Var.prompt with default"""
+        var = Var('foo', default='baz')
+        self.assertEqual(var.prompt, """Enter Foo ['baz']: """)
+
+    def test_do_prompt_with_default(self):
+        """Tests Var.do_prompt() with default"""
         resps = ['']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         var = Var('foo', default='baz')
-        self.assertEqual(var.prompt(), 'baz')
-
+        self.assertEqual(var.do_prompt(), 'baz')
         self.assertEqual(self.input_mock.call_count, 1)
-        for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (("""Enter Foo ['baz']: """,), {},))
 
     def test_prompt_empty_default(self):
-        """Tests Var.prompt() with empty default"""
+        """Tests Var.prompt with empty default"""
+        var = Var('foo', default='')
+        self.assertEqual(var.prompt, """Enter Foo ['']: """)
+
+    def test_do_prompt_empty_default(self):
+        """Tests Var.do_prompt() with empty default"""
         resps = ['']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         var = Var('foo', default='')
-        self.assertEqual(var.prompt(), '')
-
+        self.assertEqual(var.do_prompt(), '')
         self.assertEqual(self.input_mock.call_count, 1)
-        for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (("""Enter Foo ['']: """,), {},))
 
 
 class TestBool(TestCase):
@@ -372,52 +379,50 @@ class TestBool(TestCase):
         self.assertEqual(var.full_description, 'Foo (y/N)')
 
     def test_prompt_true(self):
-        """Tests Bool.prompt() for True"""
+        """Tests Bool.prompt for True"""
+        var = Bool('foo')
+        self.assertEqual(var.prompt, 'Enter Foo (y/N): ')
+
+    def test_do_prompt_true(self):
+        """Tests Bool.do_prompt() for True"""
         resps = ['', 'y']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         var = Bool('foo')
-        self.assertEqual(var.prompt(), True)
-
+        self.assertEqual(var.do_prompt(), True)
         self.assertEqual(self.input_mock.call_count, 2)
-        for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (('Enter Foo (y/N): ',), {},))
 
-    def test_prompt_false(self):
-        """Tests Bool.prompt() for False"""
+    def test_do_prompt_false(self):
+        """Tests Bool.do_prompt() for False"""
         resps = ['', 'n']
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
         var = Bool('foo')
-        self.assertEqual(var.prompt(), False)
-
+        self.assertEqual(var.do_prompt(), False)
         self.assertEqual(self.input_mock.call_count, 2)
-        for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (('Enter Foo (y/N): ',), {},))
 
     def test_prompt_with_default(self):
-        """Tests Bool.prompt() with default set"""
-        resps = ['']
+        """Tests Bool.prompt with default"""
+        var = Bool('foo', default=True)
+        self.assertEqual(var.prompt, "Enter Foo (y/N) ['y']: ")
+
+    def test_do_prompt_with_default(self):
+        """Tests Bool.do_prompt() with default"""
+        resps = ['', ]
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
-        var = Bool('foo', default=True)
-        self.assertEqual(var.prompt(), True)
-
+        var = Bool('foo', default=False)
+        self.assertEqual(var.do_prompt(), False)
         self.assertEqual(self.input_mock.call_count, 1)
-        for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (("Enter Foo (y/N) ['y']: ",), {},))
 
-    def test_prompt_default_overwritten(self):
-        """Tests Bool.prompt() with default overwritten"""
-        resps = ['no']
+    def test_do_prompt_default_overwritten(self):
+        """Tests Bool.do_prompt() with default"""
+        resps = ['y', ]
         self.input_mock.side_effect = lambda x: resps.pop(0)
 
-        var = Bool('foo', default=True)
-        self.assertEqual(var.prompt(), False)
-
+        var = Bool('foo', default=False)
+        self.assertEqual(var.do_prompt(), True)
         self.assertEqual(self.input_mock.call_count, 1)
-        for args in self.input_mock.call_args_list:
-            self.assertEqual(args, (("Enter Foo (y/N) ['y']: ",), {},))
 
 
 class TestDefaultTemplate(unittest.TestCase):

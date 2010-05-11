@@ -227,7 +227,7 @@ class Skeleton(collections.MutableMapping):
         """
         for var in self.vars:
             if var.name not in self.set_variables:
-                self[var.name] = var.prompt()
+                self[var.name] = var.do_prompt()
             else:
                 _LOG.debug("Variable %r already set", var.name)
 
@@ -461,24 +461,36 @@ class Var(object):
         else:
             return self.display_name
 
+    @property
     def prompt(self):
-        """Prompt the user for a value.
-
-        If no default is defined, the user will be prompted until he gives a
-        value.
-        """
-        if self.intro:
-            print self.intro
+        """Message to Prompt"""
         prompt_ = u'Enter %s' % self.full_description
         if self.default is not None:
             prompt_ += u' [%r]' % self.default
         prompt_ += u': '
+        return prompt_
 
+    def do_prompt(self):
+        """Prompt user for variable value and return the validated value
+
+        It will keep prompting the user until it receive a valid value.
+        By default, a value is valid if it is not a empty string string or if 
+        the variable has a default.
+
+        If the user value is empty and the variable has a default, the default
+        value is returned.
+
+        """
+        if self.intro is not None:
+            print self.intro
+
+        prompt_ = self.prompt
         while True:
             try:
                 return self.validate(self._prompt(prompt_))
             except (ValidateError,), exc:
                 print str(exc)
+
 
     def validate(self, response):
         """Checks the user has given a non empty value or that the variable has
@@ -498,38 +510,38 @@ class Var(object):
 
 class Bool(Var):
     """Var accepting "y/n"
+
     """
-
-    def prompt(self):
-        """Prompt user for the variable value.
-        """
-        if self.intro:
-            print self.intro
-
-        prompt_ = u'Enter %s' % self.full_description
-        if self.default is not None:
-            prompt_ += u' [%r]' % (self.default and 'y' or 'N')
-        prompt_ += u': '
-
-        while True:
-            try:
-                return self.validate(self._prompt(prompt_))
-            except (ValidateError,), exc:
-                print str(exc)
 
     @property
     def full_description(self):
-        """Return the name of the variable and a description if description
-        is set.
+        """Return the name of the variable, a description if description
+        is set, and the y/N choice.
+
         """
         if self.description:
             return u'%s (%s - y/N)' % (self.display_name, self.description,)
         else:
             return u'%s (y/N)' % self.display_name
 
+    @property
+    def prompt(self):
+        """Message to Prompt (with default converted to "y" or "n")
+
+        """
+        prompt_ = u'Enter %s' % self.full_description
+        if self.default is not None:
+            prompt_ += u' [%r]' % (self.default and 'y' or 'N')
+        prompt_ += u': '
+        return prompt_
+
     def validate(self, response):
-        """Chec the response is either Y, YES, N or NO, or that the variable
-        has a default value
+        """Checks the response is either Y, YES, N or NO, or that the variable
+        has a default value.
+
+        Raises a ValidateError exception if the response wasn't recognized or 
+        if no value was given and one is required.
+
         """
         response = response.strip().upper()
         if response in ('Y', 'YES',):

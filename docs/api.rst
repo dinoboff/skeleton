@@ -15,7 +15,11 @@ API
     
 
 .. autoclass:: skeleton.Var
-    :members: display_name, full_description, prompt, validate
+    :members: display_name, full_description, prompt, do_prompt, validate
+    
+.. autoclass:: skeleton.Bool
+    :members: full_description, prompt, validate
+    :inherited-members: display_name, validate
     
 
 .. autofunction:: skeleton.insert_into_file
