@@ -26,7 +26,7 @@ RST2HTML = rst2html.py --strict
 VIRTUALENV = virtualenv
 
 DIST_VERSION   = $(shell $(PYTHON) setup.py --version)
-RELEASE_BRANCH = release-0.5
+RELEASE_BRANCH = release-0.6
 RELEASE_REMOTE = origin
 
 GH_PAGES_SUBMODULE = docs/_build/html
