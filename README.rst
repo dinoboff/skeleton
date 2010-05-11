@@ -168,7 +168,6 @@ create a new project::
 Todo:
 =====
 
-- Write documentation.
 - add more examples.
 
 
