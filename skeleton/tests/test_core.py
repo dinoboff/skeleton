@@ -1,8 +1,7 @@
-'''
-Created on May 9, 2010
+"""
+Tests for skeleton core components
 
-@author: dinoboff
-'''
+"""
 import datetime
 import unittest
 

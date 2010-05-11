@@ -1,5 +1,5 @@
 """
-Basic Template system for project skeleton.
+Basic Template system for project skeleton,
 similar to the template part of PasteScript but without any dependencies.
 
 """

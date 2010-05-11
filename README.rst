@@ -99,8 +99,8 @@ methods to apply the skeleton. `write()` will raise a `KeyException` if a
 variable is not set; `run()` will prompt the user for the missing variables
 
 
-basic-module/README`
---------------------
+`basic-module/README`
+---------------------
 
 `README` a is static file that will simply be copied::
 
