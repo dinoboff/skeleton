@@ -27,6 +27,12 @@ class TemplateKeyError(KeyError, SkeletonError):
     """Raised by Skeleton when a template required an unknown variable
     """
 
+    #: Name of the unexpected variable
+    variable_name = None
+
+    #: Path to the file which cannot be formatted
+    file_path = None
+
     def __init__(self, variable_name, file_path):
         super(TemplateKeyError, self).__init__(variable_name)
         self.variable_name = variable_name
@@ -38,8 +44,14 @@ class TemplateKeyError(KeyError, SkeletonError):
 
 
 class FileNameKeyError(KeyError, SkeletonError):
-    """Raised by Skeleton when a name cannot be formmatted
+    """Raised by Skeleton when a file name cannot be formatted
     """
+
+    #: Name of the unexpected variable
+    variable_name = None
+
+    #: Path to the file which the name cannot be formatted
+    file_path = None
 
     def __init__(self, variable_name, file_path):
         super(FileNameKeyError, self).__init__(variable_name)
