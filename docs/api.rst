@@ -7,7 +7,7 @@ API
 
 
 .. autoclass:: skeleton.Skeleton
-    :members: run, template_formatter, cmd, configure_parser, src, vars, file_encoding, required_skeletons
+    :members: run, template_formatter, cmd, configure_parser, src, variables, file_encoding, required_skeletons
     
     .. automethod:: check_variables()
     .. automethod:: get_missing_variables()

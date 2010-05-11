@@ -55,7 +55,7 @@ First, create the skeleton script layout::
 	    Create an empty module with its etup script and a README file.
 	    """
 	    src = 'basic-module'
-	    vars = [
+	    variables = [
 	        Var('module_name'),
 	        Var('author'),
 	        Var('author_email'),
@@ -73,7 +73,7 @@ First, create the skeleton script layout::
 The `src` attribute sets the relative path to the skeleton directory where the 
 script will find the files and directories to create.
 
-The `vars` attribute list the variables the templates will require.
+The `variables` attribute list the variables the templates will require.
 The variables with a default can be left blank by the user.
 
 `Skeleton.cmd()` is a convenient method to set an optparser and 

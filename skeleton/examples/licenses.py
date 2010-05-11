@@ -17,7 +17,7 @@ class NoLicense(Skeleton):
 
     """
     src = 'licenses/no-license'
-    vars = [
+    variables = [
         Var('author'),
         ]
 
@@ -32,7 +32,7 @@ class BSD(Skeleton):
     """
 
     src = 'licenses/bsd'
-    vars = [
+    variables = [
         Var('author'),
         Var('organization',
             default='',
@@ -61,7 +61,7 @@ class GPL(Skeleton):
     """
 
     src = 'licenses/gpl'
-    vars = [
+    variables = [
         Var('author'),
         Var('project_name'),
         ]
@@ -80,7 +80,7 @@ class LicenseChoice(Skeleton):
     """Let the use pick the licence
 
     """
-    vars = [
+    variables = [
         Var('project_name'),
         Var('author'),
         Var('author_email'),
@@ -107,12 +107,12 @@ class LicenseChoice(Skeleton):
                 )(self)
         return self._licence_skel
 
-    def check_vars(self):
+    def check_variables(self):
         """Check variables of the license skeleton.
 
         """
-        super(LicenseChoice, self).check_vars()
-        self.license_skel.check_vars()
+        super(LicenseChoice, self).check_variables()
+        self.license_skel.check_variables()
 
     def get_missing_variables(self):
         """Prompt for the license skeleton variables.

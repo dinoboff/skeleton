@@ -15,12 +15,12 @@ THIS_YEAR = datetime.datetime.utcnow().year
 
 class WithDefault(Skeleton):
     """Skeleton with variables with default"""
-    vars = [Var('foo'), Var('bar', default=2), Var('baz')]
+    variables = [Var('foo'), Var('bar', default=2), Var('baz')]
 
 
 class WithRequirement(Skeleton):
     """Skeleton with other skeleton required"""
-    vars = [Var('foo', default=1)]
+    variables = [Var('foo', default=1)]
     required_skeletons = [WithDefault, ]
 
 
@@ -37,7 +37,7 @@ class Static(Skeleton):
 class DynamicContent(Static):
     """Skeleton dynamic content (bar/bax.txt_tmpl)"""
     src = 'skeletons/dynamic-content'
-    vars = [
+    variables = [
         Var('baz', 'Dummy variable'),
         ]
 
@@ -50,7 +50,7 @@ class DynamicFileName(Static):
 class Required(Static):
     """Just a ${FileName}.txt file"""
     src = "skeletons/required"
-    vars = [Var('file_name') ]
+    variables = [Var('file_name') ]
 
 
 class StaticWithRequirement(Static):
@@ -61,13 +61,13 @@ class StaticWithRequirement(Static):
 class MissingVariable(DynamicContent):
     """We forgot to declare the variable "baz"
     """
-    vars = []
+    variables = []
 
 
 class MissingVariableForFileName(DynamicFileName):
     """We forgot to declare the variable "baz"
     """
-    vars = []
+    variables = []
 
 
 class TestSkeleton(TestCase):

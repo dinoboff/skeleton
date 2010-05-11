@@ -38,7 +38,7 @@ class BasicPackage(Skeleton):
     """
 
     src = 'basic-package'
-    vars = [
+    variables = [
         Var('project_name'),
         Var('package_name'),
         Var('author'),

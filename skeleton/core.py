@@ -93,7 +93,7 @@ class Skeleton(collections.MutableMapping):
     """Skeleton Class.
 
     It should have a `src` attribute set to the path to the skeleton folder
-    (relative to the class module) and a list of variables, the `vars`
+    (relative to the class module) and a list of variables, the `variables`
     attribute, the skeleton template files require. The variable should be an
     object with `name`, `display_name` and `full_description` attributes,
     and a prompt method which prompt the user for the variable value
@@ -115,7 +115,7 @@ class Skeleton(collections.MutableMapping):
     src = None
 
     #: List of variable required by templates
-    vars = []
+    variables = []
 
     #: List of Skeleton to apply first
     required_skeletons = []
@@ -138,7 +138,7 @@ class Skeleton(collections.MutableMapping):
                 self.set_variables.update(skeleton)
         self.set_variables.update(kw)
 
-        for var in self.vars:
+        for var in self.variables:
             if var.default is not None:
                 self._defaults[var.name] = var.default
 
@@ -216,7 +216,7 @@ class Skeleton(collections.MutableMapping):
         """
         Raise a KeyError if any required variable is missing.
         """
-        for var in self.vars:
+        for var in self.variables:
             self.__getitem__(var.name)
 
     @run_requirements_last
@@ -225,7 +225,7 @@ class Skeleton(collections.MutableMapping):
         Prompt user for any missing variable
         (even the ones with a default value).
         """
-        for var in self.vars:
+        for var in self.variables:
             if var.name not in self.set_variables:
                 self[var.name] = var.do_prompt()
             else:
@@ -322,7 +322,7 @@ class Skeleton(collections.MutableMapping):
             format="%(levelname)s - %(message)s"
             )
 
-        for var in skel.vars:
+        for var in skel.variables:
             value = getattr(options, var.name)
             if value is not None:
                 skel[var.name] = value
@@ -341,7 +341,7 @@ class Skeleton(collections.MutableMapping):
             action="store_const", const=logging.DEBUG, dest="verbose_")
         parser.set_default('verbose_', logging.ERROR)
 
-        parser = vars_to_optparser(self.vars, parser=parser)
+        parser = vars_to_optparser(self.variables, parser=parser)
         return parser
 
     def template_formatter(self, template):
