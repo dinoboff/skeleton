@@ -22,7 +22,7 @@ def read_file(name):
 
 
 PROJECT = 'skeleton'
-VERSION = '0.5.1'
+VERSION = '0.6'
 URL = 'http://github.com/dinoboff/skeleton'
 AUTHOR = 'Damien Lebrun'
 AUTHOR_EMAIL = 'dinoboff@gmail.com'

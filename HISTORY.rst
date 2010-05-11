@@ -1,6 +1,24 @@
 History
 =======
 
+0.6 (Mai 12, 2010)
+--------------------
+
+- Add `skeleton.insert_into_file()`.
+- Add `skeleton.Bool`.
+- Rename `Skeleton.skel_dir` to `Skeleton.real_dir`.
+- Rename `Skelton.vars` to `Skeleton.variables`.
+- Rename `Skeleton.check_vars` to `Skeleton.check_variables`.
+- `Skeleton` constructor can take any mapping object not just `Skeleton`.
+- Add Var.valiadte(response) to validate user imput.
+- Rename Var.prompt() to Var.do_prompt(). Var.prompt is now a property
+  returning the message to prompt.
+  
+0.7 will be the last minor release before version 1.0. Any backward 
+incompatible changes between versions 0.6 and 1.0 will be marked by
+warnings in 0.7. 
+
+
 0.5.1 (Mai 11, 2010)
 --------------------
 
