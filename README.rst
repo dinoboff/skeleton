@@ -168,6 +168,12 @@ create a new project::
 CHANGES:
 ========
 
+0.5.1 (Mai 11, 2010)
+--------------------
+
+- Fix syntax error in the package virtualenvwrapper.project extension.
+
+
 0.5 (Mai 10, 2010)
 ------------------
 
