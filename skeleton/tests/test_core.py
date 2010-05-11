@@ -7,7 +7,8 @@ import datetime
 import unittest
 
 from skeleton.tests.utils import TestCase, TempDir
-from skeleton.core import Skeleton, Var, TemplateKeyError, FileNameKeyError
+from skeleton.core import Skeleton, Var, TemplateKeyError, FileNameKeyError, \
+    Bool
 
 
 THIS_YEAR = datetime.datetime.utcnow().year
@@ -357,6 +358,68 @@ class TestVar(TestCase):
             self.assertEqual(args, (("""Enter Foo ['']: """,), {},))
 
 
+class TestBool(TestCase):
+    """Tests for skeleton.core.Bool"""
+
+    def test_full_description(self):
+        """Tests Bool full description (complete)"""
+        var = Bool('foo', description='dummy var')
+        self.assertEqual(var.full_description, 'Foo (dummy var - y/N)')
+
+    def test_basic_full_description(self):
+        """Tests Bool full description (complete)"""
+        var = Bool('foo')
+        self.assertEqual(var.full_description, 'Foo (y/N)')
+
+    def test_prompt_true(self):
+        """Tests Bool.prompt() for True"""
+        resps = ['', 'y']
+        self.input_mock.side_effect = lambda x: resps.pop(0)
+
+        var = Bool('foo')
+        self.assertEqual(var.prompt(), True)
+
+        self.assertEqual(self.input_mock.call_count, 2)
+        for args in self.input_mock.call_args_list:
+            self.assertEqual(args, (('Enter Foo (y/N): ',), {},))
+
+    def test_prompt_false(self):
+        """Tests Bool.prompt() for False"""
+        resps = ['', 'n']
+        self.input_mock.side_effect = lambda x: resps.pop(0)
+
+        var = Bool('foo')
+        self.assertEqual(var.prompt(), False)
+
+        self.assertEqual(self.input_mock.call_count, 2)
+        for args in self.input_mock.call_args_list:
+            self.assertEqual(args, (('Enter Foo (y/N): ',), {},))
+
+    def test_prompt_with_default(self):
+        """Tests Bool.prompt() with default set"""
+        resps = ['']
+        self.input_mock.side_effect = lambda x: resps.pop(0)
+
+        var = Bool('foo', default=True)
+        self.assertEqual(var.prompt(), True)
+
+        self.assertEqual(self.input_mock.call_count, 1)
+        for args in self.input_mock.call_args_list:
+            self.assertEqual(args, (("Enter Foo (y/N) ['y']: ",), {},))
+
+    def test_prompt_default_overwritten(self):
+        """Tests Bool.prompt() with default overwritten"""
+        resps = ['no']
+        self.input_mock.side_effect = lambda x: resps.pop(0)
+
+        var = Bool('foo', default=True)
+        self.assertEqual(var.prompt(), False)
+
+        self.assertEqual(self.input_mock.call_count, 1)
+        for args in self.input_mock.call_args_list:
+            self.assertEqual(args, (("Enter Foo (y/N) ['y']: ",), {},))
+
+
 class TestDefaultTemplate(unittest.TestCase):
     """Tests for the default template formatter"""
 
@@ -387,6 +450,7 @@ def suite():
     tests = unittest.TestSuite()
     tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestSkeleton))
     tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestVar))
+    tests.addTest(unittest.TestLoader().loadTestsFromTestCase(TestBool))
     tests.addTest(
         unittest.TestLoader().loadTestsFromTestCase(TestDefaultTemplate))
     return tests

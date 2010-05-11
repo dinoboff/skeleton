@@ -491,6 +491,55 @@ class Var(object):
         if response:
             return response
         elif self.default is not None:
+            return self.default
+        else:
+            raise ValidateError("%s is required" % self.display_name)
+
+
+class Bool(Var):
+    """Var accepting "y/n"
+    """
+
+    def prompt(self):
+        """Prompt user for the variable value.
+        """
+        if self.intro:
+            print self.intro
+
+        prompt_ = u'Enter %s' % self.full_description
+        if self.default is not None:
+            prompt_ += u' [%r]' % (self.default and 'y' or 'N')
+        prompt_ += u': '
+
+        while True:
+            try:
+                return self.validate(self._prompt(prompt_))
+            except (ValidateError,), exc:
+                print str(exc)
+
+    @property
+    def full_description(self):
+        """Return the name of the variable and a description if description
+        is set.
+        """
+        if self.description:
+            return u'%s (%s - y/N)' % (self.display_name, self.description,)
+        else:
+            return u'%s (y/N)' % self.display_name
+
+    def validate(self, response):
+        """Chec the response is either Y, YES, N or NO, or that the variable
+        has a default value
+        """
+        response = response.strip().upper()
+        if response in ('Y', 'YES',):
+            return True
+        elif response in ('N', 'NO',):
+            return False
+        elif response == '':
+            if self.default is not None:
                 return self.default
             else:
                 raise ValidateError("%s is required" % self.display_name)
+        else:
+            raise ValidateError('enter either "Y" for yes or "N" or no')
