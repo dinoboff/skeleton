@@ -317,12 +317,12 @@ class Skeleton(collections.MutableMapping):
         self.write(dst_dir, run_dry=run_dry)
 
     @classmethod
-    def cmd(cls, argv=None):
+    def cmd(cls, argv=None, **kw):
         """
         Convenient method to set a logger, an optpaser and run the skeleton
         """
 
-        skel = cls()
+        skel = cls(**kw)
 
         parser = skel.configure_parser()
         options, args = parser.parse_args(argv)
